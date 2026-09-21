@@ -83,6 +83,7 @@ a { color: inherit; }
 .btn-pour:hover::before { transform: scaleX(1); filter: brightness(0.55) saturate(1.2); }
 .btn-pour:hover { transform: translateY(-2px); box-shadow: 0 14px 34px rgba(0,0,0,0.5); }
 .btn-pour-dark { color: var(--ink) !important; border-color: var(--ink); }
+.btn-pour-dark:hover { color: var(--porcelain) !important; }
 .btn-pour-dark::before { background: linear-gradient(100deg, #5E1D0E, var(--ember) 60%, #C64A2E); }
 .btn-solid { background: var(--porcelain); color: var(--cellar); border-color: var(--porcelain); }
 .btn-solid:hover { transform: translateY(-2px); box-shadow: 0 18px 40px rgba(0,0,0,0.4); }
