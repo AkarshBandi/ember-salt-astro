@@ -2,8 +2,8 @@
 dist/
 .astro/
 
-# TinaCMS generated
-tina/__generated__/
+# TinaCMS generated (TinaCloud needs these committed)
+# tina/__generated__/
 
 # Wrangler
 .wrangler/

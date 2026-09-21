@@ -1,0 +1,37 @@
+fragment GeneralParts on General {
+  __typename
+  seo_title
+  description
+  nav_links {
+    __typename
+    label
+    href
+  }
+}
+
+fragment ActsParts on Acts {
+  __typename
+  courses {
+    __typename
+    n
+    numeral
+    time
+    name
+    sense
+    line
+    img
+    imgB
+    accent
+    choice
+  }
+}
+
+fragment JournalParts on Journal {
+  __typename
+  title
+  date
+  category
+  description
+  image
+  body
+}
