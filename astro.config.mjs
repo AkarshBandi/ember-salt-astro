@@ -3,8 +3,12 @@ import cloudflare from '@astrojs/cloudflare';
 import tina from '@tinacms/astro/integration';
 
 export default defineConfig({
-  output: 'static',
-  adapter: cloudflare(),
+  output: 'server',
+  adapter: cloudflare({
+    platformProxy: {
+      enabled: true,
+    },
+  }),
   integrations: [
     tina(),
   ],

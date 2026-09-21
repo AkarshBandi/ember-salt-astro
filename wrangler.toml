@@ -1,9 +1,8 @@
-name = "ember-salt"
+name = "ember-salt-astro"
 compatibility_date = "2024-09-23"
 compatibility_flags = ["nodejs_compat"]
-workers_dev = false
+workers_dev = true
 
-[assets]
-directory = "dist"
-binding = "ASSETS"
-not_found_handling = "404-page"
+[[kv_namespaces]]
+binding = "SESSION"
+id = "06ef94f88ca04301a3221db08bf25ce2"

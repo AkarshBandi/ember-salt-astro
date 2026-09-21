@@ -1,7 +1,8 @@
 // tina/config.ts
 import { defineConfig } from "tinacms";
+var branch = process.env.GITHUB_BRANCH || process.env.VERCEL_GIT_COMMIT_REF || process.env.WORKERS_CI_BRANCH || process.env.CF_PAGES_BRANCH || process.env.HEAD || "main";
 var config_default = defineConfig({
-  branch: "main",
+  branch,
   clientId: process.env.PUBLIC_TINA_CLIENT_ID,
   token: process.env.TINA_TOKEN,
   build: {

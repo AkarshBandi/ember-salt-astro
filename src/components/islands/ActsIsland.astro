@@ -1,0 +1,48 @@
+---
+import { tinaField } from '@tinacms/astro/tina-field';
+import type { CmsActs } from '../../lib/tina/data';
+
+interface Props {
+  acts?: CmsActs | null;
+}
+
+const { acts } = Astro.props;
+const courses = acts?.courses ?? [];
+const homeActs = [courses[0], courses[1], courses[3], courses[5], courses[10]].filter(Boolean);
+---
+
+<section id="menu" class="linen" style="padding:var(--space-section) 0;color:var(--ink)">
+  <div class="wrap">
+    <div class="rv">
+      <p class="eyebrow" style="color:var(--brassdeep)" data-tina-field={tinaField(acts, 'courses')}>The menu — dinner in five courses</p>
+      <h2 class="font-display" style="font-weight:900;letter-spacing:-0.02em;max-width:40rem;margin-top:12px;font-size:var(--fs-h2)" data-tina-field={tinaField(acts, 'courses')}>Five plates land. Scroll to serve.</h2>
+      <p style="color:rgba(34,26,18,0.62);font-size:15px;margin-top:12px;max-width:36rem">A tasting menu means the kitchen decides the order — small plates, eaten in sequence. Each course sticks while the next lands on top; two ask you to choose.</p>
+    </div>
+    <div id="flight" style="margin-top:48px;display:grid;gap:6vh">
+      {homeActs.map((a, i) => (
+        <article class="flight-card rv" data-flight={i} style={`top:calc(88px + ${i * 22}px)`} data-tina-field={tinaField(a, 'name')}>
+          <div class="flight-photo">
+            <img src={a.img} alt={a.name} loading="lazy" data-photo-a={a.img} data-photo-b={a.imgB || undefined} />
+            <span class="flight-act eyebrow">Course {a.n} / V</span>
+          </div>
+          <div class="flight-type">
+            <p class="flight-num font-display" aria-hidden="true" style={`-webkit-text-stroke:1.5px ${a.accent}`}>{a.numeral}</p>
+            <h3 class="font-display" style="font-weight:700;font-size:clamp(1.6rem,3vw,2.4rem);margin-top:4px" data-tina-field={tinaField(a, 'name')}>{a.name}</h3>
+            <p class="font-display" style={`font-style:italic;margin-top:4px;color:${a.accent}`} data-tina-field={tinaField(a, 'sense')}>{a.sense}</p>
+            <p style="font-size:15px;color:rgba(34,26,18,0.65);margin-top:12px;line-height:1.65;max-width:26rem" data-tina-field={tinaField(a, 'line')}>{a.line}</p>
+            {a.choice ? (
+              <div style="margin-top:18px;display:flex;flex-wrap:wrap;gap:8px" data-choice={a.n}>
+                {a.choice.map((opt) => (
+                  <button class="chip on-paper" data-opt={opt} aria-pressed="false"><span class="stamp">{opt}</span></button>
+                ))}
+              </div>
+              <p style="margin-top:10px;font-size:11px;letter-spacing:0.25em;text-transform:uppercase;font-weight:700;color:rgba(34,26,18,0.5)" data-pick-label>Choose one</p>
+            ) : (
+              <p style="margin-top:18px;font-size:11px;letter-spacing:0.25em;text-transform:uppercase;font-weight:700;color:rgba(34,26,18,0.4)">Ingredients withheld</p>
+            )}
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
