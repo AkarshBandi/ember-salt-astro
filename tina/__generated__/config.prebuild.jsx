@@ -25,6 +25,9 @@ var config_default = defineConfig({
         match: {
           include: "general"
         },
+        ui: {
+          router: () => "/"
+        },
         fields: [
           { name: "seo_title", label: "SEO Title", type: "string" },
           { name: "description", label: "Description", type: "string", ui: { component: "textarea" } },
@@ -47,6 +50,9 @@ var config_default = defineConfig({
         format: "yaml",
         match: {
           include: "acts"
+        },
+        ui: {
+          router: () => "/menu"
         },
         fields: [
           {
@@ -80,6 +86,9 @@ var config_default = defineConfig({
         label: "Journal Entries",
         path: "src/content/journal",
         format: "markdown",
+        ui: {
+          router: ({ document }) => `/journal/${document._sys.filename}`
+        },
         fields: [
           { name: "title", label: "Title", type: "string", isTitle: true, required: true },
           { name: "date", label: "Date", type: "datetime" },
