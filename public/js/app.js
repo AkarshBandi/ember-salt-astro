@@ -51,9 +51,6 @@
     if (header) {
       header.classList.toggle("solid", y > 60);
       header.classList.toggle("clear", y <= 60);
-      var hide = y > 320 && y > lastY + 4;
-      header.classList.toggle("hidden-up", hide);
-      if (y < lastY - 4) header.classList.remove("hidden-up");
     }
     if (prog) {
       var max = document.body.scrollHeight - window.innerHeight;
