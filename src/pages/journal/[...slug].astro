@@ -1,0 +1,27 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('journal');
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<Layout title={entry.data.title}>
+<main class="linen" style="color:var(--ink);padding:160px 0 var(--space-section)">
+  <article style="max-width:720px;margin:0 auto;padding:0 var(--gutter)">
+    <p class="eyebrow" style="color:var(--brassdeep)">{entry.data.category} — {entry.data.date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
+    <h1 class="font-display" style="font-weight:900;letter-spacing:-0.02em;margin-top:12px;font-size:var(--fs-h2)">{entry.data.title}</h1>
+    {entry.data.image && <figure style="margin:32px 0;border:1px solid rgba(154,123,69,0.5);padding:8px"><img src={entry.data.image} alt={entry.data.title} style="width:100%;height:auto" /></figure>}
+    <div class="font-display" style="font-size:1.15rem;line-height:1.9"><Content /></div>
+    <div style="margin-top:48px"><a href="/journal/" class="eyebrow draw-link">&larr; All entries</a></div>
+  </article>
+</main>
+</Layout>

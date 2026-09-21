@@ -1,0 +1,189 @@
+---
+import Layout from '../layouts/Layout.astro';
+import actsRaw from '../content/site/acts.yaml?raw';
+import * as yaml from 'js-yaml';
+
+const acts = yaml.load(actsRaw) as Array<{
+  n: string;
+  numeral: string;
+  time: string;
+  name: string;
+  sense: string;
+  line: string;
+  img: string;
+  accent: string;
+  imgB?: string;
+  choice?: string[];
+}>;
+
+const homeActs = [acts[0], acts[1], acts[3], acts[5], acts[10]];
+---
+
+<Layout title="Home">
+<!-- HERO -->
+<section id="top" class="hero cellar">
+  <div class="hero-bg" id="heroBg">
+    <canvas id="gl" aria-hidden="true"></canvas>
+    <div class="hero-scrim"></div>
+    <div class="hero-ignite" id="ignite"></div>
+  </div>
+  <div class="wrap-wide hero-content" id="heroContent">
+    <div class="rv in" style="display:flex;align-items:center;gap:16px">
+      <span class="eyebrow" style="color:var(--cream-glow)">Woodfire & fermentation — Portland</span>
+      <span style="height:1px;width:96px;background:rgba(200,169,110,0.6)" class="hide-sm"></span>
+      <span class="miles-pill">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 22 16 8"/><path d="M3.47 12.53 5 11l1.53 1.53a3.5 3.5 0 0 1 0 4.94L5 19l-1.53-1.53a3.5 3.5 0 0 1 0-4.94Z"/><path d="M7.47 8.53 9 7l1.53 1.53a3.5 3.5 0 0 1 0 4.94L9 15l-1.53-1.53a3.5 3.5 0 0 1 0-4.94Z"/><path d="M11.47 4.53 13 3l1.53 1.53a3.5 3.5 0 0 1 0 4.94L13 11l-1.53-1.53a3.5 3.5 0 0 1 0-4.94Z"/><path d="M20 2h2v2a4 4 0 0 1-4 4h-2V6a4 4 0 0 1 4-4Z"/><path d="M11.47 17.47 13 19l-1.53 1.53a3.5 3.5 0 0 1-4.94 0L5 19l1.53-1.53a3.5 3.5 0 0 1 4.94 0Z"/></svg>
+        40 miles</span>
+    </div>
+    <h1 aria-label="Ember and Salt">
+      <span class="hl-set" aria-hidden="true">
+        <span class="ch" style="--d:0.65s">E</span><span class="ch" style="--d:0.72s">M</span><span class="ch" style="--d:0.79s">B</span><span class="ch" style="--d:0.86s">E</span><span class="ch" style="--d:0.93s">R</span><span class="amp">&amp;</span><span class="plate-dot"><img src="/images/dish-fire.jpg" alt="" /></span><span>SALT</span>
+      </span>
+    </h1>
+    <div style="margin-top:32px;display:flex;flex-direction:column;gap:24px" class="hero-cta-row">
+      <p class="font-display" style="font-style:italic;font-size:clamp(1.25rem,2vw+1rem,2rem);max-width:28rem;line-height:1.3">Twelve courses. Fourteen seats. One oak kiln.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:12px">
+        <a href="/menu/" class="btn btn-pour eyebrow">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          Read the menu</a>
+        <span data-magnetic><a href="/visit/" class="btn btn-solid eyebrow">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>
+          Secure a table</a></span>
+      </div>
+    </div>
+    <div style="margin-top:40px;display:flex;align-items:center;gap:12px;color:rgba(245,240,232,0.5)">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#C8A96E" stroke-width="1.5"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+      <span style="width:64px;height:1px;background:linear-gradient(90deg,#C8A96E,transparent)"></span>
+      <span style="font-size:11px;letter-spacing:0.25em;text-transform:uppercase">Scroll slowly</span>
+    </div>
+  </div>
+</section>
+<style>
+.hero h1 .ch { opacity: 0; transform: translateY(70px) rotate(4deg); animation: chIn 0.7s cubic-bezier(0.22,1,0.36,1) forwards; animation-delay: var(--d); }
+@keyframes chIn { to { opacity: 1; transform: none; } }
+.hero .plate-dot { opacity: 0; animation: chIn 0.48s cubic-bezier(0.34,1.3,0.64,1) forwards; animation-delay: 1.15s; }
+@media (prefers-reduced-motion: reduce) { .hero h1 .ch, .hero .plate-dot { opacity: 1; transform: none; animation: none; } }
+@media (min-width: 768px) { .hero-cta-row { flex-direction: row !important; align-items: end; gap: 48px !important; } .hero-cta-row > div:last-child { margin-left: auto; } }
+</style>
+
+<!-- PRESS -->
+<div class="press-strip cellar">
+  <div class="crawl-track">
+    {[1, 2].map(() => (
+      <>
+        <span class="crawl-item"><span class="t font-display" style="font-style:italic">Twelve courses</span><span class="d">&#9670;</span></span>
+        <span class="crawl-item"><span class="t font-display" style="font-style:italic">Within forty miles</span><span class="d">&#9670;</span></span>
+        <span class="crawl-item"><span class="t font-display" style="font-style:italic">Oak woodfire</span><span class="d">&#9670;</span></span>
+        <span class="crawl-item"><span class="t font-display" style="font-style:italic">Natural pairings</span><span class="d">&#9670;</span></span>
+        <span class="crawl-item"><span class="t font-display" style="font-style:italic">House fermentation</span><span class="d">&#9670;</span></span>
+      </>
+    ))}
+  </div>
+</div>
+
+<!-- TASTING FLIGHT -->
+<section id="menu" class="linen" style="padding:var(--space-section) 0;color:var(--ink)">
+  <div class="wrap">
+    <div class="rv">
+      <p class="eyebrow" style="color:var(--brassdeep)">The menu — dinner in five courses</p>
+      <h2 class="font-display" style="font-weight:900;letter-spacing:-0.02em;max-width:40rem;margin-top:12px;font-size:var(--fs-h2)">Five plates land. Scroll to serve.</h2>
+      <p style="color:rgba(34,26,18,0.62);font-size:15px;margin-top:12px;max-width:36rem">A tasting menu means the kitchen decides the order — small plates, eaten in sequence. Each course sticks while the next lands on top; two ask you to choose.</p>
+    </div>
+    <div id="flight" style="margin-top:48px;display:grid;gap:6vh">
+      {homeActs.map((a, i) => (
+        <article class="flight-card rv" data-flight={i} style={`top:calc(88px + ${i * 22}px)`}>
+          <div class="flight-photo">
+            <img src={a.img} alt={a.name} loading="lazy" data-photo-a={a.img} data-photo-b={a.imgB || undefined} />
+            <span class="flight-act eyebrow">Course {a.n} / V</span>
+          </div>
+          <div class="flight-type">
+            <p class="flight-num font-display" aria-hidden="true" style={`-webkit-text-stroke:1.5px ${a.accent}`}>{a.numeral}</p>
+            <h3 class="font-display" style="font-weight:700;font-size:clamp(1.6rem,3vw,2.4rem);margin-top:4px">{a.name}</h3>
+            <p class="font-display" style={`font-style:italic;margin-top:4px;color:${a.accent}`}>{a.sense}</p>
+            <p style="font-size:15px;color:rgba(34,26,18,0.65);margin-top:12px;line-height:1.65;max-width:26rem">{a.line}</p>
+            {a.choice ? (
+              <div style="margin-top:18px;display:flex;flex-wrap:wrap;gap:8px" data-choice={a.n}>
+                {a.choice.map((opt) => (
+                  <button class="chip on-paper" data-opt={opt} aria-pressed="false"><span class="stamp">{opt}</span></button>
+                ))}
+              </div>
+              <p style="margin-top:10px;font-size:11px;letter-spacing:0.25em;text-transform:uppercase;font-weight:700;color:rgba(34,26,18,0.5)" data-pick-label>Choose one</p>
+            ) : (
+              <p style="margin-top:18px;font-size:11px;letter-spacing:0.25em;text-transform:uppercase;font-weight:700;color:rgba(34,26,18,0.4)">Ingredients withheld</p>
+            )}
+          </div>
+        </article>
+      ))}
+    </div>
+    <div class="rv" style="text-align:center;margin-top:6vh" id="boxOffice">
+      <p class="eyebrow" style="color:var(--brassdeep)">Box office — your menu</p>
+      <p class="font-display" style="font-size:1.4rem;margin-top:10px" id="recapLine">Two choices outstanding (0/2). The kiln waits.</p>
+      <p style="margin-top:8px;font-size:14px;color:rgba(34,26,18,0.6)"><span id="recapSvc">Next service —</span> <span class="seats" data-seats-next></span></p>
+      <div style="margin-top:24px;display:flex;flex-wrap:wrap;gap:16px;justify-content:center;align-items:center">
+        <span data-magnetic><a href="/visit/" class="btn btn-pour btn-pour-dark eyebrow">Request a table &rarr;</a></span>
+        <a href="/menu/" class="eyebrow draw-link" style="padding:14px 8px">The full evening</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="linen" style="padding-bottom:40px">
+  <hr style="border:none;border-top:1px solid rgba(154,123,69,0.2);margin:0 10%" />
+</div>
+
+<!-- ASSEMBLY -->
+<section id="assembly" class="cellar" style="padding:var(--space-section) 0;overflow:clip">
+  <div class="wrap-wide" style="display:grid;gap:48px;align-items:center" id="assemblyGrid">
+    <div style="position:relative;height:440px;border:1px solid rgba(200,169,110,0.3);overflow:hidden">
+      <img src="/images/hero.jpg" alt="Dish over fire" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" />
+      <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 62%, transparent 25%, rgba(20,18,16,0.6) 100%)"></div>
+      <div id="asmGlow" style="position:absolute;left:48px;right:48px;top:80px;height:96px;border-radius:999px;background:radial-gradient(ellipse at center, rgba(200,169,110,0.45), transparent 70%)"></div>
+      <div id="asmPlate" style="position:absolute;left:50%;top:50%;width:208px;height:208px;border-radius:999px;overflow:hidden;border:2px solid var(--brass);transform:translate(-50%,-50%)">
+        <img src="/images/dish-fire.jpg" alt="Signature fire dish" style="width:100%;height:100%;object-fit:cover" />
+      </div>
+      <p id="asmCap" class="eyebrow" style="position:absolute;left:0;right:0;bottom:32px;text-align:center;color:rgba(245,240,232,0.6)">Scroll — the plate assembles</p>
+      <span style="position:absolute;top:24px;left:50%;transform:translateX(-50%)" class="eyebrow miles-pill">Course VII</span>
+    </div>
+    <div>
+      <div class="rv"><p class="eyebrow" style="color:var(--brass)">The fire</p></div>
+      {[
+        { n: "I", t: "Ember", d: "White oak at four hundred degrees, laid at four in the afternoon. Nothing hurried, nothing forced — the kiln sets the schedule, not us." },
+        { n: "II", t: "Smoke", d: "Leeks sleep in ash for forty minutes while the room goes quiet. Day-fourteen kraut comes out of crock seven." },
+        { n: "III", t: "Season", d: "House miso aged eleven months, hot honey from the roof hives, lemon ash — weighed to the gram, never poured." },
+        { n: "IV", t: "Plate", d: "It lands heavy and it is eaten fast. Twelve courses, about three hours, no intermission. That is the whole contract." },
+      ].map((s) => (
+        <div class="rv" style="display:flex;gap:20px;padding:20px 0;border-bottom:1px solid rgba(245,240,232,0.1)">
+          <span class="font-display" style="font-style:italic;color:var(--brass);font-size:1.25rem;width:32px;flex-shrink:0">{s.n}</span>
+          <div><h3 class="font-display" style="font-weight:700;font-size:1.25rem">{s.t}</h3><p style="font-size:14px;color:rgba(245,240,232,0.6);margin-top:4px;line-height:1.6">{s.d}</p></div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+<style>@media(min-width:900px){#assemblyGrid{grid-template-columns:5fr 3fr !important}}</style>
+<div class="cellar" style="padding-top:40px">
+  <hr style="border:none;border-top:1px solid rgba(200,169,110,0.15);margin:0 10%" />
+</div>
+
+<!-- STORY PREVIEW -->
+<section id="story" class="linen" style="padding:var(--space-section) 0;color:var(--ink)">
+  <div class="wrap" style="display:grid;gap:48px;align-items:center" id="storyGrid">
+    <div>
+      <div class="rv"><p class="eyebrow" style="color:var(--brassdeep)">The chef</p>
+      <h2 class="font-display" style="font-weight:900;margin-top:12px;line-height:1.1;font-size:var(--fs-h2)">One room, one kiln, fourteen seats.</h2></div>
+      <div class="rv"><p class="font-display" style="font-size:1.125rem;line-height:1.7;margin-top:24px;color:rgba(34,26,18,0.82)">By day a neighbourhood room; by night a fourteen-seat counter around a single oak kiln. Twelve courses, forty miles, one fire — fermentation as science, smoke as punctuation.</p>
+      <p style="font-size:15px;line-height:1.7;margin-top:16px;color:rgba(34,26,18,0.62)">Mara cooked eleven years in other people's kitchens — Copenhagen, San Sebastián, a smokehouse outside Austin — before building her own fire. The back wall is crocks: fourteen of them, one per seat.</p></div>
+      <div class="rv"><div class="gold-rule" style="margin:32px 0 24px"><span class="font-display" style="font-style:italic;font-size:14px;color:rgba(34,26,18,0.7)">est. 2019</span></div>
+      <a href="/story/" class="btn btn-pour btn-pour-dark eyebrow">Read her letter &rarr;</a></div>
+    </div>
+    <div class="rv">
+      <div class="charger">
+        <div class="dish" style="width:min(420px,80vw);height:min(420px,80vw)"><img src="/images/chef.jpg" alt="Chef Mara Okafor at the kiln" style="width:100%;height:100%;object-fit:cover" /></div>
+        <span style="position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);white-space:nowrap;background:var(--cellar);border:1px solid rgba(200,169,110,0.5);padding:8px 20px;font-size:11px;letter-spacing:0.32em;text-transform:uppercase;font-weight:600;color:var(--brass)">Mara Okafor — Chef &amp; Founder</span>
+      </div>
+      <p class="font-display" style="font-style:italic;font-size:1.25rem;margin-top:40px;text-align:center;color:rgba(34,26,18,0.85);max-width:28rem;margin-left:auto;margin-right:auto;line-height:1.5">&ldquo;The kiln decides. I just translate.&rdquo;</p>
+    </div>
+  </div>
+</section>
+<style>@media(min-width:900px){#storyGrid{grid-template-columns:1fr 1fr !important}}</style>
+</Layout>

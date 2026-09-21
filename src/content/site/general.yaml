@@ -1,0 +1,11 @@
+seo_title: "Ember & Salt PDX — Woodfire Tasting, Twelve Courses, Portland"
+description: "Portland woodfire tasting kitchen. Twelve courses, fourteen seats, one oak kiln. Forty miles of ingredients."
+nav_links:
+  - label: "Menu"
+    href: "/menu/"
+  - label: "Our Story"
+    href: "/story/"
+  - label: "Journal"
+    href: "/journal/"
+  - label: "Reservations"
+    href: "/visit/"

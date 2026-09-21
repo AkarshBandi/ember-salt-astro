@@ -1,0 +1,106 @@
+---
+import Layout from '../layouts/Layout.astro';
+import actsRaw from '../content/site/acts.yaml?raw';
+import * as yaml from 'js-yaml';
+
+const acts = yaml.load(actsRaw) as Array<{
+  n: string;
+  numeral: string;
+  time: string;
+  name: string;
+  sense: string;
+  line: string;
+  img: string;
+  accent: string;
+  imgB?: string;
+  choice?: string[];
+}>;
+---
+
+<Layout title="Menu">
+<header style="position:relative;min-height:88svh;display:flex;align-items:flex-end;overflow:hidden">
+  <img src="/images/act-longfire.jpg" alt="Whole animal over oak fire at Ember and Salt" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" fetchpriority="high" />
+  <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(20,18,16,0.3),rgba(20,18,16,0.55) 60%,rgba(20,18,16,0.8))"></div>
+  <div style="position:relative;width:100%;max-width:1000px;margin:0 auto;padding:120px var(--gutter) 72px">
+    <p class="eyebrow rv" style="color:var(--brass)">The menu — one evening, twelve courses</p>
+    <h1 class="font-display rv" style="font-weight:900;letter-spacing:-0.02em;margin-top:12px;font-size:clamp(2.8rem,7vw,5.2rem);line-height:1.02;color:var(--porcelain)">Eat in order.<br />Choose twice.</h1>
+    <p class="rv" style="margin-top:16px;font-size:15px;color:rgba(245,240,232,0.75);max-width:34rem">Twelve courses, £185. Wine pairing £95, juice pairing £55. The whole table takes the tasting. Scroll — the light dies as dinner progresses. <span class="seats" data-seats-next></span></p>
+  </div>
+</header>
+<section id="dusk" class="linen" style="padding:56px 0 0;color:var(--ink);transition:background-color 0.2s linear">
+  <div style="max-width:1000px;margin:0 auto;padding-left:var(--gutter);padding-right:var(--gutter)">
+
+    <div id="duskClockWrap" style="position:fixed;top:70px;left:0;right:0;z-index:40;text-align:center;pointer-events:none;opacity:0;transition:opacity 0.35s;mix-blend-mode:difference;color:#fff">
+      <span class="tnum font-display" id="duskClock" style="font-weight:700;font-size:1rem;letter-spacing:0.35em">17:00</span>
+    </div>
+
+    <div id="courses" style="margin-top:24px;display:grid">
+      {acts.map((a, i) => {
+        const isEven = i % 2 === 1;
+        const blobClass = `b${i % 3}`;
+        return (
+          <article class="rv course" data-course={a.n} data-time={a.time} style="min-height:82vh;display:flex;flex-direction:column;justify-content:center;padding:48px 0">
+            <p class="eyebrow dusk-dim" style="color:var(--brassdeep)">Course {a.n} of twelve</p>
+            <div class="course-grid" style="display:grid;gap:36px;align-items:center;margin-top:20px">
+              <figure class="rv" style={`margin:0;width:min(320px,70vw);${isEven ? 'order:2;' : ''}`}>
+                <span class={`blob ${blobClass}`} style={`display:block;aspect-ratio:4/5;overflow:hidden;${isEven ? 'transform:rotate(2deg);' : 'transform:rotate(-2deg);'}`}>
+                  <img src={a.img || '/images/dish-fire.jpg'} alt={a.name} loading="lazy" data-imga={a.img || '/images/dish-fire.jpg'} data-imgb={a.imgB || undefined} style="width:100%;height:100%;object-fit:cover;transition:opacity 0.3s" />
+                </span>
+              </figure>
+              <div class="course-words">
+                {a.choice ? (
+                  <div style="display:flex;gap:18px;align-items:baseline;flex-wrap:wrap" data-mchoice={a.n}>
+                    {a.choice.map((opt, j) => (
+                      <>
+                        {j > 0 && <span class="font-display" style="font-style:italic;font-size:clamp(1.3rem,2.5vw,1.8rem)">or</span>}
+                        <button class="font-display mpick" data-mopt={opt} aria-pressed="false" style="background:none;border:none;cursor:pointer;font-weight:900;font-size:clamp(2.2rem,5vw,3.8rem);letter-spacing:-0.02em;line-height:1.05;padding:0">{opt}</button>
+                      </>
+                    ))}
+                  </div>
+                  <p class="font-display dusk-sense" style="font-style:italic;color:var(--ember);margin-top:8px;font-size:1.15rem">{a.sense}</p>
+                ) : (
+                  <>
+                    <h2 class="font-display" style="font-weight:900;font-size:clamp(2.2rem,5vw,3.8rem);letter-spacing:-0.02em;line-height:1.05">{a.name}</h2>
+                    <p class="font-display dusk-sense" style="font-style:italic;color:var(--ember);margin-top:8px;font-size:1.15rem">{a.sense}</p>
+                  </>
+                )}
+                {a.line && <p class="dusk-body" style="margin-top:14px;font-size:16px;line-height:1.65;max-width:30rem">{a.line}</p>}
+              </div>
+            </div>
+          </article>
+        );
+      })}
+    </div>
+
+    <div class="rv" style="text-align:center;padding:96px 0 var(--space-section)">
+      <p class="eyebrow dusk-dim" style="color:var(--brassdeep)">Your evening</p>
+      <p class="font-display" style="font-size:1.5rem;margin-top:10px" id="menuRecap">Two choices outstanding (0/2). The kiln waits.</p>
+      <div style="margin-top:28px;display:flex;flex-wrap:wrap;gap:16px;justify-content:center;align-items:center">
+        <span data-magnetic><a href="/visit/" class="btn btn-pour btn-pour-dark eyebrow">Request a table &rarr;</a></span>
+        <a href="/" class="eyebrow draw-link" style="padding:14px 8px">Back to the fire</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+<style>
+#dusk .dusk-body { color: rgba(34,26,18,0.65); transition: color 0.3s; }
+#dusk .dusk-dim { transition: color 0.3s; }
+#dusk.night { color: var(--porcelain); }
+#dusk.night .dusk-body { color: rgba(245,240,232,0.7); }
+#dusk.night .dusk-dim { color: var(--brass) !important; }
+#dusk.night .mpick { color: var(--porcelain); }
+#dusk.night .dusk-sense { color: #E4694E !important; }
+.mpick { color: var(--ink); transition: opacity 0.3s, color 0.3s, text-shadow 0.3s; }
+.mpick.lose { opacity: 0.25; }
+.mpick.win { color: var(--ember) !important; text-shadow: 0 0 32px rgba(179,52,26,0.45); }
+#dusk.night .mpick.win { color: #E4694E !important; text-shadow: 0 0 36px rgba(228,105,78,0.6); }
+.mpick:focus-visible { outline: 2px solid var(--ember); outline-offset: 6px; }
+#duskClock { transition: opacity 0.2s; }
+@media(min-width:860px){.course-grid{grid-template-columns:minmax(0,340px) minmax(0,1fr) !important}}
+.blob { box-shadow: 0 24px 60px rgba(34,26,18,0.28); }
+.blob.b0 { border-radius: 58% 42% 55% 45% / 48% 55% 45% 52%; }
+.blob.b1 { border-radius: 42% 58% 40% 60% / 55% 42% 58% 45%; }
+.blob.b2 { border-radius: 52% 48% 62% 38% / 44% 58% 42% 56%; }
+</style>
+</Layout>

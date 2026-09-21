@@ -1,0 +1,27 @@
+{
+  "name": "ember-salt-astro",
+  "type": "module",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "tinacms dev -c \"astro dev\"",
+    "dev:local": "tinacms dev -c \"astro dev\" --local",
+    "build": "tinacms build && astro build",
+    "build:local": "tinacms build --local --skip-cloud-checks && astro build",
+    "preview": "astro preview",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "@astrojs/cloudflare": "latest",
+    "@tinacms/astro": "^0.7.0",
+    "astro": "latest",
+    "gsap": "^3.15.0",
+    "js-yaml": "^5.4.2",
+    "lenis": "^1.3.26",
+    "tinacms": "^3.14.0"
+  },
+  "devDependencies": {
+    "@tinacms/cli": "^3.0.0",
+    "@types/js-yaml": "^4.0.9",
+    "sharp": "latest"
+  }
+}
