@@ -1,5 +1,5 @@
 import { requestWithMetadata } from '@tinacms/astro/data';
-import client from '../../tina/__generated__/client';
+import client from '../../../tina/__generated__/client';
 
 export const getGeneral = () =>
   requestWithMetadata(
