@@ -1,28 +1,123 @@
-fragment GeneralParts on General {
+fragment PageParts on Page {
   __typename
-  seo_title
-  description
-  nav_links {
+  seoTitle
+  blocks {
     __typename
-    label
-    href
-  }
-}
-
-fragment ActsParts on Acts {
-  __typename
-  courses {
-    __typename
-    n
-    numeral
-    time
-    name
-    sense
-    line
-    img
-    imgB
-    accent
-    choice
+    ... on PageBlocksHero {
+      eyebrow
+      miles
+      tagline
+      primaryLabel
+      primaryLink
+      secondaryLabel
+      secondaryLink
+      scrollNote
+      plateImage {
+        __typename
+        src
+        alt
+      }
+    }
+    ... on PageBlocksMarquee {
+      phrases {
+        __typename
+        text
+      }
+    }
+    ... on PageBlocksCourses {
+      eyebrow
+      headline
+      description
+      layout
+      courses {
+        __typename
+        n
+        numeral
+        time
+        name
+        sense
+        line
+        img
+        imgB
+        accent
+        choice
+      }
+    }
+    ... on PageBlocksAssembly {
+      eyebrow
+      caption
+      badge
+      image
+      plateSrc
+      steps {
+        __typename
+        n
+        title
+        text
+      }
+    }
+    ... on PageBlocksStoryPreview {
+      eyebrow
+      headline
+      body1
+      body2
+      estLabel
+      ctaLabel
+      ctaLink
+      image
+      nameplate
+      quote
+    }
+    ... on PageBlocksMenuHeader {
+      eyebrow
+      headline1
+      headline2
+      description
+      background
+    }
+    ... on PageBlocksLetter {
+      eyebrow
+      headline
+      marginNote
+      para1
+      para2
+      signoff
+    }
+    ... on PageBlocksFacts {
+      eyebrow
+      facts {
+        __typename
+        n
+        t
+      }
+    }
+    ... on PageBlocksSuppliers {
+      eyebrow
+      headline
+      hint
+      suppliers {
+        __typename
+        name
+        desc
+        img
+      }
+    }
+    ... on PageBlocksCta {
+      eyebrow
+      headline
+      primaryLabel
+      primaryLink
+      secondaryLabel
+      secondaryLink
+    }
+    ... on PageBlocksVisitIntro {
+      eyebrow
+      headline
+      description
+      note1
+      note2
+      note3
+    }
   }
 }
 
@@ -34,4 +129,28 @@ fragment JournalParts on Journal {
   description
   image
   body
+}
+
+fragment ConfigParts on Config {
+  __typename
+  seo {
+    __typename
+    title
+    description
+  }
+  nav {
+    __typename
+    title
+    link
+  }
+  footer {
+    __typename
+    ctaEyebrow
+    ctaHeadline
+    ctaText
+    phone
+    email
+    address1
+    address2
+  }
 }

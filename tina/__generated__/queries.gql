@@ -1,5 +1,5 @@
-query general($relativePath: String!) {
-  general(relativePath: $relativePath) {
+query page($relativePath: String!) {
+  page(relativePath: $relativePath) {
     ... on Document {
       _sys {
         filename
@@ -12,12 +12,12 @@ query general($relativePath: String!) {
       }
       id
     }
-    ...GeneralParts
+    ...PageParts
   }
 }
 
-query generalConnection($before: String, $after: String, $first: Float, $last: Float, $sort: String, $filter: GeneralFilter) {
-  generalConnection(
+query pageConnection($before: String, $after: String, $first: Float, $last: Float, $sort: String, $filter: PageFilter) {
+  pageConnection(
     before: $before
     after: $after
     first: $first
@@ -47,62 +47,7 @@ query generalConnection($before: String, $after: String, $first: Float, $last: F
           }
           id
         }
-        ...GeneralParts
-      }
-    }
-  }
-}
-
-query acts($relativePath: String!) {
-  acts(relativePath: $relativePath) {
-    ... on Document {
-      _sys {
-        filename
-        basename
-        hasReferences
-        breadcrumbs
-        path
-        relativePath
-        extension
-      }
-      id
-    }
-    ...ActsParts
-  }
-}
-
-query actsConnection($before: String, $after: String, $first: Float, $last: Float, $sort: String, $filter: ActsFilter) {
-  actsConnection(
-    before: $before
-    after: $after
-    first: $first
-    last: $last
-    sort: $sort
-    filter: $filter
-  ) {
-    pageInfo {
-      hasPreviousPage
-      hasNextPage
-      startCursor
-      endCursor
-    }
-    totalCount
-    edges {
-      cursor
-      node {
-        ... on Document {
-          _sys {
-            filename
-            basename
-            hasReferences
-            breadcrumbs
-            path
-            relativePath
-            extension
-          }
-          id
-        }
-        ...ActsParts
+        ...PageParts
       }
     }
   }
@@ -158,6 +103,61 @@ query journalConnection($before: String, $after: String, $first: Float, $last: F
           id
         }
         ...JournalParts
+      }
+    }
+  }
+}
+
+query config($relativePath: String!) {
+  config(relativePath: $relativePath) {
+    ... on Document {
+      _sys {
+        filename
+        basename
+        hasReferences
+        breadcrumbs
+        path
+        relativePath
+        extension
+      }
+      id
+    }
+    ...ConfigParts
+  }
+}
+
+query configConnection($before: String, $after: String, $first: Float, $last: Float, $sort: String, $filter: ConfigFilter) {
+  configConnection(
+    before: $before
+    after: $after
+    first: $first
+    last: $last
+    sort: $sort
+    filter: $filter
+  ) {
+    pageInfo {
+      hasPreviousPage
+      hasNextPage
+      startCursor
+      endCursor
+    }
+    totalCount
+    edges {
+      cursor
+      node {
+        ... on Document {
+          _sys {
+            filename
+            basename
+            hasReferences
+            breadcrumbs
+            path
+            relativePath
+            extension
+          }
+          id
+        }
+        ...ConfigParts
       }
     }
   }

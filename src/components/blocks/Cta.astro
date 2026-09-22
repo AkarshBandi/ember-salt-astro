@@ -1,0 +1,15 @@
+---
+import { tinaField } from '@tinacms/astro/tina-field';
+
+const { data } = Astro.props as { data: any };
+---
+<section style="max-width:760px;margin:0 auto;padding:0 var(--gutter) var(--space-section);text-align:center">
+  <div class="rv">
+    <p class="eyebrow" style="color:var(--brassdeep)" data-tina-field={tinaField(data, 'eyebrow')}>{data?.eyebrow}</p>
+    <p class="font-display" style="font-size:1.4rem;margin-top:10px" data-tina-field={tinaField(data, 'headline')}>{data?.headline}</p>
+    <div style="margin-top:24px;display:flex;flex-wrap:wrap;gap:16px;justify-content:center;align-items:center">
+      <span data-magnetic><a href={data?.primaryLink ?? '/visit/'} class="btn btn-pour btn-pour-dark eyebrow" data-tina-field={tinaField(data, 'primaryLabel')}>{data?.primaryLabel}</a></span>
+      <a href={data?.secondaryLink ?? '/menu/'} class="eyebrow draw-link" style="padding:14px 8px" data-tina-field={tinaField(data, 'secondaryLabel')}>{data?.secondaryLabel}</a>
+    </div>
+  </div>
+</section>

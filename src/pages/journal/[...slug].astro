@@ -1,11 +1,9 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import TinaIsland from '@tinacms/astro/TinaIsland.astro';
-import { tinaField } from '@tinacms/astro/tina-field';
+import BlogBody from '../../components/islands/BlogBody.astro';
 import { getJournal } from '../../lib/tina/data';
 import { islands } from '../../lib/tina/islands';
-import { experimental_createIslandRoute } from '@tinacms/astro/experimental';
-import { islands as islandRegistry } from '../../lib/tina/islands';
 
 export const prerender = false;
 
@@ -14,22 +12,11 @@ if (!slug) return Astro.redirect('/journal/');
 
 const journalResult = await getJournal(slug);
 const journal = journalResult.data?.journal;
+if (!journal) return new Response('Not Found', { status: 404 });
 ---
 
 <Layout title={journal?.title ?? 'Journal'}>
-<TinaIsland name="journal" wrapper={islands.journal.wrapper} params={{ slug }} primary>
-<main class="linen" style="color:var(--ink);padding:160px 0 var(--space-section)">
-  <article style="max-width:720px;margin:0 auto;padding:0 var(--gutter)">
-    <p class="eyebrow" style="color:var(--brassdeep)" data-tina-field={tinaField(journal, 'category')}>{journal?.category} — {journal?.date ? new Date(journal.date).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : ''}</p>
-    <h1 class="font-display" style="font-weight:900;letter-spacing:-0.02em;margin-top:12px;font-size:var(--fs-h2)" data-tina-field={tinaField(journal, 'title')}>{journal?.title}</h1>
-    {journal?.image && <figure style="margin:32px 0;border:1px solid rgba(154,123,69,0.5);padding:8px"><img src={journal.image} alt={journal.title ?? ''} style="width:100%;height:auto" /></figure>}
-    <div class="font-display" style="font-size:1.15rem;line-height:1.9" data-tina-field={tinaField(journal, 'body')}>
-      {journal?.body?.children?.map((child: any) => (
-        <p>{child.children?.map((c: any) => c.text).join('')}</p>
-      ))}
-    </div>
-    <div style="margin-top:48px"><a href="/journal/" class="eyebrow draw-link">&larr; All entries</a></div>
-  </article>
-</main>
-</TinaIsland>
+  <TinaIsland name="journal" wrapper={islands.journal.wrapper} params={{ slug }} primary>
+    <BlogBody data={journal} />
+  </TinaIsland>
 </Layout>

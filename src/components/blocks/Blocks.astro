@@ -1,0 +1,48 @@
+---
+import { tinaField } from '@tinacms/astro/tina-field';
+import Hero from './Hero.astro';
+import Marquee from './Marquee.astro';
+import Courses from './Courses.astro';
+import Assembly from './Assembly.astro';
+import StoryPreview from './StoryPreview.astro';
+import MenuHeader from './MenuHeader.astro';
+import Letter from './Letter.astro';
+import Facts from './Facts.astro';
+import Suppliers from './Suppliers.astro';
+import Cta from './Cta.astro';
+import VisitIntro from './VisitIntro.astro';
+
+const { data } = Astro.props as { data: any };
+const blocks = (data?.blocks ?? []).filter(Boolean);
+---
+{blocks.map((block: any) => {
+  const rendered = (() => {
+    switch (block?.__typename) {
+      case 'PageBlocksHero':
+        return <Hero data={block} />;
+      case 'PageBlocksMarquee':
+        return <Marquee data={block} />;
+      case 'PageBlocksCourses':
+        return <Courses data={block} />;
+      case 'PageBlocksAssembly':
+        return <Assembly data={block} />;
+      case 'PageBlocksStoryPreview':
+        return <StoryPreview data={block} />;
+      case 'PageBlocksMenuHeader':
+        return <MenuHeader data={block} />;
+      case 'PageBlocksLetter':
+        return <Letter data={block} />;
+      case 'PageBlocksFacts':
+        return <Facts data={block} />;
+      case 'PageBlocksSuppliers':
+        return <Suppliers data={block} />;
+      case 'PageBlocksCta':
+        return <Cta data={block} />;
+      case 'PageBlocksVisitIntro':
+        return <VisitIntro data={block} />;
+      default:
+        return null;
+    }
+  })();
+  return <div data-tina-field={tinaField(block)}>{rendered}</div>;
+})}

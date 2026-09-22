@@ -1,0 +1,31 @@
+---
+import { tinaField } from '@tinacms/astro/tina-field';
+
+const { data } = Astro.props as { data: any };
+const items = (data?.suppliers ?? []).filter(Boolean);
+---
+<section style="padding:64px 0 var(--space-section)">
+  <div style="max-width:1240px;margin:0 auto;padding:0 var(--gutter);display:flex;align-items:end;justify-content:space-between;gap:24px">
+    <div>
+      <p class="eyebrow rv" style="color:var(--brassdeep)" data-tina-field={tinaField(data, 'eyebrow')}>{data?.eyebrow}</p>
+      <h2 class="font-display rv" style="font-weight:900;margin-top:12px;font-size:var(--fs-h3)" data-tina-field={tinaField(data, 'headline')}>{data?.headline}</h2>
+    </div>
+    <div class="rv" style="display:flex;gap:8px;flex-shrink:0">
+      <button id="supPrev" aria-label="Previous supplier" style="width:48px;height:48px;border-radius:999px;border:1px solid rgba(34,26,18,0.3);background:none;cursor:pointer;font-size:1.2rem;color:var(--ink)">&larr;</button>
+      <button id="supNext" aria-label="Next supplier" style="width:48px;height:48px;border-radius:999px;border:1px solid rgba(34,26,18,0.3);background:none;cursor:pointer;font-size:1.2rem;color:var(--ink)">&rarr;</button>
+    </div>
+  </div>
+  <div id="supStrip" tabindex="0" role="region" aria-label="Suppliers, scroll sideways" data-lenis-prevent style="margin-top:32px;display:flex;gap:clamp(20px,4vw,48px);overflow-x:auto;scroll-snap-type:x mandatory;padding:8px var(--gutter) 32px;scrollbar-width:none" data-tina-field={tinaField(data, 'suppliers')}>
+    {items.map((f: any, i: number) => (
+      <figure class="rv" style={`flex:0 0 min(76vw,360px);scroll-snap-align:center;margin:0`}>
+        <span style={`display:block;aspect-ratio:1/1;border-radius:999px;padding:16px;background:#FFFFFF;box-shadow:0 24px 60px rgba(34,26,18,0.25);${i % 2 === 1 ? 'transform:rotate(2deg);' : 'transform:rotate(-2deg);'}`}>
+          <span style="display:block;width:100%;height:100%;border-radius:999px;overflow:hidden;border:1px solid rgba(154,123,69,0.55);box-shadow:inset 0 0 0 8px #fff,inset 0 14px 34px rgba(20,18,16,0.3)">
+            <img src={f?.img} alt={f?.name} loading="lazy" draggable="false" style="width:100%;height:100%;object-fit:cover;pointer-events:none" />
+          </span>
+        </span>
+        <figcaption style="padding:20px 8px 0"><p class="font-display" style="font-weight:900;font-size:clamp(1.5rem,2.5vw,2rem);letter-spacing:-0.01em">{f?.name}</p><p class="font-display" style="font-style:italic;font-size:15px;color:var(--ember);margin-top:4px">{f?.desc}</p></figcaption>
+      </figure>
+    ))}
+  </div>
+  <p class="eyebrow" style="text-align:center;color:rgba(34,26,18,0.4)" data-tina-field={tinaField(data, 'hint')}>{data?.hint}</p>
+</section>

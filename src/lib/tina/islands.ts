@@ -1,41 +1,44 @@
 import type { IslandRegistry } from '@tinacms/astro/experimental';
 import type { QueryResult } from '@tinacms/astro/data';
-import type { CmsActs, CmsGeneral } from './data';
-import ActsIsland from '../../components/islands/ActsIsland.astro';
-import GeneralIsland from '../../components/islands/GeneralIsland.astro';
+import type { PageQuery, JournalQuery, ConfigQuery } from '../../../tina/__generated__/types';
+import type { CmsConfig, CmsPage, CmsJournal } from './data';
+import PageBody from '../../components/islands/PageBody.astro';
+import BlogBody from '../../components/islands/BlogBody.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
-import { getActs, getGeneral } from './data';
+import { getPage, getJournal, getConfig } from './data';
 
 export const islands: IslandRegistry = {
-  acts: {
-    fetch: () => getActs(),
-    component: ActsIsland,
-    wrapper: { tag: 'section' },
+  page: {
+    fetch: (_request, params) => getPage(params.get('slug') ?? 'home'),
+    component: PageBody,
+    wrapper: { tag: 'main', className: 'linen' },
     propsFromData: (data) => ({
-      acts: (data as QueryResult<{ acts: CmsActs }>).data?.acts,
+      data: (data as QueryResult<PageQuery>).data?.page as CmsPage | undefined,
     }),
   },
-  general: {
-    fetch: () => getGeneral(),
-    component: GeneralIsland,
+  journal: {
+    fetch: (_request, params) => getJournal(params.get('slug') ?? ''),
+    component: BlogBody,
+    wrapper: { tag: 'article' },
+    propsFromData: (data) => ({
+      data: (data as QueryResult<JournalQuery>).data?.journal as CmsJournal | undefined,
+    }),
+  },
+  global: {
+    fetch: () => getConfig(),
+    component: Header,
     wrapper: { tag: 'div' },
     propsFromData: (data) => ({
-      general: (data as QueryResult<{ general: CmsGeneral }>).data?.general,
+      config: (data as QueryResult<ConfigQuery>).data?.config as CmsConfig | undefined,
     }),
   },
-  header: {
-    fetch: () => getGeneral(),
-    component: Header,
-    wrapper: { tag: 'header' },
-    propsFromData: (data) => ({
-      general: (data as QueryResult<{ general: CmsGeneral }>).data?.general,
-    }),
-  },
-  footer: {
-    fetch: () => getGeneral(),
+  'global-footer': {
+    fetch: () => getConfig(),
     component: Footer,
-    wrapper: { tag: 'footer' },
-    propsFromData: () => ({}),
+    wrapper: { tag: 'div' },
+    propsFromData: (data) => ({
+      config: (data as QueryResult<ConfigQuery>).data?.config as CmsConfig | undefined,
+    }),
   },
 };

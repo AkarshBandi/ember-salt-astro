@@ -84,12 +84,12 @@ export type Query = {
   collections: Array<Collection>;
   node: Node;
   document: DocumentNode;
-  general: General;
-  generalConnection: GeneralConnection;
-  acts: Acts;
-  actsConnection: ActsConnection;
+  page: Page;
+  pageConnection: PageConnection;
   journal: Journal;
   journalConnection: JournalConnection;
+  config: Config;
+  configConnection: ConfigConnection;
 };
 
 
@@ -114,33 +114,18 @@ export type QueryDocumentArgs = {
 };
 
 
-export type QueryGeneralArgs = {
+export type QueryPageArgs = {
   relativePath?: InputMaybe<Scalars['String']['input']>;
 };
 
 
-export type QueryGeneralConnectionArgs = {
+export type QueryPageConnectionArgs = {
   before?: InputMaybe<Scalars['String']['input']>;
   after?: InputMaybe<Scalars['String']['input']>;
   first?: InputMaybe<Scalars['Float']['input']>;
   last?: InputMaybe<Scalars['Float']['input']>;
   sort?: InputMaybe<Scalars['String']['input']>;
-  filter?: InputMaybe<GeneralFilter>;
-};
-
-
-export type QueryActsArgs = {
-  relativePath?: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type QueryActsConnectionArgs = {
-  before?: InputMaybe<Scalars['String']['input']>;
-  after?: InputMaybe<Scalars['String']['input']>;
-  first?: InputMaybe<Scalars['Float']['input']>;
-  last?: InputMaybe<Scalars['Float']['input']>;
-  sort?: InputMaybe<Scalars['String']['input']>;
-  filter?: InputMaybe<ActsFilter>;
+  filter?: InputMaybe<PageFilter>;
 };
 
 
@@ -158,10 +143,25 @@ export type QueryJournalConnectionArgs = {
   filter?: InputMaybe<JournalFilter>;
 };
 
+
+export type QueryConfigArgs = {
+  relativePath?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryConfigConnectionArgs = {
+  before?: InputMaybe<Scalars['String']['input']>;
+  after?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Float']['input']>;
+  last?: InputMaybe<Scalars['Float']['input']>;
+  sort?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<ConfigFilter>;
+};
+
 export type DocumentFilter = {
-  general?: InputMaybe<GeneralFilter>;
-  acts?: InputMaybe<ActsFilter>;
+  page?: InputMaybe<PageFilter>;
   journal?: InputMaybe<JournalFilter>;
+  config?: InputMaybe<ConfigFilter>;
 };
 
 export type DocumentConnectionEdges = {
@@ -201,57 +201,39 @@ export type CollectionDocumentsArgs = {
   folder?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type DocumentNode = General | Acts | Journal | Folder;
+export type DocumentNode = Page | Journal | Config | Folder;
 
-export type GeneralNav_Links = {
-  __typename?: 'GeneralNav_links';
-  label?: Maybe<Scalars['String']['output']>;
-  href?: Maybe<Scalars['String']['output']>;
+export type PageBlocksHeroPlateImage = {
+  __typename?: 'PageBlocksHeroPlateImage';
+  src?: Maybe<Scalars['String']['output']>;
+  alt?: Maybe<Scalars['String']['output']>;
 };
 
-export type General = Node & Document & {
-  __typename?: 'General';
-  seo_title?: Maybe<Scalars['String']['output']>;
-  description?: Maybe<Scalars['String']['output']>;
-  nav_links?: Maybe<Array<Maybe<GeneralNav_Links>>>;
-  id: Scalars['ID']['output'];
-  _sys: SystemInfo;
-  _values: Scalars['JSON']['output'];
+export type PageBlocksHero = {
+  __typename?: 'PageBlocksHero';
+  eyebrow?: Maybe<Scalars['String']['output']>;
+  miles?: Maybe<Scalars['String']['output']>;
+  tagline?: Maybe<Scalars['String']['output']>;
+  primaryLabel?: Maybe<Scalars['String']['output']>;
+  primaryLink?: Maybe<Scalars['String']['output']>;
+  secondaryLabel?: Maybe<Scalars['String']['output']>;
+  secondaryLink?: Maybe<Scalars['String']['output']>;
+  scrollNote?: Maybe<Scalars['String']['output']>;
+  plateImage?: Maybe<PageBlocksHeroPlateImage>;
 };
 
-export type StringFilter = {
-  startsWith?: InputMaybe<Scalars['String']['input']>;
-  eq?: InputMaybe<Scalars['String']['input']>;
-  exists?: InputMaybe<Scalars['Boolean']['input']>;
-  in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+export type PageBlocksMarqueePhrases = {
+  __typename?: 'PageBlocksMarqueePhrases';
+  text?: Maybe<Scalars['String']['output']>;
 };
 
-export type GeneralNav_LinksFilter = {
-  label?: InputMaybe<StringFilter>;
-  href?: InputMaybe<StringFilter>;
+export type PageBlocksMarquee = {
+  __typename?: 'PageBlocksMarquee';
+  phrases?: Maybe<Array<Maybe<PageBlocksMarqueePhrases>>>;
 };
 
-export type GeneralFilter = {
-  seo_title?: InputMaybe<StringFilter>;
-  description?: InputMaybe<StringFilter>;
-  nav_links?: InputMaybe<GeneralNav_LinksFilter>;
-};
-
-export type GeneralConnectionEdges = {
-  __typename?: 'GeneralConnectionEdges';
-  cursor: Scalars['String']['output'];
-  node?: Maybe<General>;
-};
-
-export type GeneralConnection = Connection & {
-  __typename?: 'GeneralConnection';
-  pageInfo: PageInfo;
-  totalCount: Scalars['Float']['output'];
-  edges?: Maybe<Array<Maybe<GeneralConnectionEdges>>>;
-};
-
-export type ActsCourses = {
-  __typename?: 'ActsCourses';
+export type PageBlocksCoursesCourses = {
+  __typename?: 'PageBlocksCoursesCourses';
   n?: Maybe<Scalars['String']['output']>;
   numeral?: Maybe<Scalars['String']['output']>;
   time?: Maybe<Scalars['String']['output']>;
@@ -264,12 +246,128 @@ export type ActsCourses = {
   choice?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
 };
 
-export type Acts = Node & Document & {
-  __typename?: 'Acts';
-  courses?: Maybe<Array<Maybe<ActsCourses>>>;
+export type PageBlocksCourses = {
+  __typename?: 'PageBlocksCourses';
+  eyebrow?: Maybe<Scalars['String']['output']>;
+  headline?: Maybe<Scalars['String']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  layout?: Maybe<Scalars['String']['output']>;
+  courses?: Maybe<Array<Maybe<PageBlocksCoursesCourses>>>;
+};
+
+export type PageBlocksAssemblySteps = {
+  __typename?: 'PageBlocksAssemblySteps';
+  n?: Maybe<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+  text?: Maybe<Scalars['String']['output']>;
+};
+
+export type PageBlocksAssembly = {
+  __typename?: 'PageBlocksAssembly';
+  eyebrow?: Maybe<Scalars['String']['output']>;
+  caption?: Maybe<Scalars['String']['output']>;
+  badge?: Maybe<Scalars['String']['output']>;
+  image?: Maybe<Scalars['String']['output']>;
+  plateSrc?: Maybe<Scalars['String']['output']>;
+  steps?: Maybe<Array<Maybe<PageBlocksAssemblySteps>>>;
+};
+
+export type PageBlocksStoryPreview = {
+  __typename?: 'PageBlocksStoryPreview';
+  eyebrow?: Maybe<Scalars['String']['output']>;
+  headline?: Maybe<Scalars['String']['output']>;
+  body1?: Maybe<Scalars['String']['output']>;
+  body2?: Maybe<Scalars['String']['output']>;
+  estLabel?: Maybe<Scalars['String']['output']>;
+  ctaLabel?: Maybe<Scalars['String']['output']>;
+  ctaLink?: Maybe<Scalars['String']['output']>;
+  image?: Maybe<Scalars['String']['output']>;
+  nameplate?: Maybe<Scalars['String']['output']>;
+  quote?: Maybe<Scalars['String']['output']>;
+};
+
+export type PageBlocksMenuHeader = {
+  __typename?: 'PageBlocksMenuHeader';
+  eyebrow?: Maybe<Scalars['String']['output']>;
+  headline1?: Maybe<Scalars['String']['output']>;
+  headline2?: Maybe<Scalars['String']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  background?: Maybe<Scalars['String']['output']>;
+};
+
+export type PageBlocksLetter = {
+  __typename?: 'PageBlocksLetter';
+  eyebrow?: Maybe<Scalars['String']['output']>;
+  headline?: Maybe<Scalars['String']['output']>;
+  marginNote?: Maybe<Scalars['String']['output']>;
+  para1?: Maybe<Scalars['String']['output']>;
+  para2?: Maybe<Scalars['String']['output']>;
+  signoff?: Maybe<Scalars['String']['output']>;
+};
+
+export type PageBlocksFactsFacts = {
+  __typename?: 'PageBlocksFactsFacts';
+  n?: Maybe<Scalars['String']['output']>;
+  t?: Maybe<Scalars['String']['output']>;
+};
+
+export type PageBlocksFacts = {
+  __typename?: 'PageBlocksFacts';
+  eyebrow?: Maybe<Scalars['String']['output']>;
+  facts?: Maybe<Array<Maybe<PageBlocksFactsFacts>>>;
+};
+
+export type PageBlocksSuppliersSuppliers = {
+  __typename?: 'PageBlocksSuppliersSuppliers';
+  name?: Maybe<Scalars['String']['output']>;
+  desc?: Maybe<Scalars['String']['output']>;
+  img?: Maybe<Scalars['String']['output']>;
+};
+
+export type PageBlocksSuppliers = {
+  __typename?: 'PageBlocksSuppliers';
+  eyebrow?: Maybe<Scalars['String']['output']>;
+  headline?: Maybe<Scalars['String']['output']>;
+  hint?: Maybe<Scalars['String']['output']>;
+  suppliers?: Maybe<Array<Maybe<PageBlocksSuppliersSuppliers>>>;
+};
+
+export type PageBlocksCta = {
+  __typename?: 'PageBlocksCta';
+  eyebrow?: Maybe<Scalars['String']['output']>;
+  headline?: Maybe<Scalars['String']['output']>;
+  primaryLabel?: Maybe<Scalars['String']['output']>;
+  primaryLink?: Maybe<Scalars['String']['output']>;
+  secondaryLabel?: Maybe<Scalars['String']['output']>;
+  secondaryLink?: Maybe<Scalars['String']['output']>;
+};
+
+export type PageBlocksVisitIntro = {
+  __typename?: 'PageBlocksVisitIntro';
+  eyebrow?: Maybe<Scalars['String']['output']>;
+  headline?: Maybe<Scalars['String']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  note1?: Maybe<Scalars['String']['output']>;
+  note2?: Maybe<Scalars['String']['output']>;
+  note3?: Maybe<Scalars['String']['output']>;
+};
+
+export type PageBlocks = PageBlocksHero | PageBlocksMarquee | PageBlocksCourses | PageBlocksAssembly | PageBlocksStoryPreview | PageBlocksMenuHeader | PageBlocksLetter | PageBlocksFacts | PageBlocksSuppliers | PageBlocksCta | PageBlocksVisitIntro;
+
+export type Page = Node & Document & {
+  __typename?: 'Page';
+  seoTitle: Scalars['String']['output'];
+  blocks?: Maybe<Array<Maybe<PageBlocks>>>;
   id: Scalars['ID']['output'];
   _sys: SystemInfo;
   _values: Scalars['JSON']['output'];
+};
+
+export type StringFilter = {
+  startsWith?: InputMaybe<Scalars['String']['input']>;
+  eq?: InputMaybe<Scalars['String']['input']>;
+  exists?: InputMaybe<Scalars['Boolean']['input']>;
+  in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
 export type ImageFilter = {
@@ -279,7 +377,32 @@ export type ImageFilter = {
   in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
-export type ActsCoursesFilter = {
+export type PageBlocksHeroPlateImageFilter = {
+  src?: InputMaybe<ImageFilter>;
+  alt?: InputMaybe<StringFilter>;
+};
+
+export type PageBlocksHeroFilter = {
+  eyebrow?: InputMaybe<StringFilter>;
+  miles?: InputMaybe<StringFilter>;
+  tagline?: InputMaybe<StringFilter>;
+  primaryLabel?: InputMaybe<StringFilter>;
+  primaryLink?: InputMaybe<StringFilter>;
+  secondaryLabel?: InputMaybe<StringFilter>;
+  secondaryLink?: InputMaybe<StringFilter>;
+  scrollNote?: InputMaybe<StringFilter>;
+  plateImage?: InputMaybe<PageBlocksHeroPlateImageFilter>;
+};
+
+export type PageBlocksMarqueePhrasesFilter = {
+  text?: InputMaybe<StringFilter>;
+};
+
+export type PageBlocksMarqueeFilter = {
+  phrases?: InputMaybe<PageBlocksMarqueePhrasesFilter>;
+};
+
+export type PageBlocksCoursesCoursesFilter = {
   n?: InputMaybe<StringFilter>;
   numeral?: InputMaybe<StringFilter>;
   time?: InputMaybe<StringFilter>;
@@ -292,21 +415,130 @@ export type ActsCoursesFilter = {
   choice?: InputMaybe<StringFilter>;
 };
 
-export type ActsFilter = {
-  courses?: InputMaybe<ActsCoursesFilter>;
+export type PageBlocksCoursesFilter = {
+  eyebrow?: InputMaybe<StringFilter>;
+  headline?: InputMaybe<StringFilter>;
+  description?: InputMaybe<StringFilter>;
+  layout?: InputMaybe<StringFilter>;
+  courses?: InputMaybe<PageBlocksCoursesCoursesFilter>;
 };
 
-export type ActsConnectionEdges = {
-  __typename?: 'ActsConnectionEdges';
+export type PageBlocksAssemblyStepsFilter = {
+  n?: InputMaybe<StringFilter>;
+  title?: InputMaybe<StringFilter>;
+  text?: InputMaybe<StringFilter>;
+};
+
+export type PageBlocksAssemblyFilter = {
+  eyebrow?: InputMaybe<StringFilter>;
+  caption?: InputMaybe<StringFilter>;
+  badge?: InputMaybe<StringFilter>;
+  image?: InputMaybe<ImageFilter>;
+  plateSrc?: InputMaybe<ImageFilter>;
+  steps?: InputMaybe<PageBlocksAssemblyStepsFilter>;
+};
+
+export type PageBlocksStoryPreviewFilter = {
+  eyebrow?: InputMaybe<StringFilter>;
+  headline?: InputMaybe<StringFilter>;
+  body1?: InputMaybe<StringFilter>;
+  body2?: InputMaybe<StringFilter>;
+  estLabel?: InputMaybe<StringFilter>;
+  ctaLabel?: InputMaybe<StringFilter>;
+  ctaLink?: InputMaybe<StringFilter>;
+  image?: InputMaybe<ImageFilter>;
+  nameplate?: InputMaybe<StringFilter>;
+  quote?: InputMaybe<StringFilter>;
+};
+
+export type PageBlocksMenuHeaderFilter = {
+  eyebrow?: InputMaybe<StringFilter>;
+  headline1?: InputMaybe<StringFilter>;
+  headline2?: InputMaybe<StringFilter>;
+  description?: InputMaybe<StringFilter>;
+  background?: InputMaybe<ImageFilter>;
+};
+
+export type PageBlocksLetterFilter = {
+  eyebrow?: InputMaybe<StringFilter>;
+  headline?: InputMaybe<StringFilter>;
+  marginNote?: InputMaybe<StringFilter>;
+  para1?: InputMaybe<StringFilter>;
+  para2?: InputMaybe<StringFilter>;
+  signoff?: InputMaybe<StringFilter>;
+};
+
+export type PageBlocksFactsFactsFilter = {
+  n?: InputMaybe<StringFilter>;
+  t?: InputMaybe<StringFilter>;
+};
+
+export type PageBlocksFactsFilter = {
+  eyebrow?: InputMaybe<StringFilter>;
+  facts?: InputMaybe<PageBlocksFactsFactsFilter>;
+};
+
+export type PageBlocksSuppliersSuppliersFilter = {
+  name?: InputMaybe<StringFilter>;
+  desc?: InputMaybe<StringFilter>;
+  img?: InputMaybe<ImageFilter>;
+};
+
+export type PageBlocksSuppliersFilter = {
+  eyebrow?: InputMaybe<StringFilter>;
+  headline?: InputMaybe<StringFilter>;
+  hint?: InputMaybe<StringFilter>;
+  suppliers?: InputMaybe<PageBlocksSuppliersSuppliersFilter>;
+};
+
+export type PageBlocksCtaFilter = {
+  eyebrow?: InputMaybe<StringFilter>;
+  headline?: InputMaybe<StringFilter>;
+  primaryLabel?: InputMaybe<StringFilter>;
+  primaryLink?: InputMaybe<StringFilter>;
+  secondaryLabel?: InputMaybe<StringFilter>;
+  secondaryLink?: InputMaybe<StringFilter>;
+};
+
+export type PageBlocksVisitIntroFilter = {
+  eyebrow?: InputMaybe<StringFilter>;
+  headline?: InputMaybe<StringFilter>;
+  description?: InputMaybe<StringFilter>;
+  note1?: InputMaybe<StringFilter>;
+  note2?: InputMaybe<StringFilter>;
+  note3?: InputMaybe<StringFilter>;
+};
+
+export type PageBlocksFilter = {
+  hero?: InputMaybe<PageBlocksHeroFilter>;
+  marquee?: InputMaybe<PageBlocksMarqueeFilter>;
+  courses?: InputMaybe<PageBlocksCoursesFilter>;
+  assembly?: InputMaybe<PageBlocksAssemblyFilter>;
+  storyPreview?: InputMaybe<PageBlocksStoryPreviewFilter>;
+  menuHeader?: InputMaybe<PageBlocksMenuHeaderFilter>;
+  letter?: InputMaybe<PageBlocksLetterFilter>;
+  facts?: InputMaybe<PageBlocksFactsFilter>;
+  suppliers?: InputMaybe<PageBlocksSuppliersFilter>;
+  cta?: InputMaybe<PageBlocksCtaFilter>;
+  visitIntro?: InputMaybe<PageBlocksVisitIntroFilter>;
+};
+
+export type PageFilter = {
+  seoTitle?: InputMaybe<StringFilter>;
+  blocks?: InputMaybe<PageBlocksFilter>;
+};
+
+export type PageConnectionEdges = {
+  __typename?: 'PageConnectionEdges';
   cursor: Scalars['String']['output'];
-  node?: Maybe<Acts>;
+  node?: Maybe<Page>;
 };
 
-export type ActsConnection = Connection & {
-  __typename?: 'ActsConnection';
+export type PageConnection = Connection & {
+  __typename?: 'PageConnection';
   pageInfo: PageInfo;
   totalCount: Scalars['Float']['output'];
-  edges?: Maybe<Array<Maybe<ActsConnectionEdges>>>;
+  edges?: Maybe<Array<Maybe<PageConnectionEdges>>>;
 };
 
 export type Journal = Node & Document & {
@@ -358,6 +590,78 @@ export type JournalConnection = Connection & {
   edges?: Maybe<Array<Maybe<JournalConnectionEdges>>>;
 };
 
+export type ConfigSeo = {
+  __typename?: 'ConfigSeo';
+  title: Scalars['String']['output'];
+  description: Scalars['String']['output'];
+};
+
+export type ConfigNav = {
+  __typename?: 'ConfigNav';
+  title: Scalars['String']['output'];
+  link: Scalars['String']['output'];
+};
+
+export type ConfigFooter = {
+  __typename?: 'ConfigFooter';
+  ctaEyebrow?: Maybe<Scalars['String']['output']>;
+  ctaHeadline?: Maybe<Scalars['String']['output']>;
+  ctaText?: Maybe<Scalars['String']['output']>;
+  phone?: Maybe<Scalars['String']['output']>;
+  email?: Maybe<Scalars['String']['output']>;
+  address1?: Maybe<Scalars['String']['output']>;
+  address2?: Maybe<Scalars['String']['output']>;
+};
+
+export type Config = Node & Document & {
+  __typename?: 'Config';
+  seo?: Maybe<ConfigSeo>;
+  nav?: Maybe<Array<Maybe<ConfigNav>>>;
+  footer?: Maybe<ConfigFooter>;
+  id: Scalars['ID']['output'];
+  _sys: SystemInfo;
+  _values: Scalars['JSON']['output'];
+};
+
+export type ConfigSeoFilter = {
+  title?: InputMaybe<StringFilter>;
+  description?: InputMaybe<StringFilter>;
+};
+
+export type ConfigNavFilter = {
+  title?: InputMaybe<StringFilter>;
+  link?: InputMaybe<StringFilter>;
+};
+
+export type ConfigFooterFilter = {
+  ctaEyebrow?: InputMaybe<StringFilter>;
+  ctaHeadline?: InputMaybe<StringFilter>;
+  ctaText?: InputMaybe<StringFilter>;
+  phone?: InputMaybe<StringFilter>;
+  email?: InputMaybe<StringFilter>;
+  address1?: InputMaybe<StringFilter>;
+  address2?: InputMaybe<StringFilter>;
+};
+
+export type ConfigFilter = {
+  seo?: InputMaybe<ConfigSeoFilter>;
+  nav?: InputMaybe<ConfigNavFilter>;
+  footer?: InputMaybe<ConfigFooterFilter>;
+};
+
+export type ConfigConnectionEdges = {
+  __typename?: 'ConfigConnectionEdges';
+  cursor: Scalars['String']['output'];
+  node?: Maybe<Config>;
+};
+
+export type ConfigConnection = Connection & {
+  __typename?: 'ConfigConnection';
+  pageInfo: PageInfo;
+  totalCount: Scalars['Float']['output'];
+  edges?: Maybe<Array<Maybe<ConfigConnectionEdges>>>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   addPendingDocument: DocumentNode;
@@ -365,12 +669,12 @@ export type Mutation = {
   deleteDocument: DocumentNode;
   createDocument: DocumentNode;
   createFolder: DocumentNode;
-  updateGeneral: General;
-  createGeneral: General;
-  updateActs: Acts;
-  createActs: Acts;
+  updatePage: Page;
+  createPage: Page;
   updateJournal: Journal;
   createJournal: Journal;
+  updateConfig: Config;
+  createConfig: Config;
 };
 
 
@@ -407,27 +711,15 @@ export type MutationCreateFolderArgs = {
 };
 
 
-export type MutationUpdateGeneralArgs = {
+export type MutationUpdatePageArgs = {
   relativePath: Scalars['String']['input'];
-  params: GeneralMutation;
+  params: PageMutation;
 };
 
 
-export type MutationCreateGeneralArgs = {
+export type MutationCreatePageArgs = {
   relativePath: Scalars['String']['input'];
-  params: GeneralMutation;
-};
-
-
-export type MutationUpdateActsArgs = {
-  relativePath: Scalars['String']['input'];
-  params: ActsMutation;
-};
-
-
-export type MutationCreateActsArgs = {
-  relativePath: Scalars['String']['input'];
-  params: ActsMutation;
+  params: PageMutation;
 };
 
 
@@ -442,31 +734,57 @@ export type MutationCreateJournalArgs = {
   params: JournalMutation;
 };
 
+
+export type MutationUpdateConfigArgs = {
+  relativePath: Scalars['String']['input'];
+  params: ConfigMutation;
+};
+
+
+export type MutationCreateConfigArgs = {
+  relativePath: Scalars['String']['input'];
+  params: ConfigMutation;
+};
+
 export type DocumentUpdateMutation = {
-  general?: InputMaybe<GeneralMutation>;
-  acts?: InputMaybe<ActsMutation>;
+  page?: InputMaybe<PageMutation>;
   journal?: InputMaybe<JournalMutation>;
+  config?: InputMaybe<ConfigMutation>;
   relativePath?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type DocumentMutation = {
-  general?: InputMaybe<GeneralMutation>;
-  acts?: InputMaybe<ActsMutation>;
+  page?: InputMaybe<PageMutation>;
   journal?: InputMaybe<JournalMutation>;
+  config?: InputMaybe<ConfigMutation>;
 };
 
-export type GeneralNav_LinksMutation = {
-  label?: InputMaybe<Scalars['String']['input']>;
-  href?: InputMaybe<Scalars['String']['input']>;
+export type PageBlocksHeroPlateImageMutation = {
+  src?: InputMaybe<Scalars['String']['input']>;
+  alt?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type GeneralMutation = {
-  seo_title?: InputMaybe<Scalars['String']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
-  nav_links?: InputMaybe<Array<InputMaybe<GeneralNav_LinksMutation>>>;
+export type PageBlocksHeroMutation = {
+  eyebrow?: InputMaybe<Scalars['String']['input']>;
+  miles?: InputMaybe<Scalars['String']['input']>;
+  tagline?: InputMaybe<Scalars['String']['input']>;
+  primaryLabel?: InputMaybe<Scalars['String']['input']>;
+  primaryLink?: InputMaybe<Scalars['String']['input']>;
+  secondaryLabel?: InputMaybe<Scalars['String']['input']>;
+  secondaryLink?: InputMaybe<Scalars['String']['input']>;
+  scrollNote?: InputMaybe<Scalars['String']['input']>;
+  plateImage?: InputMaybe<PageBlocksHeroPlateImageMutation>;
 };
 
-export type ActsCoursesMutation = {
+export type PageBlocksMarqueePhrasesMutation = {
+  text?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type PageBlocksMarqueeMutation = {
+  phrases?: InputMaybe<Array<InputMaybe<PageBlocksMarqueePhrasesMutation>>>;
+};
+
+export type PageBlocksCoursesCoursesMutation = {
   n?: InputMaybe<Scalars['String']['input']>;
   numeral?: InputMaybe<Scalars['String']['input']>;
   time?: InputMaybe<Scalars['String']['input']>;
@@ -479,8 +797,117 @@ export type ActsCoursesMutation = {
   choice?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
-export type ActsMutation = {
-  courses?: InputMaybe<Array<InputMaybe<ActsCoursesMutation>>>;
+export type PageBlocksCoursesMutation = {
+  eyebrow?: InputMaybe<Scalars['String']['input']>;
+  headline?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  layout?: InputMaybe<Scalars['String']['input']>;
+  courses?: InputMaybe<Array<InputMaybe<PageBlocksCoursesCoursesMutation>>>;
+};
+
+export type PageBlocksAssemblyStepsMutation = {
+  n?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  text?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type PageBlocksAssemblyMutation = {
+  eyebrow?: InputMaybe<Scalars['String']['input']>;
+  caption?: InputMaybe<Scalars['String']['input']>;
+  badge?: InputMaybe<Scalars['String']['input']>;
+  image?: InputMaybe<Scalars['String']['input']>;
+  plateSrc?: InputMaybe<Scalars['String']['input']>;
+  steps?: InputMaybe<Array<InputMaybe<PageBlocksAssemblyStepsMutation>>>;
+};
+
+export type PageBlocksStoryPreviewMutation = {
+  eyebrow?: InputMaybe<Scalars['String']['input']>;
+  headline?: InputMaybe<Scalars['String']['input']>;
+  body1?: InputMaybe<Scalars['String']['input']>;
+  body2?: InputMaybe<Scalars['String']['input']>;
+  estLabel?: InputMaybe<Scalars['String']['input']>;
+  ctaLabel?: InputMaybe<Scalars['String']['input']>;
+  ctaLink?: InputMaybe<Scalars['String']['input']>;
+  image?: InputMaybe<Scalars['String']['input']>;
+  nameplate?: InputMaybe<Scalars['String']['input']>;
+  quote?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type PageBlocksMenuHeaderMutation = {
+  eyebrow?: InputMaybe<Scalars['String']['input']>;
+  headline1?: InputMaybe<Scalars['String']['input']>;
+  headline2?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  background?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type PageBlocksLetterMutation = {
+  eyebrow?: InputMaybe<Scalars['String']['input']>;
+  headline?: InputMaybe<Scalars['String']['input']>;
+  marginNote?: InputMaybe<Scalars['String']['input']>;
+  para1?: InputMaybe<Scalars['String']['input']>;
+  para2?: InputMaybe<Scalars['String']['input']>;
+  signoff?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type PageBlocksFactsFactsMutation = {
+  n?: InputMaybe<Scalars['String']['input']>;
+  t?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type PageBlocksFactsMutation = {
+  eyebrow?: InputMaybe<Scalars['String']['input']>;
+  facts?: InputMaybe<Array<InputMaybe<PageBlocksFactsFactsMutation>>>;
+};
+
+export type PageBlocksSuppliersSuppliersMutation = {
+  name?: InputMaybe<Scalars['String']['input']>;
+  desc?: InputMaybe<Scalars['String']['input']>;
+  img?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type PageBlocksSuppliersMutation = {
+  eyebrow?: InputMaybe<Scalars['String']['input']>;
+  headline?: InputMaybe<Scalars['String']['input']>;
+  hint?: InputMaybe<Scalars['String']['input']>;
+  suppliers?: InputMaybe<Array<InputMaybe<PageBlocksSuppliersSuppliersMutation>>>;
+};
+
+export type PageBlocksCtaMutation = {
+  eyebrow?: InputMaybe<Scalars['String']['input']>;
+  headline?: InputMaybe<Scalars['String']['input']>;
+  primaryLabel?: InputMaybe<Scalars['String']['input']>;
+  primaryLink?: InputMaybe<Scalars['String']['input']>;
+  secondaryLabel?: InputMaybe<Scalars['String']['input']>;
+  secondaryLink?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type PageBlocksVisitIntroMutation = {
+  eyebrow?: InputMaybe<Scalars['String']['input']>;
+  headline?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  note1?: InputMaybe<Scalars['String']['input']>;
+  note2?: InputMaybe<Scalars['String']['input']>;
+  note3?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type PageBlocksMutation = {
+  hero?: InputMaybe<PageBlocksHeroMutation>;
+  marquee?: InputMaybe<PageBlocksMarqueeMutation>;
+  courses?: InputMaybe<PageBlocksCoursesMutation>;
+  assembly?: InputMaybe<PageBlocksAssemblyMutation>;
+  storyPreview?: InputMaybe<PageBlocksStoryPreviewMutation>;
+  menuHeader?: InputMaybe<PageBlocksMenuHeaderMutation>;
+  letter?: InputMaybe<PageBlocksLetterMutation>;
+  facts?: InputMaybe<PageBlocksFactsMutation>;
+  suppliers?: InputMaybe<PageBlocksSuppliersMutation>;
+  cta?: InputMaybe<PageBlocksCtaMutation>;
+  visitIntro?: InputMaybe<PageBlocksVisitIntroMutation>;
+};
+
+export type PageMutation = {
+  seoTitle?: InputMaybe<Scalars['String']['input']>;
+  blocks?: InputMaybe<Array<InputMaybe<PageBlocksMutation>>>;
 };
 
 export type JournalMutation = {
@@ -492,22 +919,37 @@ export type JournalMutation = {
   body?: InputMaybe<Scalars['RichText']['input']>;
 };
 
+export type ConfigSeoMutation = {
+  title?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type ConfigNavMutation = {
+  title?: InputMaybe<Scalars['String']['input']>;
+  link?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type ConfigFooterMutation = {
+  ctaEyebrow?: InputMaybe<Scalars['String']['input']>;
+  ctaHeadline?: InputMaybe<Scalars['String']['input']>;
+  ctaText?: InputMaybe<Scalars['String']['input']>;
+  phone?: InputMaybe<Scalars['String']['input']>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  address1?: InputMaybe<Scalars['String']['input']>;
+  address2?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type ConfigMutation = {
+  seo?: InputMaybe<ConfigSeoMutation>;
+  nav?: InputMaybe<Array<InputMaybe<ConfigNavMutation>>>;
+  footer?: InputMaybe<ConfigFooterMutation>;
+};
+
 export type StringFilter = {
   startsWith?: string | null | undefined;
   eq?: string | null | undefined;
   exists?: boolean | null | undefined;
   in?: Array<string | null | undefined> | null | undefined;
-};
-
-export type GeneralNav_LinksFilter = {
-  label?: StringFilter | null | undefined;
-  href?: StringFilter | null | undefined;
-};
-
-export type GeneralFilter = {
-  seo_title?: StringFilter | null | undefined;
-  description?: StringFilter | null | undefined;
-  nav_links?: GeneralNav_LinksFilter | null | undefined;
 };
 
 export type ImageFilter = {
@@ -517,7 +959,32 @@ export type ImageFilter = {
   in?: Array<string | null | undefined> | null | undefined;
 };
 
-export type ActsCoursesFilter = {
+export type PageBlocksHeroPlateImageFilter = {
+  src?: ImageFilter | null | undefined;
+  alt?: StringFilter | null | undefined;
+};
+
+export type PageBlocksHeroFilter = {
+  eyebrow?: StringFilter | null | undefined;
+  miles?: StringFilter | null | undefined;
+  tagline?: StringFilter | null | undefined;
+  primaryLabel?: StringFilter | null | undefined;
+  primaryLink?: StringFilter | null | undefined;
+  secondaryLabel?: StringFilter | null | undefined;
+  secondaryLink?: StringFilter | null | undefined;
+  scrollNote?: StringFilter | null | undefined;
+  plateImage?: PageBlocksHeroPlateImageFilter | null | undefined;
+};
+
+export type PageBlocksMarqueePhrasesFilter = {
+  text?: StringFilter | null | undefined;
+};
+
+export type PageBlocksMarqueeFilter = {
+  phrases?: PageBlocksMarqueePhrasesFilter | null | undefined;
+};
+
+export type PageBlocksCoursesCoursesFilter = {
   n?: StringFilter | null | undefined;
   numeral?: StringFilter | null | undefined;
   time?: StringFilter | null | undefined;
@@ -530,8 +997,117 @@ export type ActsCoursesFilter = {
   choice?: StringFilter | null | undefined;
 };
 
-export type ActsFilter = {
-  courses?: ActsCoursesFilter | null | undefined;
+export type PageBlocksCoursesFilter = {
+  eyebrow?: StringFilter | null | undefined;
+  headline?: StringFilter | null | undefined;
+  description?: StringFilter | null | undefined;
+  layout?: StringFilter | null | undefined;
+  courses?: PageBlocksCoursesCoursesFilter | null | undefined;
+};
+
+export type PageBlocksAssemblyStepsFilter = {
+  n?: StringFilter | null | undefined;
+  title?: StringFilter | null | undefined;
+  text?: StringFilter | null | undefined;
+};
+
+export type PageBlocksAssemblyFilter = {
+  eyebrow?: StringFilter | null | undefined;
+  caption?: StringFilter | null | undefined;
+  badge?: StringFilter | null | undefined;
+  image?: ImageFilter | null | undefined;
+  plateSrc?: ImageFilter | null | undefined;
+  steps?: PageBlocksAssemblyStepsFilter | null | undefined;
+};
+
+export type PageBlocksStoryPreviewFilter = {
+  eyebrow?: StringFilter | null | undefined;
+  headline?: StringFilter | null | undefined;
+  body1?: StringFilter | null | undefined;
+  body2?: StringFilter | null | undefined;
+  estLabel?: StringFilter | null | undefined;
+  ctaLabel?: StringFilter | null | undefined;
+  ctaLink?: StringFilter | null | undefined;
+  image?: ImageFilter | null | undefined;
+  nameplate?: StringFilter | null | undefined;
+  quote?: StringFilter | null | undefined;
+};
+
+export type PageBlocksMenuHeaderFilter = {
+  eyebrow?: StringFilter | null | undefined;
+  headline1?: StringFilter | null | undefined;
+  headline2?: StringFilter | null | undefined;
+  description?: StringFilter | null | undefined;
+  background?: ImageFilter | null | undefined;
+};
+
+export type PageBlocksLetterFilter = {
+  eyebrow?: StringFilter | null | undefined;
+  headline?: StringFilter | null | undefined;
+  marginNote?: StringFilter | null | undefined;
+  para1?: StringFilter | null | undefined;
+  para2?: StringFilter | null | undefined;
+  signoff?: StringFilter | null | undefined;
+};
+
+export type PageBlocksFactsFactsFilter = {
+  n?: StringFilter | null | undefined;
+  t?: StringFilter | null | undefined;
+};
+
+export type PageBlocksFactsFilter = {
+  eyebrow?: StringFilter | null | undefined;
+  facts?: PageBlocksFactsFactsFilter | null | undefined;
+};
+
+export type PageBlocksSuppliersSuppliersFilter = {
+  name?: StringFilter | null | undefined;
+  desc?: StringFilter | null | undefined;
+  img?: ImageFilter | null | undefined;
+};
+
+export type PageBlocksSuppliersFilter = {
+  eyebrow?: StringFilter | null | undefined;
+  headline?: StringFilter | null | undefined;
+  hint?: StringFilter | null | undefined;
+  suppliers?: PageBlocksSuppliersSuppliersFilter | null | undefined;
+};
+
+export type PageBlocksCtaFilter = {
+  eyebrow?: StringFilter | null | undefined;
+  headline?: StringFilter | null | undefined;
+  primaryLabel?: StringFilter | null | undefined;
+  primaryLink?: StringFilter | null | undefined;
+  secondaryLabel?: StringFilter | null | undefined;
+  secondaryLink?: StringFilter | null | undefined;
+};
+
+export type PageBlocksVisitIntroFilter = {
+  eyebrow?: StringFilter | null | undefined;
+  headline?: StringFilter | null | undefined;
+  description?: StringFilter | null | undefined;
+  note1?: StringFilter | null | undefined;
+  note2?: StringFilter | null | undefined;
+  note3?: StringFilter | null | undefined;
+};
+
+export type PageBlocksFilter = {
+  hero?: PageBlocksHeroFilter | null | undefined;
+  marquee?: PageBlocksMarqueeFilter | null | undefined;
+  courses?: PageBlocksCoursesFilter | null | undefined;
+  assembly?: PageBlocksAssemblyFilter | null | undefined;
+  storyPreview?: PageBlocksStoryPreviewFilter | null | undefined;
+  menuHeader?: PageBlocksMenuHeaderFilter | null | undefined;
+  letter?: PageBlocksLetterFilter | null | undefined;
+  facts?: PageBlocksFactsFilter | null | undefined;
+  suppliers?: PageBlocksSuppliersFilter | null | undefined;
+  cta?: PageBlocksCtaFilter | null | undefined;
+  visitIntro?: PageBlocksVisitIntroFilter | null | undefined;
+};
+
+export type PageFilter = {
+  seoTitle?: StringFilter | null | undefined;
+  blocks?: PageBlocksFilter | null | undefined;
 };
 
 export type DatetimeFilter = {
@@ -557,49 +1133,92 @@ export type JournalFilter = {
   body?: RichTextFilter | null | undefined;
 };
 
-export type GeneralPartsFragment = { __typename: 'General', seo_title: string | null, description: string | null, nav_links: Array<{ __typename: 'GeneralNav_links', label: string | null, href: string | null } | null> | null };
+export type ConfigSeoFilter = {
+  title?: StringFilter | null | undefined;
+  description?: StringFilter | null | undefined;
+};
 
-export type ActsPartsFragment = { __typename: 'Acts', courses: Array<{ __typename: 'ActsCourses', n: string | null, numeral: string | null, time: string | null, name: string | null, sense: string | null, line: string | null, img: string | null, imgB: string | null, accent: string | null, choice: Array<string | null> | null } | null> | null };
+export type ConfigNavFilter = {
+  title?: StringFilter | null | undefined;
+  link?: StringFilter | null | undefined;
+};
+
+export type ConfigFooterFilter = {
+  ctaEyebrow?: StringFilter | null | undefined;
+  ctaHeadline?: StringFilter | null | undefined;
+  ctaText?: StringFilter | null | undefined;
+  phone?: StringFilter | null | undefined;
+  email?: StringFilter | null | undefined;
+  address1?: StringFilter | null | undefined;
+  address2?: StringFilter | null | undefined;
+};
+
+export type ConfigFilter = {
+  seo?: ConfigSeoFilter | null | undefined;
+  nav?: ConfigNavFilter | null | undefined;
+  footer?: ConfigFooterFilter | null | undefined;
+};
+
+export type PagePartsFragment = { __typename: 'Page', seoTitle: string, blocks: Array<
+    | { __typename: 'PageBlocksHero', eyebrow: string | null, miles: string | null, tagline: string | null, primaryLabel: string | null, primaryLink: string | null, secondaryLabel: string | null, secondaryLink: string | null, scrollNote: string | null, plateImage: { __typename: 'PageBlocksHeroPlateImage', src: string | null, alt: string | null } | null }
+    | { __typename: 'PageBlocksMarquee', phrases: Array<{ __typename: 'PageBlocksMarqueePhrases', text: string | null } | null> | null }
+    | { __typename: 'PageBlocksCourses', eyebrow: string | null, headline: string | null, description: string | null, layout: string | null, courses: Array<{ __typename: 'PageBlocksCoursesCourses', n: string | null, numeral: string | null, time: string | null, name: string | null, sense: string | null, line: string | null, img: string | null, imgB: string | null, accent: string | null, choice: Array<string | null> | null } | null> | null }
+    | { __typename: 'PageBlocksAssembly', eyebrow: string | null, caption: string | null, badge: string | null, image: string | null, plateSrc: string | null, steps: Array<{ __typename: 'PageBlocksAssemblySteps', n: string | null, title: string | null, text: string | null } | null> | null }
+    | { __typename: 'PageBlocksStoryPreview', eyebrow: string | null, headline: string | null, body1: string | null, body2: string | null, estLabel: string | null, ctaLabel: string | null, ctaLink: string | null, image: string | null, nameplate: string | null, quote: string | null }
+    | { __typename: 'PageBlocksMenuHeader', eyebrow: string | null, headline1: string | null, headline2: string | null, description: string | null, background: string | null }
+    | { __typename: 'PageBlocksLetter', eyebrow: string | null, headline: string | null, marginNote: string | null, para1: string | null, para2: string | null, signoff: string | null }
+    | { __typename: 'PageBlocksFacts', eyebrow: string | null, facts: Array<{ __typename: 'PageBlocksFactsFacts', n: string | null, t: string | null } | null> | null }
+    | { __typename: 'PageBlocksSuppliers', eyebrow: string | null, headline: string | null, hint: string | null, suppliers: Array<{ __typename: 'PageBlocksSuppliersSuppliers', name: string | null, desc: string | null, img: string | null } | null> | null }
+    | { __typename: 'PageBlocksCta', eyebrow: string | null, headline: string | null, primaryLabel: string | null, primaryLink: string | null, secondaryLabel: string | null, secondaryLink: string | null }
+    | { __typename: 'PageBlocksVisitIntro', eyebrow: string | null, headline: string | null, description: string | null, note1: string | null, note2: string | null, note3: string | null }
+   | null> | null };
 
 export type JournalPartsFragment = { __typename: 'Journal', title: string, date: string | null, category: string | null, description: string | null, image: string | null, body: TinaMarkdownContent | null };
 
-export type GeneralQueryVariables = Exact<{
+export type ConfigPartsFragment = { __typename: 'Config', seo: { __typename: 'ConfigSeo', title: string, description: string } | null, nav: Array<{ __typename: 'ConfigNav', title: string, link: string } | null> | null, footer: { __typename: 'ConfigFooter', ctaEyebrow: string | null, ctaHeadline: string | null, ctaText: string | null, phone: string | null, email: string | null, address1: string | null, address2: string | null } | null };
+
+export type PageQueryVariables = Exact<{
   relativePath: string;
 }>;
 
 
-export type GeneralQuery = { general: { __typename: 'General', id: string, seo_title: string | null, description: string | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, nav_links: Array<{ __typename: 'GeneralNav_links', label: string | null, href: string | null } | null> | null } };
+export type PageQuery = { page: { __typename: 'Page', id: string, seoTitle: string, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, blocks: Array<
+      | { __typename: 'PageBlocksHero', eyebrow: string | null, miles: string | null, tagline: string | null, primaryLabel: string | null, primaryLink: string | null, secondaryLabel: string | null, secondaryLink: string | null, scrollNote: string | null, plateImage: { __typename: 'PageBlocksHeroPlateImage', src: string | null, alt: string | null } | null }
+      | { __typename: 'PageBlocksMarquee', phrases: Array<{ __typename: 'PageBlocksMarqueePhrases', text: string | null } | null> | null }
+      | { __typename: 'PageBlocksCourses', eyebrow: string | null, headline: string | null, description: string | null, layout: string | null, courses: Array<{ __typename: 'PageBlocksCoursesCourses', n: string | null, numeral: string | null, time: string | null, name: string | null, sense: string | null, line: string | null, img: string | null, imgB: string | null, accent: string | null, choice: Array<string | null> | null } | null> | null }
+      | { __typename: 'PageBlocksAssembly', eyebrow: string | null, caption: string | null, badge: string | null, image: string | null, plateSrc: string | null, steps: Array<{ __typename: 'PageBlocksAssemblySteps', n: string | null, title: string | null, text: string | null } | null> | null }
+      | { __typename: 'PageBlocksStoryPreview', eyebrow: string | null, headline: string | null, body1: string | null, body2: string | null, estLabel: string | null, ctaLabel: string | null, ctaLink: string | null, image: string | null, nameplate: string | null, quote: string | null }
+      | { __typename: 'PageBlocksMenuHeader', eyebrow: string | null, headline1: string | null, headline2: string | null, description: string | null, background: string | null }
+      | { __typename: 'PageBlocksLetter', eyebrow: string | null, headline: string | null, marginNote: string | null, para1: string | null, para2: string | null, signoff: string | null }
+      | { __typename: 'PageBlocksFacts', eyebrow: string | null, facts: Array<{ __typename: 'PageBlocksFactsFacts', n: string | null, t: string | null } | null> | null }
+      | { __typename: 'PageBlocksSuppliers', eyebrow: string | null, headline: string | null, hint: string | null, suppliers: Array<{ __typename: 'PageBlocksSuppliersSuppliers', name: string | null, desc: string | null, img: string | null } | null> | null }
+      | { __typename: 'PageBlocksCta', eyebrow: string | null, headline: string | null, primaryLabel: string | null, primaryLink: string | null, secondaryLabel: string | null, secondaryLink: string | null }
+      | { __typename: 'PageBlocksVisitIntro', eyebrow: string | null, headline: string | null, description: string | null, note1: string | null, note2: string | null, note3: string | null }
+     | null> | null } };
 
-export type GeneralConnectionQueryVariables = Exact<{
+export type PageConnectionQueryVariables = Exact<{
   before?: string | null | undefined;
   after?: string | null | undefined;
   first?: number | null | undefined;
   last?: number | null | undefined;
   sort?: string | null | undefined;
-  filter?: GeneralFilter | null | undefined;
+  filter?: PageFilter | null | undefined;
 }>;
 
 
-export type GeneralConnectionQuery = { generalConnection: { totalCount: number, pageInfo: { hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges: Array<{ cursor: string, node: { __typename: 'General', id: string, seo_title: string | null, description: string | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, nav_links: Array<{ __typename: 'GeneralNav_links', label: string | null, href: string | null } | null> | null } | null } | null> | null } };
-
-export type ActsQueryVariables = Exact<{
-  relativePath: string;
-}>;
-
-
-export type ActsQuery = { acts: { __typename: 'Acts', id: string, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, courses: Array<{ __typename: 'ActsCourses', n: string | null, numeral: string | null, time: string | null, name: string | null, sense: string | null, line: string | null, img: string | null, imgB: string | null, accent: string | null, choice: Array<string | null> | null } | null> | null } };
-
-export type ActsConnectionQueryVariables = Exact<{
-  before?: string | null | undefined;
-  after?: string | null | undefined;
-  first?: number | null | undefined;
-  last?: number | null | undefined;
-  sort?: string | null | undefined;
-  filter?: ActsFilter | null | undefined;
-}>;
-
-
-export type ActsConnectionQuery = { actsConnection: { totalCount: number, pageInfo: { hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges: Array<{ cursor: string, node: { __typename: 'Acts', id: string, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, courses: Array<{ __typename: 'ActsCourses', n: string | null, numeral: string | null, time: string | null, name: string | null, sense: string | null, line: string | null, img: string | null, imgB: string | null, accent: string | null, choice: Array<string | null> | null } | null> | null } | null } | null> | null } };
+export type PageConnectionQuery = { pageConnection: { totalCount: number, pageInfo: { hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges: Array<{ cursor: string, node: { __typename: 'Page', id: string, seoTitle: string, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, blocks: Array<
+          | { __typename: 'PageBlocksHero', eyebrow: string | null, miles: string | null, tagline: string | null, primaryLabel: string | null, primaryLink: string | null, secondaryLabel: string | null, secondaryLink: string | null, scrollNote: string | null, plateImage: { __typename: 'PageBlocksHeroPlateImage', src: string | null, alt: string | null } | null }
+          | { __typename: 'PageBlocksMarquee', phrases: Array<{ __typename: 'PageBlocksMarqueePhrases', text: string | null } | null> | null }
+          | { __typename: 'PageBlocksCourses', eyebrow: string | null, headline: string | null, description: string | null, layout: string | null, courses: Array<{ __typename: 'PageBlocksCoursesCourses', n: string | null, numeral: string | null, time: string | null, name: string | null, sense: string | null, line: string | null, img: string | null, imgB: string | null, accent: string | null, choice: Array<string | null> | null } | null> | null }
+          | { __typename: 'PageBlocksAssembly', eyebrow: string | null, caption: string | null, badge: string | null, image: string | null, plateSrc: string | null, steps: Array<{ __typename: 'PageBlocksAssemblySteps', n: string | null, title: string | null, text: string | null } | null> | null }
+          | { __typename: 'PageBlocksStoryPreview', eyebrow: string | null, headline: string | null, body1: string | null, body2: string | null, estLabel: string | null, ctaLabel: string | null, ctaLink: string | null, image: string | null, nameplate: string | null, quote: string | null }
+          | { __typename: 'PageBlocksMenuHeader', eyebrow: string | null, headline1: string | null, headline2: string | null, description: string | null, background: string | null }
+          | { __typename: 'PageBlocksLetter', eyebrow: string | null, headline: string | null, marginNote: string | null, para1: string | null, para2: string | null, signoff: string | null }
+          | { __typename: 'PageBlocksFacts', eyebrow: string | null, facts: Array<{ __typename: 'PageBlocksFactsFacts', n: string | null, t: string | null } | null> | null }
+          | { __typename: 'PageBlocksSuppliers', eyebrow: string | null, headline: string | null, hint: string | null, suppliers: Array<{ __typename: 'PageBlocksSuppliersSuppliers', name: string | null, desc: string | null, img: string | null } | null> | null }
+          | { __typename: 'PageBlocksCta', eyebrow: string | null, headline: string | null, primaryLabel: string | null, primaryLink: string | null, secondaryLabel: string | null, secondaryLink: string | null }
+          | { __typename: 'PageBlocksVisitIntro', eyebrow: string | null, headline: string | null, description: string | null, note1: string | null, note2: string | null, note3: string | null }
+         | null> | null } | null } | null> | null } };
 
 export type JournalQueryVariables = Exact<{
   relativePath: string;
@@ -620,33 +1239,146 @@ export type JournalConnectionQueryVariables = Exact<{
 
 export type JournalConnectionQuery = { journalConnection: { totalCount: number, pageInfo: { hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges: Array<{ cursor: string, node: { __typename: 'Journal', id: string, title: string, date: string | null, category: string | null, description: string | null, image: string | null, body: TinaMarkdownContent | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } | null } | null> | null } };
 
-export const GeneralPartsFragmentDoc = gql`
-    fragment GeneralParts on General {
+export type ConfigQueryVariables = Exact<{
+  relativePath: string;
+}>;
+
+
+export type ConfigQuery = { config: { __typename: 'Config', id: string, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, seo: { __typename: 'ConfigSeo', title: string, description: string } | null, nav: Array<{ __typename: 'ConfigNav', title: string, link: string } | null> | null, footer: { __typename: 'ConfigFooter', ctaEyebrow: string | null, ctaHeadline: string | null, ctaText: string | null, phone: string | null, email: string | null, address1: string | null, address2: string | null } | null } };
+
+export type ConfigConnectionQueryVariables = Exact<{
+  before?: string | null | undefined;
+  after?: string | null | undefined;
+  first?: number | null | undefined;
+  last?: number | null | undefined;
+  sort?: string | null | undefined;
+  filter?: ConfigFilter | null | undefined;
+}>;
+
+
+export type ConfigConnectionQuery = { configConnection: { totalCount: number, pageInfo: { hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges: Array<{ cursor: string, node: { __typename: 'Config', id: string, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, seo: { __typename: 'ConfigSeo', title: string, description: string } | null, nav: Array<{ __typename: 'ConfigNav', title: string, link: string } | null> | null, footer: { __typename: 'ConfigFooter', ctaEyebrow: string | null, ctaHeadline: string | null, ctaText: string | null, phone: string | null, email: string | null, address1: string | null, address2: string | null } | null } | null } | null> | null } };
+
+export const PagePartsFragmentDoc = gql`
+    fragment PageParts on Page {
   __typename
-  seo_title
-  description
-  nav_links {
+  seoTitle
+  blocks {
     __typename
-    label
-    href
-  }
-}
-    `;
-export const ActsPartsFragmentDoc = gql`
-    fragment ActsParts on Acts {
-  __typename
-  courses {
-    __typename
-    n
-    numeral
-    time
-    name
-    sense
-    line
-    img
-    imgB
-    accent
-    choice
+    ... on PageBlocksHero {
+      eyebrow
+      miles
+      tagline
+      primaryLabel
+      primaryLink
+      secondaryLabel
+      secondaryLink
+      scrollNote
+      plateImage {
+        __typename
+        src
+        alt
+      }
+    }
+    ... on PageBlocksMarquee {
+      phrases {
+        __typename
+        text
+      }
+    }
+    ... on PageBlocksCourses {
+      eyebrow
+      headline
+      description
+      layout
+      courses {
+        __typename
+        n
+        numeral
+        time
+        name
+        sense
+        line
+        img
+        imgB
+        accent
+        choice
+      }
+    }
+    ... on PageBlocksAssembly {
+      eyebrow
+      caption
+      badge
+      image
+      plateSrc
+      steps {
+        __typename
+        n
+        title
+        text
+      }
+    }
+    ... on PageBlocksStoryPreview {
+      eyebrow
+      headline
+      body1
+      body2
+      estLabel
+      ctaLabel
+      ctaLink
+      image
+      nameplate
+      quote
+    }
+    ... on PageBlocksMenuHeader {
+      eyebrow
+      headline1
+      headline2
+      description
+      background
+    }
+    ... on PageBlocksLetter {
+      eyebrow
+      headline
+      marginNote
+      para1
+      para2
+      signoff
+    }
+    ... on PageBlocksFacts {
+      eyebrow
+      facts {
+        __typename
+        n
+        t
+      }
+    }
+    ... on PageBlocksSuppliers {
+      eyebrow
+      headline
+      hint
+      suppliers {
+        __typename
+        name
+        desc
+        img
+      }
+    }
+    ... on PageBlocksCta {
+      eyebrow
+      headline
+      primaryLabel
+      primaryLink
+      secondaryLabel
+      secondaryLink
+    }
+    ... on PageBlocksVisitIntro {
+      eyebrow
+      headline
+      description
+      note1
+      note2
+      note3
+    }
   }
 }
     `;
@@ -661,9 +1393,34 @@ export const JournalPartsFragmentDoc = gql`
   body
 }
     `;
-export const GeneralDocument = gql`
-    query general($relativePath: String!) {
-  general(relativePath: $relativePath) {
+export const ConfigPartsFragmentDoc = gql`
+    fragment ConfigParts on Config {
+  __typename
+  seo {
+    __typename
+    title
+    description
+  }
+  nav {
+    __typename
+    title
+    link
+  }
+  footer {
+    __typename
+    ctaEyebrow
+    ctaHeadline
+    ctaText
+    phone
+    email
+    address1
+    address2
+  }
+}
+    `;
+export const PageDocument = gql`
+    query page($relativePath: String!) {
+  page(relativePath: $relativePath) {
     ... on Document {
       _sys {
         filename
@@ -676,13 +1433,13 @@ export const GeneralDocument = gql`
       }
       id
     }
-    ...GeneralParts
+    ...PageParts
   }
 }
-    ${GeneralPartsFragmentDoc}`;
-export const GeneralConnectionDocument = gql`
-    query generalConnection($before: String, $after: String, $first: Float, $last: Float, $sort: String, $filter: GeneralFilter) {
-  generalConnection(
+    ${PagePartsFragmentDoc}`;
+export const PageConnectionDocument = gql`
+    query pageConnection($before: String, $after: String, $first: Float, $last: Float, $sort: String, $filter: PageFilter) {
+  pageConnection(
     before: $before
     after: $after
     first: $first
@@ -712,69 +1469,12 @@ export const GeneralConnectionDocument = gql`
           }
           id
         }
-        ...GeneralParts
+        ...PageParts
       }
     }
   }
 }
-    ${GeneralPartsFragmentDoc}`;
-export const ActsDocument = gql`
-    query acts($relativePath: String!) {
-  acts(relativePath: $relativePath) {
-    ... on Document {
-      _sys {
-        filename
-        basename
-        hasReferences
-        breadcrumbs
-        path
-        relativePath
-        extension
-      }
-      id
-    }
-    ...ActsParts
-  }
-}
-    ${ActsPartsFragmentDoc}`;
-export const ActsConnectionDocument = gql`
-    query actsConnection($before: String, $after: String, $first: Float, $last: Float, $sort: String, $filter: ActsFilter) {
-  actsConnection(
-    before: $before
-    after: $after
-    first: $first
-    last: $last
-    sort: $sort
-    filter: $filter
-  ) {
-    pageInfo {
-      hasPreviousPage
-      hasNextPage
-      startCursor
-      endCursor
-    }
-    totalCount
-    edges {
-      cursor
-      node {
-        ... on Document {
-          _sys {
-            filename
-            basename
-            hasReferences
-            breadcrumbs
-            path
-            relativePath
-            extension
-          }
-          id
-        }
-        ...ActsParts
-      }
-    }
-  }
-}
-    ${ActsPartsFragmentDoc}`;
+    ${PagePartsFragmentDoc}`;
 export const JournalDocument = gql`
     query journal($relativePath: String!) {
   journal(relativePath: $relativePath) {
@@ -832,26 +1532,83 @@ export const JournalConnectionDocument = gql`
   }
 }
     ${JournalPartsFragmentDoc}`;
+export const ConfigDocument = gql`
+    query config($relativePath: String!) {
+  config(relativePath: $relativePath) {
+    ... on Document {
+      _sys {
+        filename
+        basename
+        hasReferences
+        breadcrumbs
+        path
+        relativePath
+        extension
+      }
+      id
+    }
+    ...ConfigParts
+  }
+}
+    ${ConfigPartsFragmentDoc}`;
+export const ConfigConnectionDocument = gql`
+    query configConnection($before: String, $after: String, $first: Float, $last: Float, $sort: String, $filter: ConfigFilter) {
+  configConnection(
+    before: $before
+    after: $after
+    first: $first
+    last: $last
+    sort: $sort
+    filter: $filter
+  ) {
+    pageInfo {
+      hasPreviousPage
+      hasNextPage
+      startCursor
+      endCursor
+    }
+    totalCount
+    edges {
+      cursor
+      node {
+        ... on Document {
+          _sys {
+            filename
+            basename
+            hasReferences
+            breadcrumbs
+            path
+            relativePath
+            extension
+          }
+          id
+        }
+        ...ConfigParts
+      }
+    }
+  }
+}
+    ${ConfigPartsFragmentDoc}`;
 export type Requester<C= {}> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => Promise<R>
   export function getSdk<C>(requester: Requester<C>) {
     return {
-      general(variables: GeneralQueryVariables, options?: C): Promise<{data: GeneralQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: GeneralQueryVariables, query: string}> {
-        return requester<{data: GeneralQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: GeneralQueryVariables, query: string}, GeneralQueryVariables>(GeneralDocument, variables, options);
+      page(variables: PageQueryVariables, options?: C): Promise<{data: PageQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: PageQueryVariables, query: string}> {
+        return requester<{data: PageQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: PageQueryVariables, query: string}, PageQueryVariables>(PageDocument, variables, options);
       },
-    generalConnection(variables?: GeneralConnectionQueryVariables, options?: C): Promise<{data: GeneralConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: GeneralConnectionQueryVariables, query: string}> {
-        return requester<{data: GeneralConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: GeneralConnectionQueryVariables, query: string}, GeneralConnectionQueryVariables>(GeneralConnectionDocument, variables, options);
-      },
-    acts(variables: ActsQueryVariables, options?: C): Promise<{data: ActsQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: ActsQueryVariables, query: string}> {
-        return requester<{data: ActsQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: ActsQueryVariables, query: string}, ActsQueryVariables>(ActsDocument, variables, options);
-      },
-    actsConnection(variables?: ActsConnectionQueryVariables, options?: C): Promise<{data: ActsConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: ActsConnectionQueryVariables, query: string}> {
-        return requester<{data: ActsConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: ActsConnectionQueryVariables, query: string}, ActsConnectionQueryVariables>(ActsConnectionDocument, variables, options);
+    pageConnection(variables?: PageConnectionQueryVariables, options?: C): Promise<{data: PageConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: PageConnectionQueryVariables, query: string}> {
+        return requester<{data: PageConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: PageConnectionQueryVariables, query: string}, PageConnectionQueryVariables>(PageConnectionDocument, variables, options);
       },
     journal(variables: JournalQueryVariables, options?: C): Promise<{data: JournalQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: JournalQueryVariables, query: string}> {
         return requester<{data: JournalQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: JournalQueryVariables, query: string}, JournalQueryVariables>(JournalDocument, variables, options);
       },
     journalConnection(variables?: JournalConnectionQueryVariables, options?: C): Promise<{data: JournalConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: JournalConnectionQueryVariables, query: string}> {
         return requester<{data: JournalConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: JournalConnectionQueryVariables, query: string}, JournalConnectionQueryVariables>(JournalConnectionDocument, variables, options);
+      },
+    config(variables: ConfigQueryVariables, options?: C): Promise<{data: ConfigQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: ConfigQueryVariables, query: string}> {
+        return requester<{data: ConfigQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: ConfigQueryVariables, query: string}, ConfigQueryVariables>(ConfigDocument, variables, options);
+      },
+    configConnection(variables?: ConfigConnectionQueryVariables, options?: C): Promise<{data: ConfigConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: ConfigConnectionQueryVariables, query: string}> {
+        return requester<{data: ConfigConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: ConfigConnectionQueryVariables, query: string}, ConfigConnectionQueryVariables>(ConfigConnectionDocument, variables, options);
       }
     };
   }
@@ -900,7 +1657,7 @@ export const ExperimentalGetTinaClient = () =>
   getSdk(
     generateRequester(
       createClient({
-        url: "https://content.tinajs.io/3.0/content/f025514a-f4b6-489a-89d2-906074df8f69/github/main",
+        url: "http://localhost:4001/graphql",
         queries,
       })
     )

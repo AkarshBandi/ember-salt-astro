@@ -1,82 +1,85 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import TinaIsland from '@tinacms/astro/TinaIsland.astro';
-import { getGeneral } from '../lib/tina/data';
+import { tinaField } from '@tinacms/astro/tina-field';
+import PageBody from '../components/islands/PageBody.astro';
+import { getConfig, getPage } from '../lib/tina/data';
 import { islands } from '../lib/tina/islands';
 
-const generalResult = await getGeneral();
-const general = generalResult.data?.general;
+const slug = 'visit';
+const page = await getPage(slug);
+const data = page.data?.page;
+if (!data) return new Response('Not Found', { status: 404 });
+const config = (await getConfig()).data?.config ?? null;
+const visitBlock = (data.blocks ?? []).find((b: any) => b?.__typename === 'PageBlocksVisitIntro');
 ---
 
-<Layout title="Reservations">
-<TinaIsland name="general" wrapper={islands.general.wrapper} params={{}} primary>
-<section class="linen" style="padding:112px 0 var(--space-section);color:var(--ink)">
-  <div style="max-width:720px;margin:0 auto;padding-left:var(--gutter);padding-right:var(--gutter)">
-    <p class="eyebrow rv" style="color:var(--brassdeep)">Reservations</p>
-    <h1 class="font-display rv" style="font-weight:900;letter-spacing:-0.02em;margin-top:12px;font-size:var(--fs-h2)">Request a table.</h1>
-    <p class="rv" style="margin-top:12px;font-size:15px;color:rgba(34,26,18,0.65)">Tell us when and how many. We telephone within a day to confirm — every request is answered by voice.</p>
+<Layout title={data.seoTitle || 'Reservations'}>
+  <TinaIsland name="page" wrapper={islands.page.wrapper} params={{ slug }} primary>
+    <PageBody data={data} />
+  </TinaIsland>
+  <section class="linen" style="padding:0 0 var(--space-section);color:var(--ink)">
+    <div style="max-width:720px;margin:0 auto;padding-left:var(--gutter);padding-right:var(--gutter)">
+      <form class="rv" id="bookForm" style="margin-top:8px;display:grid;gap:28px" novalidate>
+        <div style="display:grid;gap:28px" class="two-col">
+          <label class="block"><span class="flabel">Your name</span>
+            <input id="fName" class="tinput" style="margin-top:8px" placeholder="Jordan Ellis" autocomplete="name" />
+          </label>
+          <label class="block"><span class="flabel">Telephone</span>
+            <input id="fPhone" class="tinput" style="margin-top:8px" placeholder="+1 503 000 0000" inputmode="tel" autocomplete="tel" />
+          </label>
+        </div>
+        <div style="display:grid;gap:28px" class="three-col">
+          <label class="block"><span class="flabel">Guests</span>
+            <select id="fParty" class="tinput" style="margin-top:8px;cursor:pointer">
+              <option value="1">1 guest</option><option value="2" selected>2 guests</option><option value="3">3 guests</option><option value="4">4 guests</option><option value="5">5 guests</option><option value="6">6 guests</option>
+            </select>
+          </label>
+          <label class="block"><span class="flabel">Day</span>
+            <select id="fDay" class="tinput" style="margin-top:8px;cursor:pointer">
+              <option>Thursday</option><option selected>Friday</option><option>Saturday</option><option>Sunday</option>
+            </select>
+          </label>
+          <label class="block"><span class="flabel">Seating</span>
+            <select id="fSeat" class="tinput" style="margin-top:8px;cursor:pointer">
+              <option value="17:00">17:00 — first light</option><option value="20:00" selected>20:00 — full dark</option>
+            </select>
+          </label>
+        </div>
+        <p class="font-display" style="font-size:1.1rem" id="bookSeats">
+          <span class="seats" data-seats="thu-sat-17" hidden></span><span class="seats" data-seats="thu-sat-20"></span><span class="seats" data-seats="sun" hidden></span>
+        </p>
+        <label class="block"><span class="flabel">Occasion</span>
+          <select id="fMood" class="tinput" style="margin-top:8px;cursor:pointer">
+            <option selected>Unrushed</option><option>Celebrating</option><option>Curious</option><option>Famished</option>
+          </select>
+        </label>
+        <label class="block"><span class="flabel">Anything we should know <span style="text-transform:none;letter-spacing:0;font-weight:400">(allergies, access, surprises)</span></span>
+          <textarea id="fNotes" class="tinput" rows="3" style="margin-top:8px;resize:vertical" placeholder="Tell us ahead and we cook around it."></textarea>
+        </label>
+        <p id="bookErr" role="alert" style="font-size:14px;color:var(--ember)" hidden>We need a name and a telephone number — we confirm every request by voice.</p>
+        <div><span data-magnetic><button type="submit" id="bookSend" class="btn btn-pour btn-pour-dark eyebrow" style="cursor:pointer">Request the evening &rarr;</button></span></div>
+      </form>
 
-    <form class="rv" id="bookForm" style="margin-top:40px;display:grid;gap:28px" novalidate>
-      <div style="display:grid;gap:28px" class="two-col">
-        <label class="block"><span class="flabel">Your name</span>
-          <input id="fName" class="tinput" style="margin-top:8px" placeholder="Jordan Ellis" autocomplete="name" />
-        </label>
-        <label class="block"><span class="flabel">Telephone</span>
-          <input id="fPhone" class="tinput" style="margin-top:8px" placeholder="+1 503 000 0000" inputmode="tel" autocomplete="tel" />
-        </label>
+      <div id="bookDone" hidden style="margin-top:64px;text-align:center">
+        <p class="eyebrow" style="color:var(--brassdeep)">Request received</p>
+        <p class="font-display" id="bookSerial" style="font-weight:900;font-size:clamp(3rem,8vw,5rem);letter-spacing:-0.02em;margin-top:8px">No. 000</p>
+        <p class="font-display" id="bookLine" style="font-size:1.25rem;margin-top:12px"></p>
+        <p style="font-size:14px;color:rgba(34,26,18,0.6);margin-top:8px" id="bookMood"></p>
+        <a href="/" class="eyebrow draw-link" style="display:inline-block;margin-top:24px;padding:14px 8px">Back to the fire</a>
       </div>
-      <div style="display:grid;gap:28px" class="three-col">
-        <label class="block"><span class="flabel">Guests</span>
-          <select id="fParty" class="tinput" style="margin-top:8px;cursor:pointer">
-            <option value="1">1 guest</option><option value="2" selected>2 guests</option><option value="3">3 guests</option><option value="4">4 guests</option><option value="5">5 guests</option><option value="6">6 guests</option>
-          </select>
-        </label>
-        <label class="block"><span class="flabel">Day</span>
-          <select id="fDay" class="tinput" style="margin-top:8px;cursor:pointer">
-            <option>Thursday</option><option selected>Friday</option><option>Saturday</option><option>Sunday</option>
-          </select>
-        </label>
-        <label class="block"><span class="flabel">Seating</span>
-          <select id="fSeat" class="tinput" style="margin-top:8px;cursor:pointer">
-            <option value="17:00">17:00 — first light</option><option value="20:00" selected>20:00 — full dark</option>
-          </select>
-        </label>
+
+      <div class="rv" style="margin-top:64px;display:grid;gap:8px;font-size:14px;color:rgba(34,26,18,0.6)">
+        <p data-tina-field={tinaField(visitBlock, 'note1')}>{(visitBlock as any)?.note1}</p>
+        <p data-tina-field={tinaField(visitBlock, 'note2')}>{(visitBlock as any)?.note2}</p>
+        <p data-tina-field={tinaField(visitBlock, 'note3')}>{(visitBlock as any)?.note3}</p>
       </div>
-      <p class="font-display" style="font-size:1.1rem" id="bookSeats">
-        <span class="seats" data-seats="thu-sat-17" hidden></span><span class="seats" data-seats="thu-sat-20"></span><span class="seats" data-seats="sun" hidden></span>
-      </p>
-      <label class="block"><span class="flabel">Occasion</span>
-        <select id="fMood" class="tinput" style="margin-top:8px;cursor:pointer">
-          <option selected>Unrushed</option><option>Celebrating</option><option>Curious</option><option>Famished</option>
-        </select>
-      </label>
-      <label class="block"><span class="flabel">Anything we should know <span style="text-transform:none;letter-spacing:0;font-weight:400">(allergies, access, surprises)</span></span>
-        <textarea id="fNotes" class="tinput" rows="3" style="margin-top:8px;resize:vertical" placeholder="Tell us ahead and we cook around it."></textarea>
-      </label>
-      <p id="bookErr" role="alert" style="font-size:14px;color:var(--ember)" hidden>We need a name and a telephone number — we confirm every request by voice.</p>
-      <div><span data-magnetic><button type="submit" id="bookSend" class="btn btn-pour btn-pour-dark eyebrow" style="cursor:pointer">Request the evening &rarr;</button></span></div>
-    </form>
-
-    <div id="bookDone" hidden style="margin-top:64px;text-align:center">
-      <p class="eyebrow" style="color:var(--brassdeep)">Request received</p>
-      <p class="font-display" id="bookSerial" style="font-weight:900;font-size:clamp(3rem,8vw,5rem);letter-spacing:-0.02em;margin-top:8px">No. 000</p>
-      <p class="font-display" id="bookLine" style="font-size:1.25rem;margin-top:12px"></p>
-      <p style="font-size:14px;color:rgba(34,26,18,0.6);margin-top:8px" id="bookMood"></p>
-      <a href="/" class="eyebrow draw-link" style="display:inline-block;margin-top:24px;padding:14px 8px">Back to the fire</a>
     </div>
-
-    <div class="rv" style="margin-top:64px;display:grid;gap:8px;font-size:14px;color:rgba(34,26,18,0.6)">
-      <p>Parties above six — telephone only: +1 503 555 0184.</p>
-      <p>Mon – Wed the kiln rests. We telephone — never text, never spam.</p>
-      <p>14 Kiln Lane, Portland OR — look for the brass flame by the door.</p>
-    </div>
-  </div>
-</section>
-</TinaIsland>
-<style>
-@media(min-width:640px){.two-col{grid-template-columns:1fr 1fr !important}.three-col{grid-template-columns:1fr 1fr 1fr !important}}
-#bookSerial.stamp-in { animation: stampIn 0.45s cubic-bezier(0.34,1.4,0.64,1); }
-@keyframes stampIn { from { transform: scale(1.18); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-@media (prefers-reduced-motion: reduce) { #bookSerial.stamp-in { animation: none; } }
-</style>
+  </section>
+  <style>
+  @media(min-width:640px){.two-col{grid-template-columns:1fr 1fr !important}.three-col{grid-template-columns:1fr 1fr 1fr !important}}
+  #bookSerial.stamp-in { animation: stampIn 0.45s cubic-bezier(0.34,1.4,0.64,1); }
+  @keyframes stampIn { from { transform: scale(1.18); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { #bookSerial.stamp-in { animation: none; } }
+  </style>
 </Layout>

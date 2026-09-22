@@ -1,0 +1,17 @@
+---
+import { tinaField } from '@tinacms/astro/tina-field';
+
+const { data } = Astro.props as { data: any };
+const items = (data?.facts ?? []).filter(Boolean);
+---
+<section style="max-width:760px;margin:0 auto;padding:0 var(--gutter) 64px">
+  <p class="eyebrow rv" style="color:var(--brassdeep)" data-tina-field={tinaField(data, 'eyebrow')}>{data?.eyebrow}</p>
+  <div class="rv" style="margin-top:20px;display:flex;flex-wrap:wrap;gap:40px 56px" data-tina-field={tinaField(data, 'facts')}>
+    {items.map((f: any) => (
+      <div><p class="tnum font-display" style="font-weight:900;font-size:clamp(2.6rem,5vw,3.6rem);line-height:1;color:transparent;-webkit-text-stroke:1.5px #9A7B45">{f?.n}</p><p style="font-size:14px;color:rgba(34,26,18,0.65);margin-top:6px">{f?.t}</p>      </div>
+    ))}
+  </div>
+</section>
+<div style="max-width:1240px;margin:0 auto;padding:0 var(--gutter)" class="linen">
+  <hr style="border:none;border-top:1px solid rgba(154,123,69,0.2);margin:0" />
+</div>

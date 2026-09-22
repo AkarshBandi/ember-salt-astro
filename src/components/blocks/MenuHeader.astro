@@ -1,0 +1,14 @@
+---
+import { tinaField } from '@tinacms/astro/tina-field';
+
+const { data } = Astro.props as { data: any };
+---
+<header style="position:relative;min-height:88svh;display:flex;align-items:flex-end;overflow:hidden">
+  <img src={data?.background ?? '/images/act-longfire.jpg'} alt="Whole animal over oak fire at Ember and Salt" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" fetchpriority="high" data-tina-field={tinaField(data, 'background')} />
+  <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(20,18,16,0.3),rgba(20,18,16,0.55) 60%,rgba(20,18,16,0.8))"></div>
+  <div style="position:relative;width:100%;max-width:1000px;margin:0 auto;padding:120px var(--gutter) 72px">
+    <p class="eyebrow rv" style="color:var(--brass)" data-tina-field={tinaField(data, 'eyebrow')}>{data?.eyebrow ?? 'The menu — one evening, twelve courses'}</p>
+    <h1 class="font-display rv" style="font-weight:900;letter-spacing:-0.02em;margin-top:12px;font-size:clamp(2.8rem,7vw,5.2rem);line-height:1.02;color:var(--porcelain)"><span data-tina-field={tinaField(data, 'headline1')}>{data?.headline1 ?? 'Eat in order.'}</span><br /><span data-tina-field={tinaField(data, 'headline2')}>{data?.headline2 ?? 'Choose twice.'}</span></h1>
+    <p class="rv" style="margin-top:16px;font-size:15px;color:rgba(245,240,232,0.75);max-width:34rem" data-tina-field={tinaField(data, 'description')}>{data?.description}</p>
+  </div>
+</header>

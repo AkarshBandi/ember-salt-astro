@@ -57,18 +57,18 @@ type Query {
   collections: [Collection!]!
   node(id: String): Node!
   document(collection: String, relativePath: String): DocumentNode!
-  general(relativePath: String): General!
-  generalConnection(before: String, after: String, first: Float, last: Float, sort: String, filter: GeneralFilter): GeneralConnection!
-  acts(relativePath: String): Acts!
-  actsConnection(before: String, after: String, first: Float, last: Float, sort: String, filter: ActsFilter): ActsConnection!
+  page(relativePath: String): Page!
+  pageConnection(before: String, after: String, first: Float, last: Float, sort: String, filter: PageFilter): PageConnection!
   journal(relativePath: String): Journal!
   journalConnection(before: String, after: String, first: Float, last: Float, sort: String, filter: JournalFilter): JournalConnection!
+  config(relativePath: String): Config!
+  configConnection(before: String, after: String, first: Float, last: Float, sort: String, filter: ConfigFilter): ConfigConnection!
 }
 
 input DocumentFilter {
-  general: GeneralFilter
-  acts: ActsFilter
+  page: PageFilter
   journal: JournalFilter
+  config: ConfigFilter
 }
 
 type DocumentConnectionEdges {
@@ -94,52 +94,34 @@ type Collection {
   documents(before: String, after: String, first: Float, last: Float, sort: String, filter: DocumentFilter, folder: String): DocumentConnection!
 }
 
-union DocumentNode = General | Acts | Journal | Folder
+union DocumentNode = Page | Journal | Config | Folder
 
-type GeneralNav_links {
-  label: String
-  href: String
+type PageBlocksHeroPlateImage {
+  src: String
+  alt: String
 }
 
-type General implements Node & Document {
-  seo_title: String
-  description: String
-  nav_links: [GeneralNav_links]
-  id: ID!
-  _sys: SystemInfo!
-  _values: JSON!
+type PageBlocksHero {
+  eyebrow: String
+  miles: String
+  tagline: String
+  primaryLabel: String
+  primaryLink: String
+  secondaryLabel: String
+  secondaryLink: String
+  scrollNote: String
+  plateImage: PageBlocksHeroPlateImage
 }
 
-input StringFilter {
-  startsWith: String
-  eq: String
-  exists: Boolean
-  in: [String]
+type PageBlocksMarqueePhrases {
+  text: String
 }
 
-input GeneralNav_linksFilter {
-  label: StringFilter
-  href: StringFilter
+type PageBlocksMarquee {
+  phrases: [PageBlocksMarqueePhrases]
 }
 
-input GeneralFilter {
-  seo_title: StringFilter
-  description: StringFilter
-  nav_links: GeneralNav_linksFilter
-}
-
-type GeneralConnectionEdges {
-  cursor: String!
-  node: General
-}
-
-type GeneralConnection implements Connection {
-  pageInfo: PageInfo!
-  totalCount: Float!
-  edges: [GeneralConnectionEdges]
-}
-
-type ActsCourses {
+type PageBlocksCoursesCourses {
   n: String
   numeral: String
   time: String
@@ -152,11 +134,115 @@ type ActsCourses {
   choice: [String]
 }
 
-type Acts implements Node & Document {
-  courses: [ActsCourses]
+type PageBlocksCourses {
+  eyebrow: String
+  headline: String
+  description: String
+  layout: String
+  courses: [PageBlocksCoursesCourses]
+}
+
+type PageBlocksAssemblySteps {
+  n: String
+  title: String
+  text: String
+}
+
+type PageBlocksAssembly {
+  eyebrow: String
+  caption: String
+  badge: String
+  image: String
+  plateSrc: String
+  steps: [PageBlocksAssemblySteps]
+}
+
+type PageBlocksStoryPreview {
+  eyebrow: String
+  headline: String
+  body1: String
+  body2: String
+  estLabel: String
+  ctaLabel: String
+  ctaLink: String
+  image: String
+  nameplate: String
+  quote: String
+}
+
+type PageBlocksMenuHeader {
+  eyebrow: String
+  headline1: String
+  headline2: String
+  description: String
+  background: String
+}
+
+type PageBlocksLetter {
+  eyebrow: String
+  headline: String
+  marginNote: String
+  para1: String
+  para2: String
+  signoff: String
+}
+
+type PageBlocksFactsFacts {
+  n: String
+  t: String
+}
+
+type PageBlocksFacts {
+  eyebrow: String
+  facts: [PageBlocksFactsFacts]
+}
+
+type PageBlocksSuppliersSuppliers {
+  name: String
+  desc: String
+  img: String
+}
+
+type PageBlocksSuppliers {
+  eyebrow: String
+  headline: String
+  hint: String
+  suppliers: [PageBlocksSuppliersSuppliers]
+}
+
+type PageBlocksCta {
+  eyebrow: String
+  headline: String
+  primaryLabel: String
+  primaryLink: String
+  secondaryLabel: String
+  secondaryLink: String
+}
+
+type PageBlocksVisitIntro {
+  eyebrow: String
+  headline: String
+  description: String
+  note1: String
+  note2: String
+  note3: String
+}
+
+union PageBlocks = PageBlocksHero | PageBlocksMarquee | PageBlocksCourses | PageBlocksAssembly | PageBlocksStoryPreview | PageBlocksMenuHeader | PageBlocksLetter | PageBlocksFacts | PageBlocksSuppliers | PageBlocksCta | PageBlocksVisitIntro
+
+type Page implements Node & Document {
+  seoTitle: String!
+  blocks: [PageBlocks]
   id: ID!
   _sys: SystemInfo!
   _values: JSON!
+}
+
+input StringFilter {
+  startsWith: String
+  eq: String
+  exists: Boolean
+  in: [String]
 }
 
 input ImageFilter {
@@ -166,7 +252,32 @@ input ImageFilter {
   in: [String]
 }
 
-input ActsCoursesFilter {
+input PageBlocksHeroPlateImageFilter {
+  src: ImageFilter
+  alt: StringFilter
+}
+
+input PageBlocksHeroFilter {
+  eyebrow: StringFilter
+  miles: StringFilter
+  tagline: StringFilter
+  primaryLabel: StringFilter
+  primaryLink: StringFilter
+  secondaryLabel: StringFilter
+  secondaryLink: StringFilter
+  scrollNote: StringFilter
+  plateImage: PageBlocksHeroPlateImageFilter
+}
+
+input PageBlocksMarqueePhrasesFilter {
+  text: StringFilter
+}
+
+input PageBlocksMarqueeFilter {
+  phrases: PageBlocksMarqueePhrasesFilter
+}
+
+input PageBlocksCoursesCoursesFilter {
   n: StringFilter
   numeral: StringFilter
   time: StringFilter
@@ -179,19 +290,128 @@ input ActsCoursesFilter {
   choice: StringFilter
 }
 
-input ActsFilter {
-  courses: ActsCoursesFilter
+input PageBlocksCoursesFilter {
+  eyebrow: StringFilter
+  headline: StringFilter
+  description: StringFilter
+  layout: StringFilter
+  courses: PageBlocksCoursesCoursesFilter
 }
 
-type ActsConnectionEdges {
+input PageBlocksAssemblyStepsFilter {
+  n: StringFilter
+  title: StringFilter
+  text: StringFilter
+}
+
+input PageBlocksAssemblyFilter {
+  eyebrow: StringFilter
+  caption: StringFilter
+  badge: StringFilter
+  image: ImageFilter
+  plateSrc: ImageFilter
+  steps: PageBlocksAssemblyStepsFilter
+}
+
+input PageBlocksStoryPreviewFilter {
+  eyebrow: StringFilter
+  headline: StringFilter
+  body1: StringFilter
+  body2: StringFilter
+  estLabel: StringFilter
+  ctaLabel: StringFilter
+  ctaLink: StringFilter
+  image: ImageFilter
+  nameplate: StringFilter
+  quote: StringFilter
+}
+
+input PageBlocksMenuHeaderFilter {
+  eyebrow: StringFilter
+  headline1: StringFilter
+  headline2: StringFilter
+  description: StringFilter
+  background: ImageFilter
+}
+
+input PageBlocksLetterFilter {
+  eyebrow: StringFilter
+  headline: StringFilter
+  marginNote: StringFilter
+  para1: StringFilter
+  para2: StringFilter
+  signoff: StringFilter
+}
+
+input PageBlocksFactsFactsFilter {
+  n: StringFilter
+  t: StringFilter
+}
+
+input PageBlocksFactsFilter {
+  eyebrow: StringFilter
+  facts: PageBlocksFactsFactsFilter
+}
+
+input PageBlocksSuppliersSuppliersFilter {
+  name: StringFilter
+  desc: StringFilter
+  img: ImageFilter
+}
+
+input PageBlocksSuppliersFilter {
+  eyebrow: StringFilter
+  headline: StringFilter
+  hint: StringFilter
+  suppliers: PageBlocksSuppliersSuppliersFilter
+}
+
+input PageBlocksCtaFilter {
+  eyebrow: StringFilter
+  headline: StringFilter
+  primaryLabel: StringFilter
+  primaryLink: StringFilter
+  secondaryLabel: StringFilter
+  secondaryLink: StringFilter
+}
+
+input PageBlocksVisitIntroFilter {
+  eyebrow: StringFilter
+  headline: StringFilter
+  description: StringFilter
+  note1: StringFilter
+  note2: StringFilter
+  note3: StringFilter
+}
+
+input PageBlocksFilter {
+  hero: PageBlocksHeroFilter
+  marquee: PageBlocksMarqueeFilter
+  courses: PageBlocksCoursesFilter
+  assembly: PageBlocksAssemblyFilter
+  storyPreview: PageBlocksStoryPreviewFilter
+  menuHeader: PageBlocksMenuHeaderFilter
+  letter: PageBlocksLetterFilter
+  facts: PageBlocksFactsFilter
+  suppliers: PageBlocksSuppliersFilter
+  cta: PageBlocksCtaFilter
+  visitIntro: PageBlocksVisitIntroFilter
+}
+
+input PageFilter {
+  seoTitle: StringFilter
+  blocks: PageBlocksFilter
+}
+
+type PageConnectionEdges {
   cursor: String!
-  node: Acts
+  node: Page
 }
 
-type ActsConnection implements Connection {
+type PageConnection implements Connection {
   pageInfo: PageInfo!
   totalCount: Float!
-  edges: [ActsConnectionEdges]
+  edges: [PageConnectionEdges]
 }
 
 type Journal implements Node & Document {
@@ -240,45 +460,125 @@ type JournalConnection implements Connection {
   edges: [JournalConnectionEdges]
 }
 
+type ConfigSeo {
+  title: String!
+  description: String!
+}
+
+type ConfigNav {
+  title: String!
+  link: String!
+}
+
+type ConfigFooter {
+  ctaEyebrow: String
+  ctaHeadline: String
+  ctaText: String
+  phone: String
+  email: String
+  address1: String
+  address2: String
+}
+
+type Config implements Node & Document {
+  seo: ConfigSeo
+  nav: [ConfigNav]
+  footer: ConfigFooter
+  id: ID!
+  _sys: SystemInfo!
+  _values: JSON!
+}
+
+input ConfigSeoFilter {
+  title: StringFilter
+  description: StringFilter
+}
+
+input ConfigNavFilter {
+  title: StringFilter
+  link: StringFilter
+}
+
+input ConfigFooterFilter {
+  ctaEyebrow: StringFilter
+  ctaHeadline: StringFilter
+  ctaText: StringFilter
+  phone: StringFilter
+  email: StringFilter
+  address1: StringFilter
+  address2: StringFilter
+}
+
+input ConfigFilter {
+  seo: ConfigSeoFilter
+  nav: ConfigNavFilter
+  footer: ConfigFooterFilter
+}
+
+type ConfigConnectionEdges {
+  cursor: String!
+  node: Config
+}
+
+type ConfigConnection implements Connection {
+  pageInfo: PageInfo!
+  totalCount: Float!
+  edges: [ConfigConnectionEdges]
+}
+
 type Mutation {
   addPendingDocument(collection: String!, relativePath: String!, template: String): DocumentNode!
   updateDocument(collection: String, relativePath: String!, params: DocumentUpdateMutation!): DocumentNode!
   deleteDocument(collection: String, relativePath: String!): DocumentNode!
   createDocument(collection: String, relativePath: String!, params: DocumentMutation!): DocumentNode!
   createFolder(collection: String, relativePath: String!): DocumentNode!
-  updateGeneral(relativePath: String!, params: GeneralMutation!): General!
-  createGeneral(relativePath: String!, params: GeneralMutation!): General!
-  updateActs(relativePath: String!, params: ActsMutation!): Acts!
-  createActs(relativePath: String!, params: ActsMutation!): Acts!
+  updatePage(relativePath: String!, params: PageMutation!): Page!
+  createPage(relativePath: String!, params: PageMutation!): Page!
   updateJournal(relativePath: String!, params: JournalMutation!): Journal!
   createJournal(relativePath: String!, params: JournalMutation!): Journal!
+  updateConfig(relativePath: String!, params: ConfigMutation!): Config!
+  createConfig(relativePath: String!, params: ConfigMutation!): Config!
 }
 
 input DocumentUpdateMutation {
-  general: GeneralMutation
-  acts: ActsMutation
+  page: PageMutation
   journal: JournalMutation
+  config: ConfigMutation
   relativePath: String
 }
 
 input DocumentMutation {
-  general: GeneralMutation
-  acts: ActsMutation
+  page: PageMutation
   journal: JournalMutation
+  config: ConfigMutation
 }
 
-input GeneralNav_linksMutation {
-  label: String
-  href: String
+input PageBlocksHeroPlateImageMutation {
+  src: String
+  alt: String
 }
 
-input GeneralMutation {
-  seo_title: String
-  description: String
-  nav_links: [GeneralNav_linksMutation]
+input PageBlocksHeroMutation {
+  eyebrow: String
+  miles: String
+  tagline: String
+  primaryLabel: String
+  primaryLink: String
+  secondaryLabel: String
+  secondaryLink: String
+  scrollNote: String
+  plateImage: PageBlocksHeroPlateImageMutation
 }
 
-input ActsCoursesMutation {
+input PageBlocksMarqueePhrasesMutation {
+  text: String
+}
+
+input PageBlocksMarqueeMutation {
+  phrases: [PageBlocksMarqueePhrasesMutation]
+}
+
+input PageBlocksCoursesCoursesMutation {
   n: String
   numeral: String
   time: String
@@ -291,8 +591,117 @@ input ActsCoursesMutation {
   choice: [String]
 }
 
-input ActsMutation {
-  courses: [ActsCoursesMutation]
+input PageBlocksCoursesMutation {
+  eyebrow: String
+  headline: String
+  description: String
+  layout: String
+  courses: [PageBlocksCoursesCoursesMutation]
+}
+
+input PageBlocksAssemblyStepsMutation {
+  n: String
+  title: String
+  text: String
+}
+
+input PageBlocksAssemblyMutation {
+  eyebrow: String
+  caption: String
+  badge: String
+  image: String
+  plateSrc: String
+  steps: [PageBlocksAssemblyStepsMutation]
+}
+
+input PageBlocksStoryPreviewMutation {
+  eyebrow: String
+  headline: String
+  body1: String
+  body2: String
+  estLabel: String
+  ctaLabel: String
+  ctaLink: String
+  image: String
+  nameplate: String
+  quote: String
+}
+
+input PageBlocksMenuHeaderMutation {
+  eyebrow: String
+  headline1: String
+  headline2: String
+  description: String
+  background: String
+}
+
+input PageBlocksLetterMutation {
+  eyebrow: String
+  headline: String
+  marginNote: String
+  para1: String
+  para2: String
+  signoff: String
+}
+
+input PageBlocksFactsFactsMutation {
+  n: String
+  t: String
+}
+
+input PageBlocksFactsMutation {
+  eyebrow: String
+  facts: [PageBlocksFactsFactsMutation]
+}
+
+input PageBlocksSuppliersSuppliersMutation {
+  name: String
+  desc: String
+  img: String
+}
+
+input PageBlocksSuppliersMutation {
+  eyebrow: String
+  headline: String
+  hint: String
+  suppliers: [PageBlocksSuppliersSuppliersMutation]
+}
+
+input PageBlocksCtaMutation {
+  eyebrow: String
+  headline: String
+  primaryLabel: String
+  primaryLink: String
+  secondaryLabel: String
+  secondaryLink: String
+}
+
+input PageBlocksVisitIntroMutation {
+  eyebrow: String
+  headline: String
+  description: String
+  note1: String
+  note2: String
+  note3: String
+}
+
+input PageBlocksMutation {
+  hero: PageBlocksHeroMutation
+  marquee: PageBlocksMarqueeMutation
+  courses: PageBlocksCoursesMutation
+  assembly: PageBlocksAssemblyMutation
+  storyPreview: PageBlocksStoryPreviewMutation
+  menuHeader: PageBlocksMenuHeaderMutation
+  letter: PageBlocksLetterMutation
+  facts: PageBlocksFactsMutation
+  suppliers: PageBlocksSuppliersMutation
+  cta: PageBlocksCtaMutation
+  visitIntro: PageBlocksVisitIntroMutation
+}
+
+input PageMutation {
+  seoTitle: String
+  blocks: [PageBlocksMutation]
 }
 
 input JournalMutation {
@@ -302,6 +711,32 @@ input JournalMutation {
   description: String
   image: String
   body: RichText
+}
+
+input ConfigSeoMutation {
+  title: String
+  description: String
+}
+
+input ConfigNavMutation {
+  title: String
+  link: String
+}
+
+input ConfigFooterMutation {
+  ctaEyebrow: String
+  ctaHeadline: String
+  ctaText: String
+  phone: String
+  email: String
+  address1: String
+  address2: String
+}
+
+input ConfigMutation {
+  seo: ConfigSeoMutation
+  nav: [ConfigNavMutation]
+  footer: ConfigFooterMutation
 }
 
 schema {

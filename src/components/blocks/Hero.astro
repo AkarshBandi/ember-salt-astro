@@ -1,0 +1,49 @@
+---
+import { tinaField } from '@tinacms/astro/tina-field';
+
+const { data } = Astro.props as { data: any };
+---
+<section id="top" class="hero cellar">
+  <div class="hero-bg" id="heroBg">
+    <canvas id="gl" aria-hidden="true"></canvas>
+    <div class="hero-scrim"></div>
+    <div class="hero-ignite" id="ignite"></div>
+  </div>
+  <div class="wrap-wide hero-content" id="heroContent">
+    <div class="rv in" style="display:flex;align-items:center;gap:16px">
+      <span class="eyebrow" style="color:var(--cream-glow)" data-tina-field={tinaField(data, 'eyebrow')}>{data?.eyebrow ?? 'Woodfire & fermentation — Portland'}</span>
+      <span style="height:1px;width:96px;background:rgba(200,169,110,0.6)" class="hide-sm"></span>
+      <span class="miles-pill" data-tina-field={tinaField(data, 'miles')}>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 22 16 8"/><path d="M3.47 12.53 5 11l1.53 1.53a3.5 3.5 0 0 1 0 4.94L5 19l-1.53-1.53a3.5 3.5 0 0 1 0-4.94Z"/><path d="M7.47 8.53 9 7l1.53 1.53a3.5 3.5 0 0 1 0 4.94L9 15l-1.53-1.53a3.5 3.5 0 0 1 0-4.94Z"/><path d="M11.47 4.53 13 3l1.53 1.53a3.5 3.5 0 0 1 0 4.94L13 11l-1.53-1.53a3.5 3.5 0 0 1 0-4.94Z"/><path d="M20 2h2v2a4 4 0 0 1-4 4h-2V6a4 4 0 0 1 4-4Z"/><path d="M11.47 17.47 13 19l-1.53 1.53a3.5 3.5 0 0 1-4.94 0L5 19l1.53-1.53a3.5 3.5 0 0 1 4.94 0Z"/></svg>
+        {data?.miles ?? '40 miles'}</span>
+    </div>
+    <h1 aria-label="Ember and Salt">
+      <span class="hl-set" aria-hidden="true">
+        <span class="ch" style="--d:0.65s">E</span><span class="ch" style="--d:0.72s">M</span><span class="ch" style="--d:0.79s">B</span><span class="ch" style="--d:0.86s">E</span><span class="ch" style="--d:0.93s">R</span><span class="amp">&amp;</span><span class="plate-dot" data-tina-field={tinaField(data, 'plateImage')}><img src={data?.plateImage?.src ?? '/images/dish-fire.jpg'} alt={data?.plateImage?.alt ?? ''} /></span><span>SALT</span>
+      </span>
+    </h1>
+    <div style="margin-top:32px;display:flex;flex-direction:column;gap:24px" class="hero-cta-row">
+      <p class="font-display" style="font-style:italic;font-size:clamp(1.25rem,2vw+1rem,2rem);max-width:28rem;line-height:1.3" data-tina-field={tinaField(data, 'tagline')}>{data?.tagline ?? 'Twelve courses. Fourteen seats. One oak kiln.'}</p>
+      <div style="display:flex;flex-wrap:wrap;gap:12px">
+        <a href={data?.primaryLink ?? '/menu/'} class="btn btn-pour eyebrow" data-tina-field={tinaField(data, 'primaryLabel')}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          {data?.primaryLabel ?? 'Read the menu'}</a>
+        <span data-magnetic><a href={data?.secondaryLink ?? '/visit/'} class="btn btn-solid eyebrow" data-tina-field={tinaField(data, 'secondaryLabel')}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>
+          {data?.secondaryLabel ?? 'Secure a table'}</a></span>
+      </div>
+    </div>
+    <div style="margin-top:40px;display:flex;align-items:center;gap:12px;color:rgba(245,240,232,0.5)">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#C8A96E" stroke-width="1.5"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+      <span style="width:64px;height:1px;background:linear-gradient(90deg,#C8A96E,transparent)"></span>
+      <span style="font-size:11px;letter-spacing:0.25em;text-transform:uppercase" data-tina-field={tinaField(data, 'scrollNote')}>{data?.scrollNote ?? 'Scroll slowly'}</span>
+    </div>
+  </div>
+</section>
+<style>
+.hero h1 .ch { opacity: 0; transform: translateY(70px) rotate(4deg); animation: chIn 0.7s cubic-bezier(0.22,1,0.36,1) forwards; animation-delay: var(--d); }
+@keyframes chIn { to { opacity: 1; transform: none; } }
+.hero .plate-dot { opacity: 0; animation: chIn 0.48s cubic-bezier(0.34,1.3,0.64,1) forwards; animation-delay: 1.15s; }
+@media (prefers-reduced-motion: reduce) { .hero h1 .ch, .hero .plate-dot { opacity: 1; transform: none; animation: none; } }
+@media (min-width: 768px) { .hero-cta-row { flex-direction: row !important; align-items: end; gap: 48px !important; } .hero-cta-row > div:last-child { margin-left: auto; } }
+</style>

@@ -1,0 +1,28 @@
+---
+import { tinaField } from '@tinacms/astro/tina-field';
+
+const { data } = Astro.props as { data: any };
+---
+<div class="cellar" style="padding-top:40px">
+  <hr style="border:none;border-top:1px solid rgba(200,169,110,0.15);margin:0 10%" />
+</div>
+<section id="story" class="linen" style="padding:var(--space-section) 0;color:var(--ink)">
+  <div class="wrap" style="display:grid;gap:48px;align-items:center" id="storyGrid">
+    <div>
+      <div class="rv"><p class="eyebrow" style="color:var(--brassdeep)" data-tina-field={tinaField(data, 'eyebrow')}>{data?.eyebrow ?? 'The chef'}</p>
+      <h2 class="font-display" style="font-weight:900;margin-top:12px;line-height:1.1;font-size:var(--fs-h2)" data-tina-field={tinaField(data, 'headline')}>{data?.headline ?? 'One room, one kiln, fourteen seats.'}</h2></div>
+      <div class="rv"><p class="font-display" style="font-size:1.125rem;line-height:1.7;margin-top:24px;color:rgba(34,26,18,0.82)" data-tina-field={tinaField(data, 'body1')}>{data?.body1}</p>
+      <p style="font-size:15px;line-height:1.7;margin-top:16px;color:rgba(34,26,18,0.62)" data-tina-field={tinaField(data, 'body2')}>{data?.body2}</p></div>
+      <div class="rv"><div class="gold-rule" style="margin:32px 0 24px"><span class="font-display" style="font-style:italic;font-size:14px;color:rgba(34,26,18,0.7)" data-tina-field={tinaField(data, 'estLabel')}>{data?.estLabel ?? 'est. 2019'}</span></div>
+      <a href={data?.ctaLink ?? '/story/'} class="btn btn-pour btn-pour-dark eyebrow" data-tina-field={tinaField(data, 'ctaLabel')}>{data?.ctaLabel ?? 'Read her letter →'}</a></div>
+    </div>
+    <div class="rv">
+      <div class="charger">
+        <div class="dish" style="width:min(420px,80vw);height:min(420px,80vw)" data-tina-field={tinaField(data, 'image')}><img src={data?.image ?? '/images/chef.jpg'} alt="Chef Mara Okafor at the kiln" style="width:100%;height:100%;object-fit:cover" /></div>
+        <span style="position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);white-space:nowrap;background:var(--cellar);border:1px solid rgba(200,169,110,0.5);padding:8px 20px;font-size:11px;letter-spacing:0.32em;text-transform:uppercase;font-weight:600;color:var(--brass)" data-tina-field={tinaField(data, 'nameplate')}>{data?.nameplate ?? 'Mara Okafor — Chef & Founder'}</span>
+      </div>
+      <p class="font-display" style="font-style:italic;font-size:1.25rem;margin-top:40px;text-align:center;color:rgba(34,26,18,0.85);max-width:28rem;margin-left:auto;margin-right:auto;line-height:1.5" data-tina-field={tinaField(data, 'quote')}>{data?.quote}</p>
+    </div>
+  </div>
+</section>
+<style>@media(min-width:900px){#storyGrid{grid-template-columns:1fr 1fr !important}}</style>

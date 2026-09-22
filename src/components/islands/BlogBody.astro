@@ -1,0 +1,18 @@
+---
+import TinaMarkdown from '@tinacms/astro/TinaMarkdown.astro';
+import { tinaField } from '@tinacms/astro/tina-field';
+
+const { data } = Astro.props as { data: any };
+---
+<main class="linen" style="color:var(--ink);padding:160px 0 var(--space-section)">
+  <article style="max-width:720px;margin:0 auto;padding:0 var(--gutter)">
+    <p class="eyebrow" style="color:var(--brassdeep)" data-tina-field={tinaField(data, 'category')}>{data?.category} — {data?.date ? new Date(data.date).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : ''}</p>
+    <h1 class="font-display" style="font-weight:900;letter-spacing:-0.02em;margin-top:12px;font-size:var(--fs-h2)" data-tina-field={tinaField(data, 'title')}>{data?.title}</h1>
+    {data?.image && <figure style="margin:32px 0;border:1px solid rgba(154,123,69,0.5);padding:8px" data-tina-field={tinaField(data, 'image')}><img src={data.image} alt={data.title ?? ''} style="width:100%;height:auto" /></figure>}
+    {data?.description && <p class="font-display" style="font-style:italic;font-size:1.15rem;color:rgba(34,26,18,0.7)" data-tina-field={tinaField(data, 'description')}>{data.description}</p>}
+    <div class="font-display" style="font-size:1.15rem;line-height:1.9" data-tina-field={tinaField(data, 'body')}>
+      <TinaMarkdown content={data?.body} />
+    </div>
+    <div style="margin-top:48px"><a href="/journal/" class="eyebrow draw-link">&larr; All entries</a></div>
+  </article>
+</main>

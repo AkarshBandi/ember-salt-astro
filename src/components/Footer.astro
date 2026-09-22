@@ -1,11 +1,20 @@
 ---
+import { tinaField } from '@tinacms/astro/tina-field';
+import type { CmsConfig } from '../lib/tina/data';
+
+interface Props {
+  config?: CmsConfig | null;
+}
+
+const { config } = Astro.props;
+const footer = (config as any)?.footer ?? {};
 ---
 <footer id="visit" class="cellar" style="overflow:clip;border-top:1px solid rgba(200,169,110,0.25)">
   <div class="wrap-wide" style="padding-top:var(--space-section);padding-bottom:32px">
     <div class="rv">
-      <p class="eyebrow" style="color:var(--brass);text-align:center">Reservations</p>
-      <h2 class="font-display" style="font-weight:900;text-align:center;margin-top:12px;font-size:var(--fs-h2)">Two seatings nightly.</h2>
-      <p style="text-align:center;color:rgba(245,240,232,0.55);font-size:14px;margin-top:12px">Seventeen hundred hours, and twenty hundred. The diary opens on the first of the month — regulars write, newcomers telephone.</p>
+      <p class="eyebrow" style="color:var(--brass);text-align:center" data-tina-field={tinaField(footer, 'ctaEyebrow')}>{footer?.ctaEyebrow ?? 'Reservations'}</p>
+      <h2 class="font-display" style="font-weight:900;text-align:center;margin-top:12px;font-size:var(--fs-h2)" data-tina-field={tinaField(footer, 'ctaHeadline')}>{footer?.ctaHeadline ?? 'Two seatings nightly.'}</h2>
+      <p style="text-align:center;color:rgba(245,240,232,0.55);font-size:14px;margin-top:12px" data-tina-field={tinaField(footer, 'ctaText')}>{footer?.ctaText ?? 'Seventeen hundred hours, and twenty hundred. The diary opens on the first of the month — regulars write, newcomers telephone.'}</p>
       <div style="display:flex;justify-content:center;margin-top:28px">
         <span data-magnetic><a href="/visit/" class="btn btn-pour eyebrow" style="padding:16px 36px">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>
@@ -35,15 +44,15 @@
         <div>
           <p class="eyebrow" style="color:var(--brass)">⌖ The room</p>
           <div style="margin-top:12px;display:grid;gap:10px;font-size:15px;line-height:1.6;color:rgba(245,240,232,0.8)">
-            <p><strong class="font-display" style="color:var(--porcelain)">14 Kiln Lane</strong><br />Portland, OR</p>
+            <p><strong class="font-display" style="color:var(--porcelain)" data-tina-field={tinaField(footer, 'address1')}>{footer?.address1 ?? '14 Kiln Lane'}</strong><br /><span data-tina-field={tinaField(footer, 'address2')}>{footer?.address2 ?? 'Portland, OR'}</span></p>
             <p style="color:rgba(245,240,232,0.5)">Look for the brass flame by the door — three knocks, we answer.</p>
           </div>
         </div>
         <div>
           <p class="eyebrow" style="color:var(--brass)">✆ Telephone & post</p>
           <div style="margin-top:12px;display:grid;gap:10px;font-size:15px;line-height:1.6;color:rgba(245,240,232,0.8)">
-            <p><strong class="font-display" style="color:var(--porcelain)">+1 503 555 0184</strong><br />parties above six — telephone only</p>
-            <p style="color:rgba(245,240,232,0.5)">hello@emberandsalt.food</p>
+            <p><strong class="font-display" style="color:var(--porcelain)" data-tina-field={tinaField(footer, 'phone')}>{footer?.phone ?? '+1 503 555 0184'}</strong><br />parties above six — telephone only</p>
+            <p style="color:rgba(245,240,232,0.5)" data-tina-field={tinaField(footer, 'email')}>{footer?.email ?? 'hello@emberandsalt.food'}</p>
           </div>
         </div>
       </div>

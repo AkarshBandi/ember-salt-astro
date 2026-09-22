@@ -1,0 +1,18 @@
+---
+import { tinaField } from '@tinacms/astro/tina-field';
+
+const { data } = Astro.props as { data: any };
+const items = (data?.phrases ?? []).filter(Boolean);
+const loop = [...items, ...items];
+---
+<div class="press-strip cellar" data-tina-field={tinaField(data, 'phrases')}>
+  <div class="crawl-track">
+    {[0, 1].map((rep) => (
+      <>
+        {items.map((item: any) => (
+          <span class="crawl-item"><span class="t font-display" style="font-style:italic">{item?.text}</span><span class="d">&#9670;</span></span>
+        ))}
+      </>
+    ))}
+  </div>
+</div>

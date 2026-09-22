@@ -1,0 +1,12 @@
+---
+import { tinaField } from '@tinacms/astro/tina-field';
+
+const { data } = Astro.props as { data: any };
+---
+<section class="linen" style="padding:112px 0 8px;color:var(--ink)">
+  <div style="max-width:720px;margin:0 auto;padding-left:var(--gutter);padding-right:var(--gutter)">
+    <p class="eyebrow rv" style="color:var(--brassdeep)" data-tina-field={tinaField(data, 'eyebrow')}>{data?.eyebrow ?? 'Reservations'}</p>
+    <h1 class="font-display rv" style="font-weight:900;letter-spacing:-0.02em;margin-top:12px;font-size:var(--fs-h2)" data-tina-field={tinaField(data, 'headline')}>{data?.headline ?? 'Request a table.'}</h1>
+    <p class="rv" style="margin-top:12px;font-size:15px;color:rgba(34,26,18,0.65)" data-tina-field={tinaField(data, 'description')}>{data?.description}</p>
+  </div>
+</section>
