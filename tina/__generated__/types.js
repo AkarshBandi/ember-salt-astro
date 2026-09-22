@@ -25,6 +25,11 @@ export const PagePartsFragmentDoc = gql`
         src
         alt
       }
+      bgImage {
+        __typename
+        src
+        alt
+      }
     }
     ... on PageBlocksMarquee {
       phrases {
@@ -153,15 +158,28 @@ export const ConfigPartsFragmentDoc = gql`
     title
     link
   }
+  headerCtaLabel
   footer {
     __typename
     ctaEyebrow
     ctaHeadline
     ctaText
+    guestEyebrow
+    guestLine
+    serviceEyebrow
+    serviceThuSat
+    serviceSun
+    serviceNote
+    roomEyebrow
     phone
     email
     address1
     address2
+    roomNote
+    legalNote
+    giantText
+    copyright
+    hoursNote
   }
 }
     `;

@@ -21,6 +21,15 @@ export const heroBlockSchema: Template = {
         { name: 'alt', label: 'Alt text', type: 'string' },
       ],
     },
+    {
+      type: 'object',
+      label: 'Hero background',
+      name: 'bgImage',
+      fields: [
+        { name: 'src', label: 'Image source', type: 'image' },
+        { name: 'alt', label: 'Alt text', type: 'string' },
+      ],
+    },
   ],
   ui: {
     defaultItem: {

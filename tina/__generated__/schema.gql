@@ -101,6 +101,11 @@ type PageBlocksHeroPlateImage {
   alt: String
 }
 
+type PageBlocksHeroBgImage {
+  src: String
+  alt: String
+}
+
 type PageBlocksHero {
   eyebrow: String
   miles: String
@@ -111,6 +116,7 @@ type PageBlocksHero {
   secondaryLink: String
   scrollNote: String
   plateImage: PageBlocksHeroPlateImage
+  bgImage: PageBlocksHeroBgImage
 }
 
 type PageBlocksMarqueePhrases {
@@ -257,6 +263,11 @@ input PageBlocksHeroPlateImageFilter {
   alt: StringFilter
 }
 
+input PageBlocksHeroBgImageFilter {
+  src: ImageFilter
+  alt: StringFilter
+}
+
 input PageBlocksHeroFilter {
   eyebrow: StringFilter
   miles: StringFilter
@@ -267,6 +278,7 @@ input PageBlocksHeroFilter {
   secondaryLink: StringFilter
   scrollNote: StringFilter
   plateImage: PageBlocksHeroPlateImageFilter
+  bgImage: PageBlocksHeroBgImageFilter
 }
 
 input PageBlocksMarqueePhrasesFilter {
@@ -474,15 +486,28 @@ type ConfigFooter {
   ctaEyebrow: String
   ctaHeadline: String
   ctaText: String
+  guestEyebrow: String
+  guestLine: String
+  serviceEyebrow: String
+  serviceThuSat: String
+  serviceSun: String
+  serviceNote: String
+  roomEyebrow: String
   phone: String
   email: String
   address1: String
   address2: String
+  roomNote: String
+  legalNote: String
+  giantText: String
+  copyright: String
+  hoursNote: String
 }
 
 type Config implements Node & Document {
   seo: ConfigSeo
   nav: [ConfigNav]
+  headerCtaLabel: String
   footer: ConfigFooter
   id: ID!
   _sys: SystemInfo!
@@ -503,15 +528,28 @@ input ConfigFooterFilter {
   ctaEyebrow: StringFilter
   ctaHeadline: StringFilter
   ctaText: StringFilter
+  guestEyebrow: StringFilter
+  guestLine: StringFilter
+  serviceEyebrow: StringFilter
+  serviceThuSat: StringFilter
+  serviceSun: StringFilter
+  serviceNote: StringFilter
+  roomEyebrow: StringFilter
   phone: StringFilter
   email: StringFilter
   address1: StringFilter
   address2: StringFilter
+  roomNote: StringFilter
+  legalNote: StringFilter
+  giantText: StringFilter
+  copyright: StringFilter
+  hoursNote: StringFilter
 }
 
 input ConfigFilter {
   seo: ConfigSeoFilter
   nav: ConfigNavFilter
+  headerCtaLabel: StringFilter
   footer: ConfigFooterFilter
 }
 
@@ -558,6 +596,11 @@ input PageBlocksHeroPlateImageMutation {
   alt: String
 }
 
+input PageBlocksHeroBgImageMutation {
+  src: String
+  alt: String
+}
+
 input PageBlocksHeroMutation {
   eyebrow: String
   miles: String
@@ -568,6 +611,7 @@ input PageBlocksHeroMutation {
   secondaryLink: String
   scrollNote: String
   plateImage: PageBlocksHeroPlateImageMutation
+  bgImage: PageBlocksHeroBgImageMutation
 }
 
 input PageBlocksMarqueePhrasesMutation {
@@ -727,15 +771,28 @@ input ConfigFooterMutation {
   ctaEyebrow: String
   ctaHeadline: String
   ctaText: String
+  guestEyebrow: String
+  guestLine: String
+  serviceEyebrow: String
+  serviceThuSat: String
+  serviceSun: String
+  serviceNote: String
+  roomEyebrow: String
   phone: String
   email: String
   address1: String
   address2: String
+  roomNote: String
+  legalNote: String
+  giantText: String
+  copyright: String
+  hoursNote: String
 }
 
 input ConfigMutation {
   seo: ConfigSeoMutation
   nav: [ConfigNavMutation]
+  headerCtaLabel: String
   footer: ConfigFooterMutation
 }
 

@@ -22,6 +22,15 @@ var heroBlockSchema = {
         { name: "src", label: "Image source", type: "image" },
         { name: "alt", label: "Alt text", type: "string" }
       ]
+    },
+    {
+      type: "object",
+      label: "Hero background",
+      name: "bgImage",
+      fields: [
+        { name: "src", label: "Image source", type: "image" },
+        { name: "alt", label: "Alt text", type: "string" }
+      ]
     }
   ],
   ui: {
@@ -409,6 +418,11 @@ var GlobalCollection = {
       ]
     },
     {
+      name: "headerCtaLabel",
+      label: "Header CTA label",
+      type: "string"
+    },
+    {
       name: "footer",
       label: "Footer",
       type: "object",
@@ -416,10 +430,22 @@ var GlobalCollection = {
         { name: "ctaEyebrow", label: "CTA eyebrow", type: "string" },
         { name: "ctaHeadline", label: "CTA headline", type: "string" },
         { name: "ctaText", label: "CTA text", type: "string", ui: { component: "textarea" } },
+        { name: "guestEyebrow", label: "Guest eyebrow", type: "string" },
+        { name: "guestLine", label: "Guest line", type: "string", ui: { component: "textarea" } },
+        { name: "serviceEyebrow", label: "Service eyebrow", type: "string" },
+        { name: "serviceThuSat", label: "Thu\u2013Sat line", type: "string" },
+        { name: "serviceSun", label: "Sunday line", type: "string" },
+        { name: "serviceNote", label: "Service note", type: "string" },
+        { name: "roomEyebrow", label: "Room eyebrow", type: "string" },
         { name: "phone", label: "Phone", type: "string" },
         { name: "email", label: "Email", type: "string" },
         { name: "address1", label: "Address line 1", type: "string" },
-        { name: "address2", label: "Address line 2", type: "string" }
+        { name: "address2", label: "Address line 2", type: "string" },
+        { name: "roomNote", label: "Room note", type: "string", ui: { component: "textarea" } },
+        { name: "legalNote", label: "Legal note", type: "string", ui: { component: "textarea" } },
+        { name: "giantText", label: "Giant outline text", type: "string" },
+        { name: "copyright", label: "Copyright", type: "string" },
+        { name: "hoursNote", label: "Hours note", type: "string" }
       ]
     }
   ]

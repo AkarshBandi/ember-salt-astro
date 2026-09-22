@@ -4,8 +4,9 @@ import { tinaField } from '@tinacms/astro/tina-field';
 const { data } = Astro.props as { data: any };
 ---
 <section id="top" class="hero cellar">
-  <div class="hero-bg" id="heroBg">
+  <div class="hero-bg" id="heroBg" data-tina-field={tinaField(data, 'bgImage')}>
     <canvas id="gl" aria-hidden="true"></canvas>
+    <img src={data?.bgImage?.src ?? '/images/hero.jpg'} alt={data?.bgImage?.alt ?? ''} style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;pointer-events:none" aria-hidden="true" />
     <div class="hero-scrim"></div>
     <div class="hero-ignite" id="ignite"></div>
   </div>

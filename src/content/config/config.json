@@ -1,8 +1,7 @@
 {
   "seo": {
     "title": "Ember & Salt",
-    "description": "Portland woodfire tasting kitchen. Twelve courses, fourteen seats, one oak kiln. Forty miles of ingredients.",
-    "siteOwner": "Mara Okafor"
+    "description": "Portland woodfire tasting kitchen. Twelve courses, fourteen seats, one oak kiln. Forty miles of ingredients."
   },
   "nav": [
     { "title": "Menu", "link": "/menu/" },
@@ -10,14 +9,26 @@
     { "title": "Journal", "link": "/journal/" },
     { "title": "Reservations", "link": "/visit/" }
   ],
-  "contactLinks": [],
+  "headerCtaLabel": "Secure a Table",
   "footer": {
     "ctaEyebrow": "Reservations",
     "ctaHeadline": "Two seatings nightly.",
     "ctaText": "Seventeen hundred hours, and twenty hundred. The diary opens on the first of the month — regulars write, newcomers telephone.",
+    "guestEyebrow": "Guest information",
+    "guestLine": "Taken at the door, remembered at the table.",
+    "serviceEyebrow": "⌾ Service",
+    "serviceThuSat": "Thu – Sat · 17:00 & 20:00",
+    "serviceSun": "Sunday · one long service · 12:00 – 20:00",
+    "serviceNote": "Mon – Wed — the kiln rests.",
+    "roomEyebrow": "⌖ The room",
     "phone": "+1 503 555 0184",
     "email": "hello@emberandsalt.food",
     "address1": "14 Kiln Lane",
-    "address2": "Portland, OR"
+    "address2": "Portland, OR",
+    "roomNote": "Look for the brass flame by the door — three knocks, we answer.",
+    "legalNote": "Good to know — allergens told ahead are cooked around · smart dress, no ceremony · the whole table takes the tasting.",
+    "giantText": "EMBER",
+    "copyright": "© 2026 Ember & Salt — portfolio demo · photos Pexels",
+    "hoursNote": "Thu – Sat · Sun midday"
   }
 }

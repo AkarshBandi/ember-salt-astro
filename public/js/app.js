@@ -2,8 +2,11 @@
    Motion math preserved: springs, lerps, velocity turbulence, eased mappings. */
 (function () {
   "use strict";
-  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var fine = window.matchMedia("(pointer: fine)").matches;
+  var isTinaEdit = false;
+  try { isTinaEdit = window.self !== window.top; } catch (e) { isTinaEdit = true; }
+  if (!isTinaEdit && document.querySelector('[data-tina-form]')) isTinaEdit = true;
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches || isTinaEdit;
+  var fine = window.matchMedia("(pointer: fine)").matches && !isTinaEdit;
 
   /* ---------- spring helper: semi-implicit Euler, ζ = c/(2√(km)) ---------- */
   function springTo(obj, key, target, k, c, m, onU) {
@@ -29,7 +32,7 @@
   /* ---------- Lenis smooth scroll ---------- */
   var lenis = null;
   try {
-    if (!reduce && typeof Lenis !== "undefined") {
+    if (!isTinaEdit && !reduce && typeof Lenis !== "undefined") {
       lenis = new Lenis({ lerp: 0.09, smoothWheel: true });
       window.__lenis = lenis;
       var rafL = function (t) { lenis.raf(t); requestAnimationFrame(rafL); };
@@ -87,16 +90,32 @@
   }
 
   /* ---------- reveal on scroll ---------- */
-  var io = new IntersectionObserver(function (entries) {
-    entries.forEach(function (en) {
-      if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
+  function revealAll() { document.querySelectorAll(".rv:not(.in)").forEach(function (el) { el.classList.add("in"); }); }
+  if (isTinaEdit) {
+    revealAll();
+    // Re-reveal swapped islands from Tina
+    new MutationObserver(function (muts) {
+      var needs = false;
+      muts.forEach(function (m) {
+        if (m.addedNodes && m.addedNodes.length) needs = true;
+        m.addedNodes.forEach(function (n) {
+          if (n.nodeType === 1 && (n.matches && n.matches('.rv') || n.querySelector && n.querySelector('.rv'))) needs = true;
+        });
+      });
+      if (needs) revealAll();
+    }).observe(document.body, { childList: true, subtree: true });
+  } else {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll(".rv").forEach(function (el, i) {
+      if (reduce) { el.classList.add("in"); return; }
+      el.style.transitionDelay = Math.min(i % 6 * 0.05, 0.25) + "s";
+      io.observe(el);
     });
-  }, { threshold: 0.12 });
-  document.querySelectorAll(".rv").forEach(function (el, i) {
-    if (reduce) { el.classList.add("in"); return; }
-    el.style.transitionDelay = Math.min(i % 6 * 0.05, 0.25) + "s";
-    io.observe(el);
-  });
+  }
 
   /* ---------- live seats ---------- */
   var SEATINGS = ["thu-sat-17", "thu-sat-20", "sun"];
@@ -172,6 +191,15 @@
 
   /* ---------- HERO WebGL steam + ignite + cinematic exit ---------- */
   (function hero() {
+    if (isTinaEdit) {
+      var c0 = document.getElementById("gl");
+      if (c0) { var fb0 = document.createElement("img"); fb0.src = c0.nextElementSibling && c0.nextElementSibling.tagName === 'IMG' ? c0.nextElementSibling.src : "/images/hero.jpg"; fb0.alt = "Fire dish"; fb0.style.cssText = "position:absolute;inset:0;width:100%;height:100%;object-fit:cover"; c0.replaceWith(fb0); }
+      var ig0 = document.getElementById("ignite");
+      if (ig0) ig0.remove();
+      var hc0 = document.getElementById("heroContent");
+      if (hc0) { hc0.style.opacity = "1"; hc0.style.transform = "none"; }
+      return;
+    }
     var canvas = document.getElementById("gl");
     if (!canvas) return;
     var heroContent = document.getElementById("heroContent");

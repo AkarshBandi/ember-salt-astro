@@ -209,6 +209,12 @@ export type PageBlocksHeroPlateImage = {
   alt?: Maybe<Scalars['String']['output']>;
 };
 
+export type PageBlocksHeroBgImage = {
+  __typename?: 'PageBlocksHeroBgImage';
+  src?: Maybe<Scalars['String']['output']>;
+  alt?: Maybe<Scalars['String']['output']>;
+};
+
 export type PageBlocksHero = {
   __typename?: 'PageBlocksHero';
   eyebrow?: Maybe<Scalars['String']['output']>;
@@ -220,6 +226,7 @@ export type PageBlocksHero = {
   secondaryLink?: Maybe<Scalars['String']['output']>;
   scrollNote?: Maybe<Scalars['String']['output']>;
   plateImage?: Maybe<PageBlocksHeroPlateImage>;
+  bgImage?: Maybe<PageBlocksHeroBgImage>;
 };
 
 export type PageBlocksMarqueePhrases = {
@@ -382,6 +389,11 @@ export type PageBlocksHeroPlateImageFilter = {
   alt?: InputMaybe<StringFilter>;
 };
 
+export type PageBlocksHeroBgImageFilter = {
+  src?: InputMaybe<ImageFilter>;
+  alt?: InputMaybe<StringFilter>;
+};
+
 export type PageBlocksHeroFilter = {
   eyebrow?: InputMaybe<StringFilter>;
   miles?: InputMaybe<StringFilter>;
@@ -392,6 +404,7 @@ export type PageBlocksHeroFilter = {
   secondaryLink?: InputMaybe<StringFilter>;
   scrollNote?: InputMaybe<StringFilter>;
   plateImage?: InputMaybe<PageBlocksHeroPlateImageFilter>;
+  bgImage?: InputMaybe<PageBlocksHeroBgImageFilter>;
 };
 
 export type PageBlocksMarqueePhrasesFilter = {
@@ -607,16 +620,29 @@ export type ConfigFooter = {
   ctaEyebrow?: Maybe<Scalars['String']['output']>;
   ctaHeadline?: Maybe<Scalars['String']['output']>;
   ctaText?: Maybe<Scalars['String']['output']>;
+  guestEyebrow?: Maybe<Scalars['String']['output']>;
+  guestLine?: Maybe<Scalars['String']['output']>;
+  serviceEyebrow?: Maybe<Scalars['String']['output']>;
+  serviceThuSat?: Maybe<Scalars['String']['output']>;
+  serviceSun?: Maybe<Scalars['String']['output']>;
+  serviceNote?: Maybe<Scalars['String']['output']>;
+  roomEyebrow?: Maybe<Scalars['String']['output']>;
   phone?: Maybe<Scalars['String']['output']>;
   email?: Maybe<Scalars['String']['output']>;
   address1?: Maybe<Scalars['String']['output']>;
   address2?: Maybe<Scalars['String']['output']>;
+  roomNote?: Maybe<Scalars['String']['output']>;
+  legalNote?: Maybe<Scalars['String']['output']>;
+  giantText?: Maybe<Scalars['String']['output']>;
+  copyright?: Maybe<Scalars['String']['output']>;
+  hoursNote?: Maybe<Scalars['String']['output']>;
 };
 
 export type Config = Node & Document & {
   __typename?: 'Config';
   seo?: Maybe<ConfigSeo>;
   nav?: Maybe<Array<Maybe<ConfigNav>>>;
+  headerCtaLabel?: Maybe<Scalars['String']['output']>;
   footer?: Maybe<ConfigFooter>;
   id: Scalars['ID']['output'];
   _sys: SystemInfo;
@@ -637,15 +663,28 @@ export type ConfigFooterFilter = {
   ctaEyebrow?: InputMaybe<StringFilter>;
   ctaHeadline?: InputMaybe<StringFilter>;
   ctaText?: InputMaybe<StringFilter>;
+  guestEyebrow?: InputMaybe<StringFilter>;
+  guestLine?: InputMaybe<StringFilter>;
+  serviceEyebrow?: InputMaybe<StringFilter>;
+  serviceThuSat?: InputMaybe<StringFilter>;
+  serviceSun?: InputMaybe<StringFilter>;
+  serviceNote?: InputMaybe<StringFilter>;
+  roomEyebrow?: InputMaybe<StringFilter>;
   phone?: InputMaybe<StringFilter>;
   email?: InputMaybe<StringFilter>;
   address1?: InputMaybe<StringFilter>;
   address2?: InputMaybe<StringFilter>;
+  roomNote?: InputMaybe<StringFilter>;
+  legalNote?: InputMaybe<StringFilter>;
+  giantText?: InputMaybe<StringFilter>;
+  copyright?: InputMaybe<StringFilter>;
+  hoursNote?: InputMaybe<StringFilter>;
 };
 
 export type ConfigFilter = {
   seo?: InputMaybe<ConfigSeoFilter>;
   nav?: InputMaybe<ConfigNavFilter>;
+  headerCtaLabel?: InputMaybe<StringFilter>;
   footer?: InputMaybe<ConfigFooterFilter>;
 };
 
@@ -764,6 +803,11 @@ export type PageBlocksHeroPlateImageMutation = {
   alt?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type PageBlocksHeroBgImageMutation = {
+  src?: InputMaybe<Scalars['String']['input']>;
+  alt?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type PageBlocksHeroMutation = {
   eyebrow?: InputMaybe<Scalars['String']['input']>;
   miles?: InputMaybe<Scalars['String']['input']>;
@@ -774,6 +818,7 @@ export type PageBlocksHeroMutation = {
   secondaryLink?: InputMaybe<Scalars['String']['input']>;
   scrollNote?: InputMaybe<Scalars['String']['input']>;
   plateImage?: InputMaybe<PageBlocksHeroPlateImageMutation>;
+  bgImage?: InputMaybe<PageBlocksHeroBgImageMutation>;
 };
 
 export type PageBlocksMarqueePhrasesMutation = {
@@ -933,15 +978,28 @@ export type ConfigFooterMutation = {
   ctaEyebrow?: InputMaybe<Scalars['String']['input']>;
   ctaHeadline?: InputMaybe<Scalars['String']['input']>;
   ctaText?: InputMaybe<Scalars['String']['input']>;
+  guestEyebrow?: InputMaybe<Scalars['String']['input']>;
+  guestLine?: InputMaybe<Scalars['String']['input']>;
+  serviceEyebrow?: InputMaybe<Scalars['String']['input']>;
+  serviceThuSat?: InputMaybe<Scalars['String']['input']>;
+  serviceSun?: InputMaybe<Scalars['String']['input']>;
+  serviceNote?: InputMaybe<Scalars['String']['input']>;
+  roomEyebrow?: InputMaybe<Scalars['String']['input']>;
   phone?: InputMaybe<Scalars['String']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
   address1?: InputMaybe<Scalars['String']['input']>;
   address2?: InputMaybe<Scalars['String']['input']>;
+  roomNote?: InputMaybe<Scalars['String']['input']>;
+  legalNote?: InputMaybe<Scalars['String']['input']>;
+  giantText?: InputMaybe<Scalars['String']['input']>;
+  copyright?: InputMaybe<Scalars['String']['input']>;
+  hoursNote?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type ConfigMutation = {
   seo?: InputMaybe<ConfigSeoMutation>;
   nav?: InputMaybe<Array<InputMaybe<ConfigNavMutation>>>;
+  headerCtaLabel?: InputMaybe<Scalars['String']['input']>;
   footer?: InputMaybe<ConfigFooterMutation>;
 };
 
@@ -964,6 +1022,11 @@ export type PageBlocksHeroPlateImageFilter = {
   alt?: StringFilter | null | undefined;
 };
 
+export type PageBlocksHeroBgImageFilter = {
+  src?: ImageFilter | null | undefined;
+  alt?: StringFilter | null | undefined;
+};
+
 export type PageBlocksHeroFilter = {
   eyebrow?: StringFilter | null | undefined;
   miles?: StringFilter | null | undefined;
@@ -974,6 +1037,7 @@ export type PageBlocksHeroFilter = {
   secondaryLink?: StringFilter | null | undefined;
   scrollNote?: StringFilter | null | undefined;
   plateImage?: PageBlocksHeroPlateImageFilter | null | undefined;
+  bgImage?: PageBlocksHeroBgImageFilter | null | undefined;
 };
 
 export type PageBlocksMarqueePhrasesFilter = {
@@ -1147,20 +1211,33 @@ export type ConfigFooterFilter = {
   ctaEyebrow?: StringFilter | null | undefined;
   ctaHeadline?: StringFilter | null | undefined;
   ctaText?: StringFilter | null | undefined;
+  guestEyebrow?: StringFilter | null | undefined;
+  guestLine?: StringFilter | null | undefined;
+  serviceEyebrow?: StringFilter | null | undefined;
+  serviceThuSat?: StringFilter | null | undefined;
+  serviceSun?: StringFilter | null | undefined;
+  serviceNote?: StringFilter | null | undefined;
+  roomEyebrow?: StringFilter | null | undefined;
   phone?: StringFilter | null | undefined;
   email?: StringFilter | null | undefined;
   address1?: StringFilter | null | undefined;
   address2?: StringFilter | null | undefined;
+  roomNote?: StringFilter | null | undefined;
+  legalNote?: StringFilter | null | undefined;
+  giantText?: StringFilter | null | undefined;
+  copyright?: StringFilter | null | undefined;
+  hoursNote?: StringFilter | null | undefined;
 };
 
 export type ConfigFilter = {
   seo?: ConfigSeoFilter | null | undefined;
   nav?: ConfigNavFilter | null | undefined;
+  headerCtaLabel?: StringFilter | null | undefined;
   footer?: ConfigFooterFilter | null | undefined;
 };
 
 export type PagePartsFragment = { __typename: 'Page', seoTitle: string, blocks: Array<
-    | { __typename: 'PageBlocksHero', eyebrow: string | null, miles: string | null, tagline: string | null, primaryLabel: string | null, primaryLink: string | null, secondaryLabel: string | null, secondaryLink: string | null, scrollNote: string | null, plateImage: { __typename: 'PageBlocksHeroPlateImage', src: string | null, alt: string | null } | null }
+    | { __typename: 'PageBlocksHero', eyebrow: string | null, miles: string | null, tagline: string | null, primaryLabel: string | null, primaryLink: string | null, secondaryLabel: string | null, secondaryLink: string | null, scrollNote: string | null, plateImage: { __typename: 'PageBlocksHeroPlateImage', src: string | null, alt: string | null } | null, bgImage: { __typename: 'PageBlocksHeroBgImage', src: string | null, alt: string | null } | null }
     | { __typename: 'PageBlocksMarquee', phrases: Array<{ __typename: 'PageBlocksMarqueePhrases', text: string | null } | null> | null }
     | { __typename: 'PageBlocksCourses', eyebrow: string | null, headline: string | null, description: string | null, layout: string | null, courses: Array<{ __typename: 'PageBlocksCoursesCourses', n: string | null, numeral: string | null, time: string | null, name: string | null, sense: string | null, line: string | null, img: string | null, imgB: string | null, accent: string | null, choice: Array<string | null> | null } | null> | null }
     | { __typename: 'PageBlocksAssembly', eyebrow: string | null, caption: string | null, badge: string | null, image: string | null, plateSrc: string | null, steps: Array<{ __typename: 'PageBlocksAssemblySteps', n: string | null, title: string | null, text: string | null } | null> | null }
@@ -1175,7 +1252,7 @@ export type PagePartsFragment = { __typename: 'Page', seoTitle: string, blocks: 
 
 export type JournalPartsFragment = { __typename: 'Journal', title: string, date: string | null, category: string | null, description: string | null, image: string | null, body: TinaMarkdownContent | null };
 
-export type ConfigPartsFragment = { __typename: 'Config', seo: { __typename: 'ConfigSeo', title: string, description: string } | null, nav: Array<{ __typename: 'ConfigNav', title: string, link: string } | null> | null, footer: { __typename: 'ConfigFooter', ctaEyebrow: string | null, ctaHeadline: string | null, ctaText: string | null, phone: string | null, email: string | null, address1: string | null, address2: string | null } | null };
+export type ConfigPartsFragment = { __typename: 'Config', headerCtaLabel: string | null, seo: { __typename: 'ConfigSeo', title: string, description: string } | null, nav: Array<{ __typename: 'ConfigNav', title: string, link: string } | null> | null, footer: { __typename: 'ConfigFooter', ctaEyebrow: string | null, ctaHeadline: string | null, ctaText: string | null, guestEyebrow: string | null, guestLine: string | null, serviceEyebrow: string | null, serviceThuSat: string | null, serviceSun: string | null, serviceNote: string | null, roomEyebrow: string | null, phone: string | null, email: string | null, address1: string | null, address2: string | null, roomNote: string | null, legalNote: string | null, giantText: string | null, copyright: string | null, hoursNote: string | null } | null };
 
 export type PageQueryVariables = Exact<{
   relativePath: string;
@@ -1183,7 +1260,7 @@ export type PageQueryVariables = Exact<{
 
 
 export type PageQuery = { page: { __typename: 'Page', id: string, seoTitle: string, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, blocks: Array<
-      | { __typename: 'PageBlocksHero', eyebrow: string | null, miles: string | null, tagline: string | null, primaryLabel: string | null, primaryLink: string | null, secondaryLabel: string | null, secondaryLink: string | null, scrollNote: string | null, plateImage: { __typename: 'PageBlocksHeroPlateImage', src: string | null, alt: string | null } | null }
+      | { __typename: 'PageBlocksHero', eyebrow: string | null, miles: string | null, tagline: string | null, primaryLabel: string | null, primaryLink: string | null, secondaryLabel: string | null, secondaryLink: string | null, scrollNote: string | null, plateImage: { __typename: 'PageBlocksHeroPlateImage', src: string | null, alt: string | null } | null, bgImage: { __typename: 'PageBlocksHeroBgImage', src: string | null, alt: string | null } | null }
       | { __typename: 'PageBlocksMarquee', phrases: Array<{ __typename: 'PageBlocksMarqueePhrases', text: string | null } | null> | null }
       | { __typename: 'PageBlocksCourses', eyebrow: string | null, headline: string | null, description: string | null, layout: string | null, courses: Array<{ __typename: 'PageBlocksCoursesCourses', n: string | null, numeral: string | null, time: string | null, name: string | null, sense: string | null, line: string | null, img: string | null, imgB: string | null, accent: string | null, choice: Array<string | null> | null } | null> | null }
       | { __typename: 'PageBlocksAssembly', eyebrow: string | null, caption: string | null, badge: string | null, image: string | null, plateSrc: string | null, steps: Array<{ __typename: 'PageBlocksAssemblySteps', n: string | null, title: string | null, text: string | null } | null> | null }
@@ -1207,7 +1284,7 @@ export type PageConnectionQueryVariables = Exact<{
 
 
 export type PageConnectionQuery = { pageConnection: { totalCount: number, pageInfo: { hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges: Array<{ cursor: string, node: { __typename: 'Page', id: string, seoTitle: string, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, blocks: Array<
-          | { __typename: 'PageBlocksHero', eyebrow: string | null, miles: string | null, tagline: string | null, primaryLabel: string | null, primaryLink: string | null, secondaryLabel: string | null, secondaryLink: string | null, scrollNote: string | null, plateImage: { __typename: 'PageBlocksHeroPlateImage', src: string | null, alt: string | null } | null }
+          | { __typename: 'PageBlocksHero', eyebrow: string | null, miles: string | null, tagline: string | null, primaryLabel: string | null, primaryLink: string | null, secondaryLabel: string | null, secondaryLink: string | null, scrollNote: string | null, plateImage: { __typename: 'PageBlocksHeroPlateImage', src: string | null, alt: string | null } | null, bgImage: { __typename: 'PageBlocksHeroBgImage', src: string | null, alt: string | null } | null }
           | { __typename: 'PageBlocksMarquee', phrases: Array<{ __typename: 'PageBlocksMarqueePhrases', text: string | null } | null> | null }
           | { __typename: 'PageBlocksCourses', eyebrow: string | null, headline: string | null, description: string | null, layout: string | null, courses: Array<{ __typename: 'PageBlocksCoursesCourses', n: string | null, numeral: string | null, time: string | null, name: string | null, sense: string | null, line: string | null, img: string | null, imgB: string | null, accent: string | null, choice: Array<string | null> | null } | null> | null }
           | { __typename: 'PageBlocksAssembly', eyebrow: string | null, caption: string | null, badge: string | null, image: string | null, plateSrc: string | null, steps: Array<{ __typename: 'PageBlocksAssemblySteps', n: string | null, title: string | null, text: string | null } | null> | null }
@@ -1244,7 +1321,7 @@ export type ConfigQueryVariables = Exact<{
 }>;
 
 
-export type ConfigQuery = { config: { __typename: 'Config', id: string, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, seo: { __typename: 'ConfigSeo', title: string, description: string } | null, nav: Array<{ __typename: 'ConfigNav', title: string, link: string } | null> | null, footer: { __typename: 'ConfigFooter', ctaEyebrow: string | null, ctaHeadline: string | null, ctaText: string | null, phone: string | null, email: string | null, address1: string | null, address2: string | null } | null } };
+export type ConfigQuery = { config: { __typename: 'Config', id: string, headerCtaLabel: string | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, seo: { __typename: 'ConfigSeo', title: string, description: string } | null, nav: Array<{ __typename: 'ConfigNav', title: string, link: string } | null> | null, footer: { __typename: 'ConfigFooter', ctaEyebrow: string | null, ctaHeadline: string | null, ctaText: string | null, guestEyebrow: string | null, guestLine: string | null, serviceEyebrow: string | null, serviceThuSat: string | null, serviceSun: string | null, serviceNote: string | null, roomEyebrow: string | null, phone: string | null, email: string | null, address1: string | null, address2: string | null, roomNote: string | null, legalNote: string | null, giantText: string | null, copyright: string | null, hoursNote: string | null } | null } };
 
 export type ConfigConnectionQueryVariables = Exact<{
   before?: string | null | undefined;
@@ -1256,7 +1333,7 @@ export type ConfigConnectionQueryVariables = Exact<{
 }>;
 
 
-export type ConfigConnectionQuery = { configConnection: { totalCount: number, pageInfo: { hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges: Array<{ cursor: string, node: { __typename: 'Config', id: string, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, seo: { __typename: 'ConfigSeo', title: string, description: string } | null, nav: Array<{ __typename: 'ConfigNav', title: string, link: string } | null> | null, footer: { __typename: 'ConfigFooter', ctaEyebrow: string | null, ctaHeadline: string | null, ctaText: string | null, phone: string | null, email: string | null, address1: string | null, address2: string | null } | null } | null } | null> | null } };
+export type ConfigConnectionQuery = { configConnection: { totalCount: number, pageInfo: { hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges: Array<{ cursor: string, node: { __typename: 'Config', id: string, headerCtaLabel: string | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, seo: { __typename: 'ConfigSeo', title: string, description: string } | null, nav: Array<{ __typename: 'ConfigNav', title: string, link: string } | null> | null, footer: { __typename: 'ConfigFooter', ctaEyebrow: string | null, ctaHeadline: string | null, ctaText: string | null, guestEyebrow: string | null, guestLine: string | null, serviceEyebrow: string | null, serviceThuSat: string | null, serviceSun: string | null, serviceNote: string | null, roomEyebrow: string | null, phone: string | null, email: string | null, address1: string | null, address2: string | null, roomNote: string | null, legalNote: string | null, giantText: string | null, copyright: string | null, hoursNote: string | null } | null } | null } | null> | null } };
 
 export const PagePartsFragmentDoc = gql`
     fragment PageParts on Page {
@@ -1274,6 +1351,11 @@ export const PagePartsFragmentDoc = gql`
       secondaryLink
       scrollNote
       plateImage {
+        __typename
+        src
+        alt
+      }
+      bgImage {
         __typename
         src
         alt
@@ -1406,15 +1488,28 @@ export const ConfigPartsFragmentDoc = gql`
     title
     link
   }
+  headerCtaLabel
   footer {
     __typename
     ctaEyebrow
     ctaHeadline
     ctaText
+    guestEyebrow
+    guestLine
+    serviceEyebrow
+    serviceThuSat
+    serviceSun
+    serviceNote
+    roomEyebrow
     phone
     email
     address1
     address2
+    roomNote
+    legalNote
+    giantText
+    copyright
+    hoursNote
   }
 }
     `;
