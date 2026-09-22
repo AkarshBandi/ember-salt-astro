@@ -1,6 +1,9 @@
 ---
+import TinaIsland from '@tinacms/astro/TinaIsland.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { getGeneral } from '../lib/tina/data';
+import { islands } from '../lib/tina/islands';
 
 interface Props {
   title: string;
@@ -9,6 +12,9 @@ interface Props {
 
 const { title, description = "Twelve courses, one kiln, Portland, OR — Ember & Salt" } = Astro.props;
 const pageTitle = Astro.url.pathname === '/' ? `${title}` : `${title} | Ember & Salt`;
+
+const generalResult = await getGeneral();
+const general = generalResult.data?.general;
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -23,9 +29,13 @@ const pageTitle = Astro.url.pathname === '/' ? `${title}` : `${title} | Ember & 
   <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body class="grain">
-  <Header />
+  <TinaIsland name="header" wrapper={islands.header.wrapper} params={{ path: Astro.url.pathname }}>
+    <Header general={general} pathname={Astro.url.pathname} />
+  </TinaIsland>
   <slot />
-  <Footer />
+  <TinaIsland name="footer" wrapper={islands.footer.wrapper} params={{ path: Astro.url.pathname }}>
+    <Footer />
+  </TinaIsland>
   <script is:inline src="/js/lenis.min.js"></script>
   <script is:inline src="/js/app.js" defer></script>
 </body>

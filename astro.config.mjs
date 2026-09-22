@@ -15,5 +15,8 @@ export default defineConfig({
   ],
   vite: {
     plugins: [tinaAdminDevRedirect()],
+    ssr: {
+      noExternal: ['@tinacms/astro', '@tinacms/bridge'],
+    },
   },
 });

@@ -1,12 +1,22 @@
 ---
-const navLinks = [
-  { name: 'Menu', href: '/menu/' },
-  { name: 'Our Story', href: '/story/' },
-  { name: 'Journal', href: '/journal/' },
-  { name: 'Reservations', href: '/visit/' },
-];
+import { tinaField } from '@tinacms/astro/tina-field';
+import type { CmsGeneral } from '../lib/tina/data';
 
-const currentPath = Astro.url.pathname;
+interface Props {
+  general?: CmsGeneral | null;
+  pathname?: string;
+}
+
+const { general, pathname = '/' } = Astro.props;
+
+const navLinks = general?.nav_links?.length
+  ? general.nav_links.map((l) => ({ name: l.label, href: l.href }))
+  : [
+      { name: 'Menu', href: '/menu/' },
+      { name: 'Our Story', href: '/story/' },
+      { name: 'Journal', href: '/journal/' },
+      { name: 'Reservations', href: '/visit/' },
+    ];
 ---
 <div class="progress-line" id="progressLine"></div>
 <header class="site-header clear" id="siteHeader">
@@ -17,9 +27,9 @@ const currentPath = Astro.url.pathname;
     </a>
     <nav class="main-nav" aria-label="Primary">
       {navLinks.map((link) => {
-        const isActive = currentPath === link.href;
+        const isActive = pathname === link.href;
         return (
-          <a href={link.href} class="eyebrow draw-link" {...(isActive ? { 'aria-current': 'page', style: 'color:var(--brass)' } : {})}>{link.name}</a>
+          <a href={link.href} class="eyebrow draw-link" data-tina-field={tinaField(general, 'nav_links')} {...(isActive ? { 'aria-current': 'page', style: 'color:var(--brass)' } : {})}>{link.name}</a>
         );
       })}
     </nav>
