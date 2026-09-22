@@ -1,9 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import TinaIsland from '@tinacms/astro/TinaIsland.astro';
+import { tinaField } from '@tinacms/astro/tina-field';
 import { getActs } from '../lib/tina/data';
 import { islands } from '../lib/tina/islands';
-import ActsIsland from '../components/islands/ActsIsland.astro';
 
 const actsResult = await getActs();
 const acts = actsResult.data?.acts;
@@ -21,7 +21,7 @@ const courses = acts?.courses ?? [];
   </div>
 </header>
 
-<TinaIsland name="acts" wrapper={islands.acts.wrapper} primary>
+<TinaIsland name="acts" wrapper={islands.acts.wrapper} params={{}} primary>
   <section id="dusk" class="linen" style="padding:56px 0 0;color:var(--ink);transition:background-color 0.2s linear">
     <div style="max-width:1000px;margin:0 auto;padding-left:var(--gutter);padding-right:var(--gutter)">
       <div id="duskClockWrap" style="position:fixed;top:70px;left:0;right:0;z-index:40;text-align:center;pointer-events:none;opacity:0;transition:opacity 0.35s;mix-blend-mode:difference;color:#fff">
@@ -32,8 +32,8 @@ const courses = acts?.courses ?? [];
           const isEven = i % 2 === 1;
           const blobClass = `b${i % 3}`;
           return (
-            <article class="rv course" data-course={a.n} data-time={a.time} style="min-height:82vh;display:flex;flex-direction:column;justify-content:center;padding:48px 0" data-tina-field={a.name ? `courses.${i}.name` : undefined}>
-              <p class="eyebrow dusk-dim" style="color:var(--brassdeep)">Course {a.n} of twelve</p>
+            <article class="rv course" data-course={a.n} data-time={a.time} style="min-height:82vh;display:flex;flex-direction:column;justify-content:center;padding:48px 0">
+              <p class="eyebrow dusk-dim" style="color:var(--brassdeep)" data-tina-field={tinaField(a, 'n')}>Course {a.n} of twelve</p>
               <div class="course-grid" style="display:grid;gap:36px;align-items:center;margin-top:20px">
                 <figure class="rv" style={`margin:0;width:min(320px,70vw);${isEven ? 'order:2;' : ''}`}>
                   <span class={`blob ${blobClass}`} style={`display:block;aspect-ratio:4/5;overflow:hidden;${isEven ? 'transform:rotate(2deg);' : 'transform:rotate(-2deg);'}`}>
@@ -50,14 +50,14 @@ const courses = acts?.courses ?? [];
                         </>
                       ))}
                     </div>
-                    <p class="font-display dusk-sense" style="font-style:italic;color:var(--ember);margin-top:8px;font-size:1.15rem">{a.sense}</p>
+                    <p class="font-display dusk-sense" style="font-style:italic;color:var(--ember);margin-top:8px;font-size:1.15rem" data-tina-field={tinaField(a, 'sense')}>{a.sense}</p>
                   ) : (
                     <>
-                      <h2 class="font-display" style="font-weight:900;font-size:clamp(2.2rem,5vw,3.8rem);letter-spacing:-0.02em;line-height:1.05">{a.name}</h2>
-                      <p class="font-display dusk-sense" style="font-style:italic;color:var(--ember);margin-top:8px;font-size:1.15rem">{a.sense}</p>
+                      <h2 class="font-display" style="font-weight:900;font-size:clamp(2.2rem,5vw,3.8rem);letter-spacing:-0.02em;line-height:1.05" data-tina-field={tinaField(a, 'name')}>{a.name}</h2>
+                      <p class="font-display dusk-sense" style="font-style:italic;color:var(--ember);margin-top:8px;font-size:1.15rem" data-tina-field={tinaField(a, 'sense')}>{a.sense}</p>
                     </>
                   )}
-                  {a.line && <p class="dusk-body" style="margin-top:14px;font-size:16px;line-height:1.65;max-width:30rem">{a.line}</p>}
+                  {a.line && <p class="dusk-body" style="margin-top:14px;font-size:16px;line-height:1.65;max-width:30rem" data-tina-field={tinaField(a, 'line')}>{a.line}</p>}
                 </div>
               </div>
             </article>

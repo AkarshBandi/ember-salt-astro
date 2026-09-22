@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import TinaIsland from '@tinacms/astro/TinaIsland.astro';
+import { tinaField } from '@tinacms/astro/tina-field';
 import { getActs } from '../lib/tina/data';
 import { islands } from '../lib/tina/islands';
 import ActsIsland from '../components/islands/ActsIsland.astro';
@@ -72,7 +73,7 @@ const acts = actsResult.data?.acts;
 </div>
 
 <!-- TASTING FLIGHT (editable via TinaIsland) -->
-<TinaIsland name="acts" wrapper={islands.acts.wrapper} primary>
+<TinaIsland name="acts" wrapper={islands.acts.wrapper} params={{}} primary>
   <ActsIsland acts={acts} />
 </TinaIsland>
 

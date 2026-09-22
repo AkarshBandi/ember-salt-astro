@@ -1,14 +1,23 @@
 import { requestWithMetadata } from '@tinacms/astro/data';
-import client from '../../../tina/__generated__/client';
+import client from '../../tina/__generated__/client';
 
 export const getGeneral = () =>
-  requestWithMetadata(client.queries.general({ relativePath: 'general.yaml' }));
+  requestWithMetadata(
+    client.queries.general({ relativePath: 'general.yaml' }),
+    { priority: 'primary' }
+  );
 
 export const getActs = () =>
-  requestWithMetadata(client.queries.acts({ relativePath: 'acts.yaml' }));
+  requestWithMetadata(
+    client.queries.acts({ relativePath: 'acts.yaml' }),
+    { priority: 'primary' }
+  );
 
 export const getJournal = (slug: string) =>
-  requestWithMetadata(client.queries.journal({ relativePath: `${slug}.md` }));
+  requestWithMetadata(
+    client.queries.journal({ relativePath: `${slug}.md` }),
+    { priority: 'primary' }
+  );
 
 export async function listJournal() {
   const result = await client.queries.journalConnection();
