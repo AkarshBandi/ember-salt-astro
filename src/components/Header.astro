@@ -1,11 +1,22 @@
 ---
-const navLinks = [
-  { name: 'Menu', href: '/menu/' },
-  { name: 'Our Story', href: '/story/' },
-  { name: 'Journal', href: '/journal/' },
-  { name: 'Reservations', href: '/visit/' },
-];
-const { pathname = '/' } = Astro.props as { pathname?: string };
+import { tinaField } from '@tinacms/astro/tina-field';
+import type { CmsConfig } from '../lib/tina/data';
+
+interface Props {
+  config?: CmsConfig | null;
+  pathname?: string;
+}
+
+const { config, pathname = '/' } = Astro.props;
+
+const navLinks = (config as any)?.nav?.length
+  ? (config as any).nav.map((l: any) => ({ name: l?.title ?? '', href: l?.link ?? '/' }))
+  : [
+      { name: 'Menu', href: '/menu/' },
+      { name: 'Our Story', href: '/story/' },
+      { name: 'Journal', href: '/journal/' },
+      { name: 'Reservations', href: '/visit/' },
+    ];
 ---
 <div class="progress-line" id="progressLine"></div>
 <header class="site-header clear" id="siteHeader">
@@ -14,7 +25,7 @@ const { pathname = '/' } = Astro.props as { pathname?: string };
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
       <span>EMBER <em>&</em> SALT</span>
     </a>
-    <nav class="main-nav" aria-label="Primary">
+    <nav class="main-nav" aria-label="Primary" data-tina-field={tinaField(config as any, 'nav')}>
       {navLinks.map((link) => {
         const isActive = pathname === link.href;
         return <a href={link.href} class="eyebrow draw-link" {...(isActive ? { 'aria-current': 'page', style: 'color:var(--brass)' } : {})}>{link.name}</a>;
