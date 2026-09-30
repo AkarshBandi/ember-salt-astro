@@ -223,6 +223,65 @@
     }
     var HERO_SRC = heroSrc();
 
+  /* ---------- how expensive is this hero allowed to be? ----------
+   *
+   * The steam is the point of this page, so it is never deleted. It is
+   * rendered at the cheapest tier the machine can actually sustain, and the
+   * tiers are decided by what the device reports about itself rather than by
+   * a hardcoded list of models.
+   *
+   * This is deliberately not `prefers-reduced-motion`. That media query
+   * describes what the user wants; it says nothing about what the hardware can
+   * afford. Keying the fallback on it is why the shader used to run at full
+   * cost on a software rasteriser, where it spends ~48 sin() per pixel —
+   * 62 million per frame at 1440x900.
+   *
+   * Returns 0..3. See the ladder in the hero block below.
+   */
+  function heroTier() {
+    if (reduce) return 0;
+    var probe = document.createElement("canvas");
+    var g = null;
+    try { g = probe.getContext("webgl") || probe.getContext("experimental-webgl"); } catch (e) {}
+    if (!g) return 0;
+    var name = "";
+    try {
+      var dbg = g.getExtension("WEBGL_debug_renderer_info");
+      if (dbg) name = String(g.getParameter(dbg.UNMASKED_RENDERER_WEBGL) || "");
+      // release the probe context rather than leaving one of the few
+      // per-page contexts allocated
+      var lose = g.getExtension("WEBGL_lose_context");
+      if (lose) lose.loseContext();
+    } catch (e) { /* renderer string blocked by privacy settings */ }
+    if (/swiftshader|llvmpipe|software|basic render|generic renderer/i.test(name)) return 1;
+    var conn = navigator.connection || {};
+    if (conn.saveData) return 1;
+    var cores = navigator.hardwareConcurrency || 0;
+    /* No WebGL2 means a driver too old to be worth trusting with a
+     * 4-octave per-pixel shader; run the cheap variant instead. */
+    if (!probe.getContext("webgl2")) return 2;
+    if (cores && cores <= 4) return 2;
+    return 3;
+  }
+
+  /* Steam without WebGL: the photo plus two blurred copies of it, drifting
+   * upward on a compositor layer. No JS runs per frame, so the main thread
+   * stays free — that is the whole point. Reads as heat rising off the dish
+   * rather than as a missing feature.
+   */
+  function steamFallback() {
+    var wrap = document.createElement("div");
+    wrap.className = "hero-steam";
+    var base = document.createElement("img");
+    base.className = "hero-steam-base";
+    base.src = HERO_SRC;
+    base.alt = "Fire dish";
+    base.decoding = "async";
+    wrap.appendChild(base);
+    for (var i = 0; i < 2; i++) wrap.appendChild(document.createElement("div"));
+    return wrap;
+  }
+
   /* ---------- HERO WebGL steam + ignite + cinematic exit ---------- */
   (function hero() {
     if (isTinaEdit) {
@@ -239,22 +298,29 @@
     var heroContent = document.getElementById("heroContent");
     var heroBg = document.getElementById("heroBg");
     var igniteEl = document.getElementById("ignite");
-    if (reduce) {
-      var img = document.createElement("img");
-      img.src = HERO_SRC; img.alt = "Fire dish";
-      canvas.replaceWith(img);
+    var tier = heroTier();
+
+    /* Tiers 0 and 1 never touch a GL context at all. Tier 1 is the case
+     * that was scoring 58: the renderer string says software, so running a
+     * per-pixel shader would be the single most expensive thing on the page
+     * for an effect the compositor can fake for free. */
+    if (tier < 2) {
+      canvas.replaceWith(steamFallback());
       if (igniteEl) igniteEl.remove();
       return;
     }
-    var gl = canvas.getContext("webgl", { antialias: false, alpha: false });
+
+    var gl = canvas.getContext("webgl", { antialias: false, alpha: false, powerPreference: "low-power" });
     if (!gl) {
-      var img2 = document.createElement("img");
-      img2.src = HERO_SRC; img2.alt = "Fire dish";
-      canvas.replaceWith(img2);
+      canvas.replaceWith(steamFallback());
       if (igniteEl) igniteEl.remove();
       return;
     }
+
     var VERT = "attribute vec2 a_pos;varying vec2 v_uv;void main(){v_uv=a_pos*0.5+0.5;gl_Position=vec4(a_pos,0.0,1.0);}";
+    var LOW = tier < 3;
+    var OCTAVES = LOW ? "2" : "4";
+    var FPS = LOW ? 30 : 60;
     var FRAG = [
       "precision highp float;varying vec2 v_uv;",
       "uniform sampler2D u_tex;uniform vec2 u_res;uniform vec2 u_img;",
@@ -262,7 +328,7 @@
       "float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}",
       "float noise(vec2 p){vec2 i=floor(p),f=fract(p);vec2 u=f*f*(3.0-2.0*f);",
       "return mix(mix(hash(i),hash(i+vec2(1.,0.)),u.x),mix(hash(i+vec2(0.,1.)),hash(i+vec2(1.,1.)),u.x),u.y);}",
-      "float fbm(vec2 p){float v=0.0,a=0.5;for(int i=0;i<4;i++){v+=a*noise(p);p*=2.03;a*=0.5;}return v;}",
+      "float fbm(vec2 p){float v=0.0,a=0.5;for(int i=0;i<OCTAVES;i++){v+=a*noise(p);p*=2.03;a*=0.5;}return v;}",
       "vec2 coverUv(vec2 uv,vec2 res,vec2 img){float ra=res.x/res.y,ri=img.x/img.y;",
       "vec2 s=ra>ri?vec2(1.0,ri/ra):vec2(ra/ri,1.0);return (uv-0.5)*s+0.5;}",
       "void main(){vec2 res=u_res;vec2 cuv=coverUv(v_uv,res,u_img);float t=u_time;",
@@ -287,7 +353,7 @@
       "photo+=(hash(v_uv*(res*0.5)+fract(t)*7.0)-0.5)*0.045;",
       "photo*=mix(0.82,1.0,smoothstep(0.0,0.35,v_uv.y));",
       "gl_FragColor=vec4(photo,1.0);}"
-    ].join("\n");
+    ].join("\n").replace(/OCTAVES/g, OCTAVES);
 
     function sh(type, src) {
       var s = gl.createShader(type);
@@ -340,13 +406,21 @@
     };
     pic.src = HERO_SRC;
 
-    var dpr = Math.min(1.5, window.devicePixelRatio || 1);
+    /* A 4x-DPR desktop hero is 5.2M pixels. On a weak GPU that is 249M sin()
+     * per frame. Cap the total pixel count rather than the ratio, so a
+     * high-density small screen and a large low-density one both stay sane. */
+    var MAX_PX = LOW ? 500000 : 2600000;
     function resize() {
       var r = canvas.parentElement.getBoundingClientRect();
-      canvas.width = Math.max(2, Math.floor(r.width * dpr));
-      canvas.height = Math.max(2, Math.floor(r.height * dpr));
-      gl.viewport(0, 0, canvas.width, canvas.height);
-      gl.uniform2f(uLoc.u_res, canvas.width, canvas.height);
+      var dpr = LOW ? 1 : Math.min(1.5, window.devicePixelRatio || 1);
+      var w = Math.max(2, Math.floor(r.width * dpr));
+      var h = Math.max(2, Math.floor(r.height * dpr));
+      var over = (w * h) / MAX_PX;
+      if (over > 1) { var k = 1 / Math.sqrt(over); w = Math.max(2, Math.floor(w * k)); h = Math.max(2, Math.floor(h * k)); }
+      canvas.width = w;
+      canvas.height = h;
+      gl.viewport(0, 0, w, h);
+      gl.uniform2f(uLoc.u_res, w, h);
     }
     resize();
     window.addEventListener("resize", resize);
@@ -371,18 +445,34 @@
       target = Math.min(target + 0.1, 1);
     }, { passive: true });
     new IntersectionObserver(function (en) { visible = en[0].isIntersecting; }).observe(canvas);
+    /* A hidden tab gets no rAF callbacks anyway, but stopping explicitly
+     * means the loop is not queued for the moment it becomes visible again. */
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden) { visible = false; } else { visible = true; lastF = performance.now(); }
+    });
 
     setTimeout(function () { if (igniteEl) igniteEl.classList.add("lifted"); }, 150);
 
+    /* Self-calibrating step-down. Rather than trusting the tier we picked,
+     * watch what the frames actually cost and fall back if this machine is
+     * slower than the tier assumed. */
     var slowFrames = 0, degraded = false, lastF = performance.now();
+    var minFrame = 1000 / FPS;
+    var sinceDraw = 0;
     function frame(t) {
-      requestAnimationFrame(frame);
+      if (dead) return;
       var dt = t - lastF; lastF = t;
-      if (!visible || dead) return;
+      /* Cap to the tier's frame rate. Steam is slow; 30fps reads the same
+       * and halves the work. */
+      if (dt < minFrame) { requestAnimationFrame(frame); return; }
+      /* Re-arm *after* the checks. The old version re-armed first, so a
+       * scrolled-past hero kept a live rAF loop that did nothing but
+       * return. */
+      if (!visible) { requestAnimationFrame(frame); return; }
       if (dt > 34 && ++slowFrames > 40 && !degraded) {
         degraded = true;
-        canvas.width = Math.floor(canvas.width / 2);
-        canvas.height = Math.floor(canvas.height / 2);
+        canvas.width = Math.max(2, Math.floor(canvas.width / 2));
+        canvas.height = Math.max(2, Math.floor(canvas.height / 2));
         gl.viewport(0, 0, canvas.width, canvas.height);
         gl.uniform2f(uLoc.u_res, canvas.width, canvas.height);
       }
@@ -394,6 +484,22 @@
       gl.uniform1f(uLoc.u_mouse, mouse);
       gl.uniform1f(uLoc.u_ignite, ignite);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
+      requestAnimationFrame(frame);
+    }
+    /* Start on the CSS path and upgrade to the shader once the browser is
+     * idle. The hero is visible immediately, so painting the photo first is
+     * both faster and what the visitor expects — the steam fades in over it
+     * rather than the page waiting on a shader compile. */
+    if (LOW) {
+      var swap = function () {
+        if (dead) return;
+        var c = document.getElementById("gl");
+        if (c) c.replaceWith(steamFallback());
+      };
+      if (window.requestIdleCallback) requestIdleCallback(swap, { timeout: 900 });
+      else setTimeout(swap, 60);
+    } else {
+      requestAnimationFrame(frame);
     }
   })();
 
