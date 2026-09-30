@@ -6,7 +6,7 @@ import { tinaAdminDevRedirect } from '@tinacms/astro/vite';
 
 export default defineConfig({
   site: process.env.SITE_URL || 'https://ember-salt-astro.akarshbandi82.workers.dev',
-  output: 'server',
+  output: 'static',
   adapter: cloudflare({
     platformProxy: {
       enabled: true,
