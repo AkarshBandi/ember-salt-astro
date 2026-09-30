@@ -31,8 +31,20 @@ function localPage(slug: string) {
   if (!raw) return null;
   try {
     const parsed = yamlLoad(stripFrontmatter(raw)) as any;
+    // The block dispatcher switches on __typename, which only the GraphQL
+    // layer adds. The committed MDX carries `_template` instead, so without
+    // this every block fell through the switch and rendered nothing — the
+    // page came out with its header, footer and 32 editable fields but no
+    // sections at all. TinaCMS names the type `PageBlocks` + PascalCase of
+    // the template, so richText becomes PageBlocksRichText.
+    const blocks = (parsed.blocks ?? []).map((b: any) =>
+      b && b._template && !b.__typename
+        ? { ...b, __typename: 'PageBlocks' + b._template.charAt(0).toUpperCase() + b._template.slice(1) }
+        : b,
+    );
     return {
       ...parsed,
+      ...(parsed.blocks ? { blocks } : {}),
       _sys: { filename: slug, relativePath: `${slug}.mdx`, path: `src/content/page/${slug}.mdx`, extension: '.mdx' },
     };
   } catch (e) {
@@ -42,25 +54,32 @@ function localPage(slug: string) {
 }
 
 export const getConfig = async () => {
+  // Same reasoning as getPage: the committed config.json is the truth.
   try {
-    const r = await requestWithMetadata(client.queries.config({ relativePath: 'config.json' }));
-    if (r?.data?.config) return r;
+    return await requestWithMetadata(
+      Promise.resolve({ data: { config: configRaw }, query: '', variables: {} } as any),
+    );
   } catch {}
-  return requestWithMetadata(
-    Promise.resolve({ data: { config: configRaw }, query: '', variables: {} } as any),
-  );
+  return requestWithMetadata(client.queries.config({ relativePath: 'config.json' }));
 };
 
 export const getPage = async (slug: string) => {
   const local = localPage(slug);
-  try {
-    const r = await requestWithMetadata(client.queries.page({ relativePath: `${slug}.mdx` }), {
-      priority: 'primary',
-    });
-    if (r?.data?.page) return r;
-  } catch {}
+  // LOCAL FIRST, deliberately. This is a git-backed CMS: Tina commits every
+  // editor change to the branch, so the committed file IS the source of
+  // truth. Querying the cloud first meant a branch TinaCloud had not
+  // re-indexed yet silently won over the working tree — a colour fix pushed
+  // three minutes earlier rendered the old value, and the build reported
+  // success. Reading disk makes the build deterministic: what is deployed is
+  // exactly what is committed, and a cloud that is behind cannot ship it.
+  if (local) {
+    return requestWithMetadata(
+      Promise.resolve({ data: { page: local }, query: '', variables: { relativePath: `${slug}.mdx` } } as any),
+      { priority: 'primary' },
+    );
+  }
   return requestWithMetadata(
-    Promise.resolve({ data: { page: local }, query: '', variables: { relativePath: `${slug}.mdx` } } as any),
+    client.queries.page({ relativePath: `${slug}.mdx` }),
     { priority: 'primary' },
   );
 };

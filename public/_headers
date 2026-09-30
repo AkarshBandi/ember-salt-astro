@@ -1,0 +1,30 @@
+# Static asset cache policy.
+#
+# Astro only writes a rule for /_astro/*, which is where Vite puts hashed
+# bundles. Everything else — this site's hand-written stylesheet, the
+# scripts, the photography — fell through to the Cloudflare default of
+# `max-age=0, must-revalidate`, so a repeat visit re-fetched all of it. The
+# mobile trace showed /css/style.css sitting 678ms in a render-blocking
+# queue purely because it was never cached.
+#
+# These paths are not content-hashed, so they get a long max-age but not
+# `immutable`: a rename or a new deploy must still be picked up.
+
+/css/*
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+
+/js/*
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+
+/images/*
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/shots/*
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin

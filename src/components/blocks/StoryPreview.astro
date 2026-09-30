@@ -18,7 +18,7 @@ const { data } = Astro.props as { data: any };
     </div>
     <div class="rv">
       <div class="charger">
-        <div class="dish" style="width:min(420px,80vw);height:min(420px,80vw)" data-tina-field={tinaField(data, 'image')}><img src={data?.image ?? '/images/chef.jpg'} alt="Chef Mara Okafor at the kiln" style="width:100%;height:100%;object-fit:cover" /></div>
+        <div class="dish" style="width:min(420px,80vw);height:min(420px,80vw)" data-tina-field={tinaField(data, 'image')}><img src={data?.image ?? '/images/chef.webp'} alt="Chef Mara Okafor at the kiln" style="width:100%;height:100%;object-fit:cover" /></div>
         <span style="position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);white-space:nowrap;background:var(--cellar);border:1px solid rgba(200,169,110,0.5);padding:8px 20px;font-size:11px;letter-spacing:0.32em;text-transform:uppercase;font-weight:600;color:var(--brass)" data-tina-field={tinaField(data, 'nameplate')}>{data?.nameplate ?? 'Mara Okafor — Chef & Founder'}</span>
       </div>
       <p class="font-display" style="font-style:italic;font-size:1.25rem;margin-top:40px;text-align:center;color:rgba(34,26,18,0.85);max-width:28rem;margin-left:auto;margin-right:auto;line-height:1.5" data-tina-field={tinaField(data, 'quote')}>{data?.quote}</p>

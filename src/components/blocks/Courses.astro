@@ -24,7 +24,7 @@ const flightItems = [items[0], items[1], items[3], items[5], items[10]].filter(B
               <div class="course-grid" style="display:grid;gap:36px;align-items:center;margin-top:20px">
                 <figure class="rv" style={`margin:0;width:min(320px,70vw);${isEven ? 'order:2;' : ''}`}>
                   <span class={`blob ${blobClass}`} style={`display:block;aspect-ratio:4/5;overflow:hidden;${isEven ? 'transform:rotate(2deg);' : 'transform:rotate(-2deg);'}`}>
-                    <img src={a?.img || '/images/dish-fire.jpg'} alt={a?.name} loading="lazy" data-imga={a?.img || '/images/dish-fire.jpg'} data-imgb={a?.imgB || undefined} style="width:100%;height:100%;object-fit:cover;transition:opacity 0.3s" data-tina-field={tinaField(a, 'img')} />
+                    <img src={a?.img || '/images/dish-fire.webp'} alt={a?.name} loading="lazy" data-imga={a?.img || '/images/dish-fire.webp'} data-imgb={a?.imgB || undefined} style="width:100%;height:100%;object-fit:cover;transition:opacity 0.3s" data-tina-field={tinaField(a, 'img')} />
                   </span>
                 </figure>
                 <div class="course-words">
@@ -94,7 +94,11 @@ const flightItems = [items[0], items[1], items[3], items[5], items[10]].filter(B
         {flightItems.map((a: any, i: number) => (
           <article class="flight-card rv" data-flight={i} style={`top:calc(88px + ${i * 22}px)`}>
             <div class="flight-photo">
-              <img src={a?.img} alt={a?.name} data-photo-a={a?.img} data-photo-b={a?.imgB || undefined} data-tina-field={tinaField(a, 'img')} />
+                {/* loading="lazy" on the first card is what a mobile visitor
+                    above the fold should NOT wait for; the rest defer. The
+                    .flight-photo wrapper carries min-height, so the box is
+                    already reserved and deferring causes no layout shift. */}
+                <img src={a?.img} alt={a?.name} loading={i === 0 ? 'eager' : 'lazy'} fetchpriority={i === 0 ? 'high' : 'auto'} decoding="async" data-photo-a={a?.img} data-photo-b={a?.imgB || undefined} data-tina-field={tinaField(a, 'img')} />
               <span class="flight-act eyebrow">Course {a?.n} / V</span>
             </div>
             <div class="flight-type">
