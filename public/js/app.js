@@ -203,11 +203,31 @@
     });
   }
 
+    /* One hero source, chosen once, for every consumer.
+     *
+     * The canvas texture and the three no-WebGL fallbacks all hardcoded
+     * HERO_SRC — the 791KB original. On a pointer-fine device the
+     * canvas is what paints, so desktop was downloading a 791KB JPEG for the
+     * hero while the <img> in the markup had moved to a 215KB WebP. The
+     * largest element on the page was the one asset still on the old file.
+     *
+     * Picks by the width the hero actually renders at, so a 390px phone gets
+     * the 39KB file and a large desktop gets the 215KB one.
+     */
+    function heroSrc() {
+      var dpr = Math.min(2, window.devicePixelRatio || 1);
+      var need = Math.round(window.innerWidth * dpr);
+      if (need <= 640) return "/images/hero-640.webp";
+      if (need <= 1280) return "/images/hero-1280.webp";
+      return "/images/hero.webp";
+    }
+    var HERO_SRC = heroSrc();
+
   /* ---------- HERO WebGL steam + ignite + cinematic exit ---------- */
   (function hero() {
     if (isTinaEdit) {
       var c0 = document.getElementById("gl");
-      if (c0) { var fb0 = document.createElement("img"); fb0.src = c0.nextElementSibling && c0.nextElementSibling.tagName === 'IMG' ? c0.nextElementSibling.src : "/images/hero.jpg"; fb0.alt = "Fire dish"; fb0.style.cssText = "position:absolute;inset:0;width:100%;height:100%;object-fit:cover"; c0.replaceWith(fb0); }
+      if (c0) { var fb0 = document.createElement("img"); fb0.src = c0.nextElementSibling && c0.nextElementSibling.tagName === 'IMG' ? c0.nextElementSibling.src : HERO_SRC; fb0.alt = "Fire dish"; fb0.style.cssText = "position:absolute;inset:0;width:100%;height:100%;object-fit:cover"; c0.replaceWith(fb0); }
       var ig0 = document.getElementById("ignite");
       if (ig0) ig0.remove();
       var hc0 = document.getElementById("heroContent");
@@ -221,7 +241,7 @@
     var igniteEl = document.getElementById("ignite");
     if (reduce) {
       var img = document.createElement("img");
-      img.src = "/images/hero.jpg"; img.alt = "Fire dish";
+      img.src = HERO_SRC; img.alt = "Fire dish";
       canvas.replaceWith(img);
       if (igniteEl) igniteEl.remove();
       return;
@@ -229,7 +249,7 @@
     var gl = canvas.getContext("webgl", { antialias: false, alpha: false });
     if (!gl) {
       var img2 = document.createElement("img");
-      img2.src = "/images/hero.jpg"; img2.alt = "Fire dish";
+      img2.src = HERO_SRC; img2.alt = "Fire dish";
       canvas.replaceWith(img2);
       if (igniteEl) igniteEl.remove();
       return;
@@ -285,7 +305,7 @@
       gl.useProgram(prog);
     } catch (e) {
       var fb = document.createElement("img");
-      fb.src = "/images/hero.jpg"; fb.alt = "Fire dish";
+      fb.src = HERO_SRC; fb.alt = "Fire dish";
       canvas.replaceWith(fb);
       if (igniteEl) igniteEl.remove();
       return;
@@ -318,7 +338,7 @@
       gl.uniform1i(uLoc.u_tex, 0);
       requestAnimationFrame(frame);
     };
-    pic.src = "/images/hero.jpg";
+    pic.src = HERO_SRC;
 
     var dpr = Math.min(1.5, window.devicePixelRatio || 1);
     function resize() {

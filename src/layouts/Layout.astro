@@ -25,7 +25,13 @@ const metaDescription = description ?? (config as any)?.seo?.description ?? 'Twe
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{pageTitle}</title>
   <meta name="description" content={metaDescription} />
+  <!-- Both faces that render above the fold, preloaded. The trace showed the
+       LCP element is TEXT — "Eat in order. Choose twice." in Fraunces 900 —
+       and the font request did not start until 664 ms, so the browser was
+       discovering it after first paint. Fraunces 900 is the display face;
+       Manrope is a variable file covering the 400/600 body weights. -->
   <link rel="preload" href="/fonts/6NU78FyLNQOQZAnv9bYEvDiIdE9Ea92uemAk_WBq8U_9v0c2Wa0KxC9TeA.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/xn7gYHE41ni1AdIRggexSg.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="/fonts/fonts.css" />
   <link rel="stylesheet" href="/css/style.css" />
 </head>
