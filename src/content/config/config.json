@@ -4,10 +4,22 @@
     "description": "Portland woodfire tasting kitchen. Twelve courses, fourteen seats, one oak kiln. Forty miles of ingredients."
   },
   "nav": [
-    { "title": "Menu", "link": "/menu/" },
-    { "title": "Our Story", "link": "/story/" },
-    { "title": "Journal", "link": "/journal/" },
-    { "title": "Reservations", "link": "/visit/" }
+    {
+      "title": "Menu",
+      "link": "/menu/"
+    },
+    {
+      "title": "Our Story",
+      "link": "/story/"
+    },
+    {
+      "title": "Journal",
+      "link": "/journal/"
+    },
+    {
+      "title": "Reservations",
+      "link": "/visit/"
+    }
   ],
   "headerCtaLabel": "Secure a Table",
   "footer": {
@@ -30,5 +42,14 @@
     "giantText": "EMBER",
     "copyright": "© 2026 Ember & Salt — portfolio demo · photos Pexels",
     "hoursNote": "Thu – Sat · Sun midday"
+  },
+  "header": {
+    "wordmark": "EMBER",
+    "wordmarkJoiner": "&",
+    "wordmarkEnd": "SALT",
+    "ctaLabel": "Secure a Table",
+    "ctaLabelShort": "Reserve",
+    "ctaLink": "/visit/",
+    "menuButtonLabel": "Open menu"
   }
 }

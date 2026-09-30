@@ -615,6 +615,16 @@ export type ConfigNav = {
   link: Scalars['String']['output'];
 };
 
+export type ConfigHeader = {
+  __typename?: 'ConfigHeader';
+  wordmark?: Maybe<Scalars['String']['output']>;
+  wordmarkJoiner?: Maybe<Scalars['String']['output']>;
+  ctaLabel?: Maybe<Scalars['String']['output']>;
+  ctaLabelShort?: Maybe<Scalars['String']['output']>;
+  ctaLink?: Maybe<Scalars['String']['output']>;
+  menuButtonLabel?: Maybe<Scalars['String']['output']>;
+};
+
 export type ConfigFooter = {
   __typename?: 'ConfigFooter';
   ctaEyebrow?: Maybe<Scalars['String']['output']>;
@@ -642,7 +652,7 @@ export type Config = Node & Document & {
   __typename?: 'Config';
   seo?: Maybe<ConfigSeo>;
   nav?: Maybe<Array<Maybe<ConfigNav>>>;
-  headerCtaLabel?: Maybe<Scalars['String']['output']>;
+  header?: Maybe<ConfigHeader>;
   footer?: Maybe<ConfigFooter>;
   id: Scalars['ID']['output'];
   _sys: SystemInfo;
@@ -657,6 +667,15 @@ export type ConfigSeoFilter = {
 export type ConfigNavFilter = {
   title?: InputMaybe<StringFilter>;
   link?: InputMaybe<StringFilter>;
+};
+
+export type ConfigHeaderFilter = {
+  wordmark?: InputMaybe<StringFilter>;
+  wordmarkJoiner?: InputMaybe<StringFilter>;
+  ctaLabel?: InputMaybe<StringFilter>;
+  ctaLabelShort?: InputMaybe<StringFilter>;
+  ctaLink?: InputMaybe<StringFilter>;
+  menuButtonLabel?: InputMaybe<StringFilter>;
 };
 
 export type ConfigFooterFilter = {
@@ -684,7 +703,7 @@ export type ConfigFooterFilter = {
 export type ConfigFilter = {
   seo?: InputMaybe<ConfigSeoFilter>;
   nav?: InputMaybe<ConfigNavFilter>;
-  headerCtaLabel?: InputMaybe<StringFilter>;
+  header?: InputMaybe<ConfigHeaderFilter>;
   footer?: InputMaybe<ConfigFooterFilter>;
 };
 
@@ -974,6 +993,15 @@ export type ConfigNavMutation = {
   link?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type ConfigHeaderMutation = {
+  wordmark?: InputMaybe<Scalars['String']['input']>;
+  wordmarkJoiner?: InputMaybe<Scalars['String']['input']>;
+  ctaLabel?: InputMaybe<Scalars['String']['input']>;
+  ctaLabelShort?: InputMaybe<Scalars['String']['input']>;
+  ctaLink?: InputMaybe<Scalars['String']['input']>;
+  menuButtonLabel?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type ConfigFooterMutation = {
   ctaEyebrow?: InputMaybe<Scalars['String']['input']>;
   ctaHeadline?: InputMaybe<Scalars['String']['input']>;
@@ -999,7 +1027,7 @@ export type ConfigFooterMutation = {
 export type ConfigMutation = {
   seo?: InputMaybe<ConfigSeoMutation>;
   nav?: InputMaybe<Array<InputMaybe<ConfigNavMutation>>>;
-  headerCtaLabel?: InputMaybe<Scalars['String']['input']>;
+  header?: InputMaybe<ConfigHeaderMutation>;
   footer?: InputMaybe<ConfigFooterMutation>;
 };
 
@@ -1207,6 +1235,15 @@ export type ConfigNavFilter = {
   link?: StringFilter | null | undefined;
 };
 
+export type ConfigHeaderFilter = {
+  wordmark?: StringFilter | null | undefined;
+  wordmarkJoiner?: StringFilter | null | undefined;
+  ctaLabel?: StringFilter | null | undefined;
+  ctaLabelShort?: StringFilter | null | undefined;
+  ctaLink?: StringFilter | null | undefined;
+  menuButtonLabel?: StringFilter | null | undefined;
+};
+
 export type ConfigFooterFilter = {
   ctaEyebrow?: StringFilter | null | undefined;
   ctaHeadline?: StringFilter | null | undefined;
@@ -1232,7 +1269,7 @@ export type ConfigFooterFilter = {
 export type ConfigFilter = {
   seo?: ConfigSeoFilter | null | undefined;
   nav?: ConfigNavFilter | null | undefined;
-  headerCtaLabel?: StringFilter | null | undefined;
+  header?: ConfigHeaderFilter | null | undefined;
   footer?: ConfigFooterFilter | null | undefined;
 };
 
@@ -1252,7 +1289,7 @@ export type PagePartsFragment = { __typename: 'Page', seoTitle: string, blocks: 
 
 export type JournalPartsFragment = { __typename: 'Journal', title: string, date: string | null, category: string | null, description: string | null, image: string | null, body: TinaMarkdownContent | null };
 
-export type ConfigPartsFragment = { __typename: 'Config', headerCtaLabel: string | null, seo: { __typename: 'ConfigSeo', title: string, description: string } | null, nav: Array<{ __typename: 'ConfigNav', title: string, link: string } | null> | null, footer: { __typename: 'ConfigFooter', ctaEyebrow: string | null, ctaHeadline: string | null, ctaText: string | null, guestEyebrow: string | null, guestLine: string | null, serviceEyebrow: string | null, serviceThuSat: string | null, serviceSun: string | null, serviceNote: string | null, roomEyebrow: string | null, phone: string | null, email: string | null, address1: string | null, address2: string | null, roomNote: string | null, legalNote: string | null, giantText: string | null, copyright: string | null, hoursNote: string | null } | null };
+export type ConfigPartsFragment = { __typename: 'Config', seo: { __typename: 'ConfigSeo', title: string, description: string } | null, nav: Array<{ __typename: 'ConfigNav', title: string, link: string } | null> | null, header: { __typename: 'ConfigHeader', wordmark: string | null, wordmarkJoiner: string | null, ctaLabel: string | null, ctaLabelShort: string | null, ctaLink: string | null, menuButtonLabel: string | null } | null, footer: { __typename: 'ConfigFooter', ctaEyebrow: string | null, ctaHeadline: string | null, ctaText: string | null, guestEyebrow: string | null, guestLine: string | null, serviceEyebrow: string | null, serviceThuSat: string | null, serviceSun: string | null, serviceNote: string | null, roomEyebrow: string | null, phone: string | null, email: string | null, address1: string | null, address2: string | null, roomNote: string | null, legalNote: string | null, giantText: string | null, copyright: string | null, hoursNote: string | null } | null };
 
 export type PageQueryVariables = Exact<{
   relativePath: string;
@@ -1321,7 +1358,7 @@ export type ConfigQueryVariables = Exact<{
 }>;
 
 
-export type ConfigQuery = { config: { __typename: 'Config', id: string, headerCtaLabel: string | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, seo: { __typename: 'ConfigSeo', title: string, description: string } | null, nav: Array<{ __typename: 'ConfigNav', title: string, link: string } | null> | null, footer: { __typename: 'ConfigFooter', ctaEyebrow: string | null, ctaHeadline: string | null, ctaText: string | null, guestEyebrow: string | null, guestLine: string | null, serviceEyebrow: string | null, serviceThuSat: string | null, serviceSun: string | null, serviceNote: string | null, roomEyebrow: string | null, phone: string | null, email: string | null, address1: string | null, address2: string | null, roomNote: string | null, legalNote: string | null, giantText: string | null, copyright: string | null, hoursNote: string | null } | null } };
+export type ConfigQuery = { config: { __typename: 'Config', id: string, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, seo: { __typename: 'ConfigSeo', title: string, description: string } | null, nav: Array<{ __typename: 'ConfigNav', title: string, link: string } | null> | null, header: { __typename: 'ConfigHeader', wordmark: string | null, wordmarkJoiner: string | null, ctaLabel: string | null, ctaLabelShort: string | null, ctaLink: string | null, menuButtonLabel: string | null } | null, footer: { __typename: 'ConfigFooter', ctaEyebrow: string | null, ctaHeadline: string | null, ctaText: string | null, guestEyebrow: string | null, guestLine: string | null, serviceEyebrow: string | null, serviceThuSat: string | null, serviceSun: string | null, serviceNote: string | null, roomEyebrow: string | null, phone: string | null, email: string | null, address1: string | null, address2: string | null, roomNote: string | null, legalNote: string | null, giantText: string | null, copyright: string | null, hoursNote: string | null } | null } };
 
 export type ConfigConnectionQueryVariables = Exact<{
   before?: string | null | undefined;
@@ -1333,7 +1370,7 @@ export type ConfigConnectionQueryVariables = Exact<{
 }>;
 
 
-export type ConfigConnectionQuery = { configConnection: { totalCount: number, pageInfo: { hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges: Array<{ cursor: string, node: { __typename: 'Config', id: string, headerCtaLabel: string | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, seo: { __typename: 'ConfigSeo', title: string, description: string } | null, nav: Array<{ __typename: 'ConfigNav', title: string, link: string } | null> | null, footer: { __typename: 'ConfigFooter', ctaEyebrow: string | null, ctaHeadline: string | null, ctaText: string | null, guestEyebrow: string | null, guestLine: string | null, serviceEyebrow: string | null, serviceThuSat: string | null, serviceSun: string | null, serviceNote: string | null, roomEyebrow: string | null, phone: string | null, email: string | null, address1: string | null, address2: string | null, roomNote: string | null, legalNote: string | null, giantText: string | null, copyright: string | null, hoursNote: string | null } | null } | null } | null> | null } };
+export type ConfigConnectionQuery = { configConnection: { totalCount: number, pageInfo: { hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges: Array<{ cursor: string, node: { __typename: 'Config', id: string, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, seo: { __typename: 'ConfigSeo', title: string, description: string } | null, nav: Array<{ __typename: 'ConfigNav', title: string, link: string } | null> | null, header: { __typename: 'ConfigHeader', wordmark: string | null, wordmarkJoiner: string | null, ctaLabel: string | null, ctaLabelShort: string | null, ctaLink: string | null, menuButtonLabel: string | null } | null, footer: { __typename: 'ConfigFooter', ctaEyebrow: string | null, ctaHeadline: string | null, ctaText: string | null, guestEyebrow: string | null, guestLine: string | null, serviceEyebrow: string | null, serviceThuSat: string | null, serviceSun: string | null, serviceNote: string | null, roomEyebrow: string | null, phone: string | null, email: string | null, address1: string | null, address2: string | null, roomNote: string | null, legalNote: string | null, giantText: string | null, copyright: string | null, hoursNote: string | null } | null } | null } | null> | null } };
 
 export const PagePartsFragmentDoc = gql`
     fragment PageParts on Page {
@@ -1488,7 +1525,15 @@ export const ConfigPartsFragmentDoc = gql`
     title
     link
   }
-  headerCtaLabel
+  header {
+    __typename
+    wordmark
+    wordmarkJoiner
+    ctaLabel
+    ctaLabelShort
+    ctaLink
+    menuButtonLabel
+  }
   footer {
     __typename
     ctaEyebrow
@@ -1752,7 +1797,7 @@ export const ExperimentalGetTinaClient = () =>
   getSdk(
     generateRequester(
       createClient({
-        url: "https://content.tinajs.io/3.0/content/f025514a-f4b6-489a-89d2-906074df8f69/github/main",
+        url: "http://localhost:4001/graphql",
         queries,
       })
     )

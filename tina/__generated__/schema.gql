@@ -482,6 +482,15 @@ type ConfigNav {
   link: String!
 }
 
+type ConfigHeader {
+  wordmark: String
+  wordmarkJoiner: String
+  ctaLabel: String
+  ctaLabelShort: String
+  ctaLink: String
+  menuButtonLabel: String
+}
+
 type ConfigFooter {
   ctaEyebrow: String
   ctaHeadline: String
@@ -507,7 +516,7 @@ type ConfigFooter {
 type Config implements Node & Document {
   seo: ConfigSeo
   nav: [ConfigNav]
-  headerCtaLabel: String
+  header: ConfigHeader
   footer: ConfigFooter
   id: ID!
   _sys: SystemInfo!
@@ -522,6 +531,15 @@ input ConfigSeoFilter {
 input ConfigNavFilter {
   title: StringFilter
   link: StringFilter
+}
+
+input ConfigHeaderFilter {
+  wordmark: StringFilter
+  wordmarkJoiner: StringFilter
+  ctaLabel: StringFilter
+  ctaLabelShort: StringFilter
+  ctaLink: StringFilter
+  menuButtonLabel: StringFilter
 }
 
 input ConfigFooterFilter {
@@ -549,7 +567,7 @@ input ConfigFooterFilter {
 input ConfigFilter {
   seo: ConfigSeoFilter
   nav: ConfigNavFilter
-  headerCtaLabel: StringFilter
+  header: ConfigHeaderFilter
   footer: ConfigFooterFilter
 }
 
@@ -767,6 +785,15 @@ input ConfigNavMutation {
   link: String
 }
 
+input ConfigHeaderMutation {
+  wordmark: String
+  wordmarkJoiner: String
+  ctaLabel: String
+  ctaLabelShort: String
+  ctaLink: String
+  menuButtonLabel: String
+}
+
 input ConfigFooterMutation {
   ctaEyebrow: String
   ctaHeadline: String
@@ -792,7 +819,7 @@ input ConfigFooterMutation {
 input ConfigMutation {
   seo: ConfigSeoMutation
   nav: [ConfigNavMutation]
-  headerCtaLabel: String
+  header: ConfigHeaderMutation
   footer: ConfigFooterMutation
 }
 

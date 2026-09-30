@@ -418,9 +418,17 @@ var GlobalCollection = {
       ]
     },
     {
-      name: "headerCtaLabel",
-      label: "Header CTA label",
-      type: "string"
+      name: "header",
+      label: "Header",
+      type: "object",
+      fields: [
+        { name: "wordmark", label: "Wordmark text", type: "string" },
+        { name: "wordmarkJoiner", label: "Wordmark joiner (&)", type: "string" },
+        { name: "ctaLabel", label: "Header CTA label", type: "string" },
+        { name: "ctaLabelShort", label: "Header CTA label (mobile)", type: "string" },
+        { name: "ctaLink", label: "Header CTA link", type: "string" },
+        { name: "menuButtonLabel", label: "Menu button aria-label", type: "string" }
+      ]
     },
     {
       name: "footer",

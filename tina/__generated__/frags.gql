@@ -148,7 +148,15 @@ fragment ConfigParts on Config {
     title
     link
   }
-  headerCtaLabel
+  header {
+    __typename
+    wordmark
+    wordmarkJoiner
+    ctaLabel
+    ctaLabelShort
+    ctaLink
+    menuButtonLabel
+  }
   footer {
     __typename
     ctaEyebrow
