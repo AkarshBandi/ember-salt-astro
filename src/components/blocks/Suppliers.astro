@@ -20,7 +20,7 @@ const items = (data?.suppliers ?? []).filter(Boolean);
       <figure class="rv" style={`flex:0 0 min(76vw,360px);scroll-snap-align:center;margin:0`}>
         <span style={`display:block;aspect-ratio:1/1;border-radius:999px;padding:16px;background:#FFFFFF;box-shadow:0 24px 60px rgba(34,26,18,0.25);${i % 2 === 1 ? 'transform:rotate(2deg);' : 'transform:rotate(-2deg);'}`}>
           <span style="display:block;width:100%;height:100%;border-radius:999px;overflow:hidden;border:1px solid rgba(154,123,69,0.55);box-shadow:inset 0 0 0 8px #fff,inset 0 14px 34px rgba(20,18,16,0.3)">
-            <img src={f?.img} alt={f?.name} loading="lazy" draggable="false" style="width:100%;height:100%;object-fit:cover;pointer-events:none" />
+            <img src={f?.img} alt={f?.name} draggable="false" style="width:100%;height:100%;object-fit:cover;pointer-events:none" />
           </span>
         </span>
         <figcaption style="padding:20px 8px 0"><p class="font-display" style="font-weight:900;font-size:clamp(1.5rem,2.5vw,2rem);letter-spacing:-0.01em">{f?.name}</p><p class="font-display" style="font-style:italic;font-size:15px;color:var(--ember);margin-top:4px">{f?.desc}</p></figcaption>

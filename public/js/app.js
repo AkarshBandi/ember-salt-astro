@@ -5,8 +5,14 @@
   var isTinaEdit = false;
   try { isTinaEdit = window.self !== window.top; } catch (e) { isTinaEdit = true; }
   if (!isTinaEdit && document.querySelector('[data-tina-form]')) isTinaEdit = true;
-  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches || isTinaEdit;
-  var fine = window.matchMedia("(pointer: fine)").matches && !isTinaEdit;
+    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches || isTinaEdit;
+    var fine = window.matchMedia("(pointer: fine)").matches && !isTinaEdit;
+
+    /* Opt into the hidden-then-revealed state only now that the script is
+       running. Until this runs, .rv is fully visible in CSS, so a failed
+       script load or a headless capture leaves a complete page rather than
+       a blank one. */
+    if (!reduce) document.documentElement.setAttribute("data-rv", "");
 
   /* ---------- spring helper: semi-implicit Euler, ζ = c/(2√(km)) ---------- */
   function springTo(obj, key, target, k, c, m, onU) {
@@ -110,12 +116,20 @@
         if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
       });
     }, { threshold: 0.12 });
-    document.querySelectorAll(".rv").forEach(function (el, i) {
-      if (reduce) { el.classList.add("in"); return; }
-      el.style.transitionDelay = Math.min(i % 6 * 0.05, 0.25) + "s";
-      io.observe(el);
-    });
-  }
+      document.querySelectorAll(".rv").forEach(function (el, i) {
+        if (reduce) { el.classList.add("in"); return; }
+        el.style.transitionDelay = Math.min(i % 6 * 0.05, 0.25) + "s";
+        io.observe(el);
+      });
+
+      /* Safety net. An element that never crosses the threshold, or a
+         capture that resizes the viewport after observation, would otherwise
+         stay at opacity 0 forever. Anything still hidden after load settles
+         is revealed. */
+      window.addEventListener("load", function () {
+        setTimeout(function () { revealAll(); }, 1200);
+      });
+    }
 
   /* ---------- live seats ---------- */
   var SEATINGS = ["thu-sat-17", "thu-sat-20", "sun"];

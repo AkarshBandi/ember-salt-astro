@@ -94,7 +94,7 @@ const flightItems = [items[0], items[1], items[3], items[5], items[10]].filter(B
         {flightItems.map((a: any, i: number) => (
           <article class="flight-card rv" data-flight={i} style={`top:calc(88px + ${i * 22}px)`}>
             <div class="flight-photo">
-              <img src={a?.img} alt={a?.name} loading="lazy" data-photo-a={a?.img} data-photo-b={a?.imgB || undefined} data-tina-field={tinaField(a, 'img')} />
+              <img src={a?.img} alt={a?.name} data-photo-a={a?.img} data-photo-b={a?.imgB || undefined} data-tina-field={tinaField(a, 'img')} />
               <span class="flight-act eyebrow">Course {a?.n} / V</span>
             </div>
             <div class="flight-type">

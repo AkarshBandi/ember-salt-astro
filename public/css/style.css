@@ -135,8 +135,15 @@ a { color: inherit; }
 @keyframes flick { 0%,100% { transform: scale(1) rotate(-1.2deg); opacity: 1; } 30% { transform: scale(1.06,1.1) rotate(1deg); opacity: 0.92; } 55% { transform: scale(0.97,0.95) rotate(-0.5deg); opacity: 1; } 80% { transform: scale(1.03,1.07) rotate(0.8deg); opacity: 0.95; } }
 
 /* reveal on scroll */
-.rv { opacity: 0; transform: translateY(28px); filter: blur(6px); transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out), filter 0.6s var(--ease-out); }
-.rv.in { opacity: 1; transform: none; filter: blur(0); }
+  /* Reveal-on-scroll starts hidden, which is fine for a person scrolling but
+     wrong in two cases that both produced blank gaps in full-page screenshots:
+     a headless capture never fires the IntersectionObserver, and anyone
+     reaching this with JS disabled or a failed script load saw the whole page
+     at opacity 0 permanently. The hiding is therefore opt-in: app.js sets
+     data-rv on <html> before first paint, and only then does .rv start hidden. */
+  .rv { opacity: 1; transform: none; filter: none; }
+  html[data-rv] .rv { opacity: 0; transform: translateY(28px); filter: blur(6px); transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out), filter 0.6s var(--ease-out); }
+  html[data-rv] .rv.in { opacity: 1; transform: none; filter: blur(0); }
 
 /* stage theatre */
 .stage { background: var(--cellar); color: var(--porcelain); border: 1px solid rgba(154,123,69,0.4); }
@@ -234,7 +241,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 @media (prefers-reduced-motion: reduce) {
   .crawl-track, .flame-flicker, .seats .dot::before { animation: none; }
   .choice-half { transition: none; }
-  .rv { opacity: 1; transform: none; filter: none; transition: none; }
+  html[data-rv] .rv { opacity: 1; transform: none; filter: none; transition: none; }
 }
 
 /* tasting flight — sticky stacked course cards */
