@@ -38,6 +38,7 @@ const metaDescription = description ?? (config as any)?.seo?.description ?? 'Twe
   <TinaIsland name="global-footer" wrapper={islands['global-footer'].wrapper} params={{ path: Astro.url.pathname }}>
     <Footer config={config} />
   </TinaIsland>
+  <script is:inline src="/js/tina-guard.js"></script>
   <script is:inline src="/js/lenis.min.js"></script>
   <script is:inline src="/js/app.js" defer></script>
 </body>

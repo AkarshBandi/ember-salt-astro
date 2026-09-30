@@ -92,7 +92,16 @@ a { color: inherit; }
 .hero { position: relative; min-height: 100svh; overflow: clip; background: var(--cellar); color: var(--porcelain); }
 .hero-bg { position: absolute; inset: 0; }
 .hero-bg canvas, .hero-bg img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.hero-scrim { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(20,18,16,0.78) 0%, rgba(20,18,16,0.45) 45%, transparent 75%), linear-gradient(180deg, rgba(20,18,16,0.35), transparent 30%, transparent 55%, rgba(13,10,8,0.85)); }
+  .hero-scrim { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(20,18,16,0.78) 0%, rgba(20,18,16,0.45) 45%, transparent 75%), linear-gradient(180deg, rgba(20,18,16,0.35), transparent 30%, transparent 55%, rgba(13,10,8,0.85)); }
+
+  /* Inside the Tina admin the WebGL canvas is hidden and the real <img> is
+     forced visible. Keyed off a class rather than a JS swap, because the
+     preview replaces island HTML and any swap done at load time is lost. */
+  .is-tina-edit .hero-bg canvas { display: none; }
+  .is-tina-edit .hero-bg > img { opacity: 1 !important; }
+  .is-tina-edit .hero-ignite { display: none; }
+  .is-tina-edit .hero h1 .ch,
+  .is-tina-edit .hero .plate-dot { opacity: 1; transform: none; animation: none; }
 .hero-ignite { position: absolute; inset: 0; background: #0d0a08; opacity: 1; transition: opacity 0.9s var(--ease-out); }
 .hero-ignite.lifted { opacity: 0; pointer-events: none; }
 .hero-content { position: relative; z-index: 10; display: flex; flex-direction: column; justify-content: flex-end; min-height: 100svh; padding-top: 112px; padding-bottom: 56px; }
