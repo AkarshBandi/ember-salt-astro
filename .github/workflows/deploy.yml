@@ -1,0 +1,100 @@
+# Deploy on every push to main.
+#
+# WHY THIS FILE EXISTS. TinaCMS is Git-backed: when an editor clicks Save in
+# /admin, Tina commits the change to this repository. That commit is the LAST
+# step of a pipeline that had no second half — nothing rebuilt the site, so every
+# edit sat in Git until a human deployed by hand. These four projects went weeks
+# that way. This workflow closes the loop: Save becomes a commit, a commit
+# becomes a build, a build becomes a live site.
+#
+# TWO THINGS THAT ARE EASY TO GET WRONG, both of which I hit while building this:
+#
+# 1. `wrangler deploy --config dist/server/wrangler.json`, NOT a bare
+#    `wrangler deploy` against the repo-root wrangler.toml. The root config has
+#    no `main`, so wrangler ships an ASSETS-ONLY Worker: every page keeps
+#    working and the Tina island route silently does not exist. The symptom is
+#    that the admin's left panel reads "TinaCMS form fields will appear here"
+#    while the preview beside it looks perfect. @astrojs/cloudflare writes the
+#    correct config into dist/server/ during the build; we deploy that one.
+#
+# 2. `tinacms build --skip-cloud-checks`, not a bare `tinacms build`. The bare
+#    command validates the schema against TinaCloud and hard-fails when it
+#    cannot reach it. That makes a third party able to block a client's headline
+#    from going live. The schema check is still valuable, so it runs below as its
+#    own step that reports without gating the deploy.
+
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  # Lets us re-run a deploy from the Actions tab without pushing an empty commit.
+  workflow_dispatch:
+
+# One deploy at a time per branch. A second push while a build is running waits
+# instead of racing — two concurrent wrangler deploys to the same Worker
+# overwrite each other.
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Build and deploy
+    runs-on: ubuntu-latest
+
+    # GitHub's default is NO timeout — a blocked step runs until the 6-hour job
+    # ceiling. `tinacms audit` sat on an invisible stdin prompt for 15 minutes
+    # before I noticed. Any step here that can block must be bounded by hand.
+    timeout-minutes: 10
+
+    # Read-only on contents. Nothing here needs to push back to the repo.
+    permissions:
+      contents: read
+
+    steps:
+      - name: Check out the commit that triggered this
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          # 22 is the floor declared in trade-demos' package.json engines, and
+          # comfortably above what the others need.
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # PUBLIC_TINA_CLIENT_ID is public — it ships in the browser by design — but
+      # Tina's config reads it from the environment, so it still has to be
+      # present. TINA_TOKEN is the credential that permits writing to the
+      # TinaCloud branch, which is what lets an editor's Save commit at all.
+      - name: Build the CMS schema
+        run: npx tinacms build --skip-cloud-checks
+        env:
+          PUBLIC_TINA_CLIENT_ID: ${{ secrets.PUBLIC_TINA_CLIENT_ID }}
+          TINA_TOKEN: ${{ secrets.TINA_TOKEN }}
+
+      - name: Build the site
+        run: npx astro build
+        env:
+          PUBLIC_TINA_CLIENT_ID: ${{ secrets.PUBLIC_TINA_CLIENT_ID }}
+          TINA_TOKEN: ${{ secrets.TINA_TOKEN }}
+
+      # NOTE: there is deliberately no `tinacms audit` step here. It has no
+      # non-interactive flag, so in CI — where there is no TTY — it blocks on a
+      # prompt forever. It hung a deploy for 15 minutes before I removed it. It
+      # also wants to REWRITE files, which has no business in a pipeline. If
+      # schema drift ever needs surfacing, run `tinacms build` WITHOUT
+      # --skip-cloud-checks as its own non-blocking job, not inline here.
+
+      - name: Deploy to Cloudflare Workers
+        # The adapter writes a deploy-ready config here during the build. See
+        # note 1 at the top of this file — deploying the root wrangler.toml
+        # instead ships an assets-only Worker and breaks the CMS editor.
+        run: npx wrangler deploy --config dist/server/wrangler.json
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
