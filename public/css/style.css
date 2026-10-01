@@ -133,6 +133,31 @@ a { color: inherit; }
 }
 .hero-steam > div:nth-child(2) { background-image: url("/images/steam-far.webp"); animation-duration: 19s; animation-delay: -6s; }
 .hero-steam > div:nth-child(3) { background-image: url("/images/steam-mid.webp"); animation-duration: 24s; animation-delay: -13s; }
+
+/* The warm grade and the ember glow were doing their work inside the
+   fragment shader — pow(photo, 0.92) * vec3(1.06, 0.98, 0.90) to warm the
+   photo, and an additive orange rising from the top of the frame. Dropping
+   the shader without replacing those left the raw neutral photo, which
+   reads as a different, colder image rather than as a fallback. Reinstated
+   as two static layers: no per-frame cost, same look. */
+.hero-steam::before,
+.hero-steam::after { content: ""; position: absolute; inset: 0; pointer-events: none; }
+.hero-steam::before {
+  /* warm grade */
+  z-index: 1;
+  background: linear-gradient(180deg, rgba(255, 152, 74, 0.09) 0%, rgba(255, 120, 48, 0.04) 42%, transparent 72%);
+  mix-blend-mode: soft-light;
+}
+.hero-steam::after {
+  /* Ember glow, strongest at the top where the shader put it. Deliberately
+     static: mix-blend-mode plus an animated opacity re-blends the whole
+     hero every frame, and the drifting steam already supplies the motion.
+     Animating this was what Lighthouse counted under "12 non-composited
+     animations". */
+  z-index: 2;
+  background: radial-gradient(122% 62% at 50% -12%, rgba(255, 129, 43, 0.30) 0%, rgba(255, 104, 28, 0.11) 40%, transparent 70%);
+  mix-blend-mode: screen;
+}
 @keyframes steamDrift {
   0%   { transform: translate3d(0, 5%, 0) scale(1.05); opacity: 0; }
   40%  { opacity: 0.13; }
