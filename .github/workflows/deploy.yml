@@ -71,6 +71,23 @@ jobs:
       # Tina's config reads it from the environment, so it still has to be
       # present. TINA_TOKEN is the credential that permits writing to the
       # TinaCloud branch, which is what lets an editor's Save commit at all.
+      # Prints the LENGTH of each credential, never the value. A GitHub secret
+      # set via stdin picks up a trailing newline, which Cloudflare reports as
+      # "Invalid format for Authorization header" and TinaCloud reports as a bare
+      # "401 Unauthorized" with no hint of the cause. Both cost real debugging
+      # time here. If these numbers are 37/41 instead of 36/40, the secret has a
+      # stray character — re-set it with `gh secret set NAME --body "$VALUE"`,
+      # not by piping into `--body -`.
+      - name: Check credential integrity
+        run: |
+          echo "  PUBLIC_TINA_CLIENT_ID length: ${#PUBLIC_TINA_CLIENT_ID} (expect 36)"
+          echo "  TINA_TOKEN length:           ${#TINA_TOKEN} (expect 40)"
+          test "${#PUBLIC_TINA_CLIENT_ID}" -eq 36 || { echo "::error::client id has a stray character"; exit 1; }
+          test "${#TINA_TOKEN}" -eq 40 || { echo "::error::tina token has a stray character"; exit 1; }
+        env:
+          PUBLIC_TINA_CLIENT_ID: ${{ secrets.PUBLIC_TINA_CLIENT_ID }}
+          TINA_TOKEN: ${{ secrets.TINA_TOKEN }}
+
       - name: Build the CMS schema
         run: npx tinacms build --skip-cloud-checks
         env:
