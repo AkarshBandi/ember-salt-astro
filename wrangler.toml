@@ -3,6 +3,12 @@ compatibility_date = "2024-09-23"
 compatibility_flags = ["nodejs_compat"]
 workers_dev = true
 
+[assets]
+directory = "./dist/client"
+binding = "ASSETS"
+
+# Table order matters in TOML: anything after [assets] belongs to that table,
+# so bindings go last.
 [[kv_namespaces]]
 binding = "SESSION"
 id = "06ef94f88ca04301a3221db08bf25ce2"

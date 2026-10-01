@@ -1,5 +1,6 @@
 import { requestWithMetadata } from '@tinacms/astro/data';
 import client from '../../../tina/__generated__/client';
+import { PageDocument, ConfigDocument } from '../../../tina/__generated__/types.js';
 import { load as yamlLoad } from 'js-yaml';
 
 // TinaCloud returns EMPTY data rather than throwing while it is still
@@ -57,7 +58,8 @@ export const getConfig = async () => {
   // Same reasoning as getPage: the committed config.json is the truth.
   try {
     return await requestWithMetadata(
-      Promise.resolve({ data: { config: configRaw }, query: '', variables: {} } as any),
+        // Same reasoning as getPage: the query is what builds the edit panel.
+        Promise.resolve({ data: { config: configRaw }, query: ConfigDocument, variables: { relativePath: 'config.json' } } as any),
     );
   } catch {}
   return requestWithMetadata(client.queries.config({ relativePath: 'config.json' }));
@@ -74,7 +76,17 @@ export const getPage = async (slug: string) => {
   // exactly what is committed, and a cloud that is behind cannot ship it.
   if (local) {
     return requestWithMetadata(
-      Promise.resolve({ data: { page: local }, query: '', variables: { relativePath: `${slug}.mdx` } } as any),
+      // The QUERY is not optional metadata. Tina builds the left-hand edit panel
+      // from it: it is the mapping that says which field in the schema owns
+      // which `data-tina-field` in the HTML. Returning local data with
+      // `query: ''` served a perfectly good preview and an empty panel reading
+      // "TinaCMS form fields will appear here" — the two halves of visual
+      // editing are wired together and only one of them was arriving.
+      //
+      // The DATA still comes off disk; only the query text comes from the
+      // generated client, which costs no network round trip.
+
+      Promise.resolve({ data: { page: local }, query: PageDocument, variables: { relativePath: `${slug}.mdx` } } as any),
       { priority: 'primary' },
     );
   }
