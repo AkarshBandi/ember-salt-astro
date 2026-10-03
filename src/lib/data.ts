@@ -35,7 +35,7 @@ export async function getConfig(draft = false, token?: string) {
 
 const JOURNAL_QUERY = `*[_type == "journalPost" && slug.current == $slug][0]{
   _id, title, "slug": slug.current, date, category, description, body,
-  "image": image.asset->url
+  "image": image{asset}
 }`;
 
 export async function getJournal(slug: string, draft = false, token?: string) {
@@ -50,13 +50,16 @@ export async function getJournal(slug: string, draft = false, token?: string) {
 
 const JOURNAL_LIST_QUERY = `*[_type == "journalPost"] | order(date desc) {
   _id, title, "slug": slug.current, date, category, description,
-  "image": image.asset->url
+  "image": image{asset}
 }`;
 
 export async function getJournalList(draft = false, token?: string) {
   try {
     const { data } = await loadQuery<any[]>({ query: JOURNAL_LIST_QUERY, draft, token });
-    return { data: { entries: data ?? [] } };
+    // normalize() is what turns a Sanity asset reference into a served image
+    // path. Skipping it here left the journal thumbnails rendering as
+    // "[object Object]".
+    return { data: { entries: normalize(data ?? []) } };
   } catch (e) {
     console.warn('getJournalList failed', e);
     return { data: { entries: [] as any[] } };

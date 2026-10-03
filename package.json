@@ -4,8 +4,8 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
-    "build:local": "astro build",
+    "build": "node scripts/mirror-images.mjs && astro build",
+    "build:local": "node scripts/mirror-images.mjs && astro build",
     "preview": "astro preview",
     "deploy": "npm run build && npx wrangler deploy",
     "check": "astro check"

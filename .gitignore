@@ -23,3 +23,6 @@ Thumbs.db
 *.swp
 *.swo
 *~
+
+# Mirrored from Sanity at build time by scripts/mirror-images.mjs
+public/images/sanity/
