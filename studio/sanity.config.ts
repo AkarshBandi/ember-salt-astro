@@ -1,7 +1,7 @@
 import { defineConfig } from 'sanity';
 import { createElement, Fragment } from 'react';
 import { structureTool } from 'sanity/structure';
-import { defineLocations, presentationTool } from 'sanity/presentation';
+import { defineDocuments, defineLocations, presentationTool } from 'sanity/presentation';
 import { structure } from './structure';
 import { schemaTypes } from './schemaTypes';
 
@@ -69,6 +69,25 @@ export default defineConfig({
         },
       },
       resolve: {
+        // Maps a URL in the preview back to its Sanity document, so moving
+        // between pages inside the preview iframe updates the open document in
+        // the Studio sidebar instead of leaving it on whatever was opened last.
+        mainDocuments: defineDocuments([
+          {
+            route: '/preview/journal/:slug',
+            filter: ({ params }: any) =>
+              `_type == "journalPost" && slug.current == "${params.slug}"`,
+          },
+          {
+            route: '/preview',
+            filter: () => `_type == "page" && slug.current == "home"`,
+          },
+          {
+            route: '/preview/:slug',
+            filter: ({ params }: any) =>
+              `_type == "page" && slug.current == "${params.slug}"`,
+          },
+        ]),
         locations: {
           page: defineLocations({
             select: { title: 'seoTitle', slug: 'slug.current' },
