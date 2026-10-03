@@ -68,12 +68,19 @@ jobs:
         run: npm ci
 
       - name: Build the site
-        # The dataset is public, so prerendered pages read Sanity without a
-        # token. If it ever becomes private, add SANITY_API_READ_TOKEN as a
-        # repository secret and map it into the env block below.
+        # npm run build runs scripts/mirror-images.mjs first, which copies every
+        # published image into the asset layer so visitors never spend Sanity's
+        # bandwidth. That step needs a read token; the dataset being public only
+        # means the *HTML* can be built without one, not that the mirror can.
+        #
+        # The mirrored files are gitignored and the map is committed, so if this
+        # token were ever missing the mirror step drops every map entry whose
+        # file is absent and the site falls back to Sanity CDN URLs rather than
+        # shipping HTML that points at images which were never downloaded.
         run: npm run build
         env:
           SITE_URL: ${{ vars.SITE_URL }}
+          SANITY_API_READ_TOKEN: ${{ secrets.SANITY_API_READ_TOKEN }}
 
       - name: Deploy to Cloudflare Workers
         # See the note at the top of this file: deploying the root

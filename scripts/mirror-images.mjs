@@ -2,17 +2,21 @@
 //
 // WHY: the published site is prerendered HTML served from Cloudflare's asset
 // layer, where requests are free and unlimited and egress costs nothing. Sanity
-// image bandwidth is the only traffic-linked cost left, and copying each image
+// image bandwidth is the only traffic-linked cost left, so copying each image
 // once per build removes it: the bytes are served by Cloudflare, not Sanity.
 //
 // The map is a lookup table from a Sanity asset reference to the local path, so
 // normalize() can swap a cdn.sanity.io URL for /images/sanity/<name>.webp.
+// Anything not in the map falls back to the Sanity CDN, which is correct but
+// spends that budget, so a brand-new image appears from Sanity until the next
+// build picks it up. Draft preview deliberately relies on that fallback: an
+// editor checking an image they just uploaded should see the real file.
 //
-// New images appear on the next build — which a publish triggers within about a
-// minute, so an editor sees a new photo go live at the same moment as their
-// text. Draft preview deliberately does NOT use the map: an editor checking an
-// image they just uploaded should see the real file from Sanity, not a mirror
-// from the previous build.
+// THE INVARIANT: a map entry is only ever written for a file that exists on
+// disk. The mirrored images are gitignored while the map is committed, so a
+// clone without a token would otherwise ship HTML pointing at files that were
+// never downloaded — every block image broken while the build still reported
+// success. Verify every entry before writing, and drop the ones with no file.
 //
 // Usage: node scripts/mirror-images.mjs
 import fs from 'node:fs';
@@ -27,18 +31,16 @@ const MAP_FILE = path.join(ROOT, 'src', 'sanity', 'lib', 'image-map.json');
 
 const token =
   process.env.SANITY_API_WRITE_TOKEN || process.env.SANITY_API_READ_TOKEN;
-if (!token) {
-  console.error('Set SANITY_API_WRITE_TOKEN or SANITY_API_READ_TOKEN.');
-  process.exit(1);
-}
 
-const client = createClient({
-  projectId: PROJECT_ID,
-  dataset: DATASET,
-  apiVersion: '2025-01-01',
-  useCdn: false,
-  token,
-});
+const client = token
+  ? createClient({
+      projectId: PROJECT_ID,
+      dataset: DATASET,
+      apiVersion: '2025-01-01',
+      useCdn: false,
+      token,
+    })
+  : null;
 
 // Only images reachable from PUBLISHED content are mirrored, so an orphaned
 // asset or an unsaved draft never bloats the deploy.
@@ -59,24 +61,66 @@ function collectRefs(node, out = []) {
   return out;
 }
 
-/** image-<id>-<w>x<h>-<ext>  ->  a filename we control. */
-function refToFile(ref) {
-  const m = /^image-([^-]+)-\d+x\d+-(\w+)$/.exec(ref);
+/** image-<id>-<w>x<h>-<ext>  ->  the filename and CDN URL we control. */
+function parseRef(ref) {
+  const m = /^image-([^-]+)-(\d+x\d+)-(\w+)$/.exec(ref);
   if (!m) return null;
-  const [, id, ext] = m;
-  return `${id}.${ext}`;
+  const [, id, dims, ext] = m;
+  return {
+    file: `${id}.${ext}`,
+    cdnUrl: `https://cdn.sanity.io/images/${PROJECT_ID}/${DATASET}/${id}-${dims}.${ext}`,
+  };
 }
 
-function refToCdnUrl(ref) {
-  const file = refToFile(ref);
-  if (!file) return null;
-  const id = file.slice(0, file.lastIndexOf('.'));
-  const m = /^image-([^-]+)-(\d+x\d+)-(\w+)$/.exec(ref);
-  return `https://cdn.sanity.io/images/${PROJECT_ID}/${DATASET}/${id}-${m[2]}.${m[3]}`;
+function readExistingMap() {
+  try {
+    return JSON.parse(fs.readFileSync(MAP_FILE, 'utf8'));
+  } catch {
+    return {};
+  }
+}
+
+function writeMap(map, { downloaded, bytes, refs }) {
+  // The invariant, enforced: an entry survives only if its file is on disk.
+  const verified = {};
+  let dropped = 0;
+  for (const [ref, localPath] of Object.entries(map)) {
+    const onDisk = path.join(ROOT, 'public', localPath.replace(/^\//, ''));
+    if (fs.existsSync(onDisk)) verified[ref] = localPath;
+    else dropped += 1;
+  }
+
+  fs.writeFileSync(MAP_FILE, `${JSON.stringify(verified, null, 2)}\n`);
+
+  if (dropped > 0) {
+    console.log(
+      `[mirror] ${dropped} map entries dropped: the image file is not in this build`,
+    );
+  }
+  if (!client) {
+    console.log(
+      `[mirror] no SANITY_API_*_TOKEN; kept ${Object.keys(verified).length} ` +
+        'entries, the rest fall back to the Sanity CDN',
+    );
+    return;
+  }
+  console.log(
+    `[mirror] ${refs} referenced, ${downloaded} downloaded, ` +
+      `${(bytes / 1024 / 1024).toFixed(2)} MB mirrored, ` +
+      `${Object.keys(verified).length} of ${refs} served from the asset layer`,
+  );
 }
 
 async function main() {
   fs.mkdirSync(OUT_DIR, { recursive: true });
+
+  if (!client) {
+    // Not fatal. A missing mirror must never be the reason a client's publish
+    // fails to go live: reuse whatever files this machine already has, drop any
+    // map entry whose file is absent, and let the rest fall back to Sanity.
+    writeMap(readExistingMap(), { downloaded: 0, bytes: 0, refs: 0 });
+    return;
+  }
 
   const docs = await client.fetch(PUBLISHED_DOCS);
   const refs = [...new Set(collectRefs(docs))];
@@ -86,15 +130,14 @@ async function main() {
   let bytes = 0;
 
   for (const ref of refs) {
-    const file = refToFile(ref);
-    const url = refToCdnUrl(ref);
-    if (!file || !url) {
+    const parsed = parseRef(ref);
+    if (!parsed) {
       console.warn(`[mirror] skipping unrecognised reference: ${ref}`);
       continue;
     }
 
-    const localPath = path.join(OUT_DIR, file);
-    map[ref] = `/images/sanity/${file}`;
+    const localPath = path.join(OUT_DIR, parsed.file);
+    map[ref] = `/images/sanity/${parsed.file}`;
 
     if (fs.existsSync(localPath)) {
       bytes += fs.statSync(localPath).size;
@@ -102,25 +145,21 @@ async function main() {
     }
 
     try {
-      const res = await fetch(url);
+      const res = await fetch(parsed.cdnUrl);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const buffer = Buffer.from(await res.arrayBuffer());
       fs.writeFileSync(localPath, buffer);
       downloaded += 1;
       bytes += buffer.length;
     } catch (err) {
-      // A single unreachable image must not fail the whole build. The site
-      // falls back to the Sanity CDN URL for anything missing from the map.
-      console.warn(`[mirror] could not fetch ${url}: ${err.message}`);
+      // A single unreachable image must not fail the build; the verified map
+      // drops it and normalize() falls back to the Sanity CDN URL.
+      console.warn(`[mirror] could not fetch ${parsed.cdnUrl}: ${err.message}`);
       delete map[ref];
     }
   }
 
-  fs.writeFileSync(MAP_FILE, `${JSON.stringify(map, null, 2)}\n`);
-  console.log(
-    `[mirror] ${refs.length} referenced, ${downloaded} downloaded, ` +
-      `${(bytes / 1024 / 1024).toFixed(2)} MB mirrored, map has ${Object.keys(map).length}`,
-  );
+  writeMap(map, { downloaded, bytes, refs: refs.length });
 }
 
 main().catch((err) => {
