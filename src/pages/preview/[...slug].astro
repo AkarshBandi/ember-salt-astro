@@ -1,0 +1,39 @@
+---
+// The draft preview.
+//
+// Published pages are prerendered static files, and Astro middleware does not
+// run for prerendered routes — so the `__sanity_draft` cookie cannot switch a
+// static page into a draft render. This route is the answer: it is always
+// dynamic, always renders the drafts perspective, and lives under its own
+// /preview/* path so nothing here can be cached or mistaken for the live site.
+// The Presentation tool is pointed at this base URL.
+import Layout from '../../layouts/Layout.astro';
+import PageBody from '../../components/islands/PageBody.astro';
+import BlogBody from '../../components/islands/BlogBody.astro';
+import { getJournal, getPage } from '../../lib/data';
+import { envValue } from '../../lib/runtime-env';
+
+const draft = true;
+// A Worker secret, read per request. import.meta.env would only hold whatever
+// was in .env at build time, which is empty in CI.
+const token = await envValue(Astro, 'SANITY_API_READ_TOKEN');
+
+const raw = Astro.params.slug;
+const slug = Array.isArray(raw) ? raw.join('/') : (raw ?? '');
+const isJournal = slug.startsWith('journal/');
+const entrySlug = isJournal ? slug.slice('journal/'.length) : '';
+
+const journal = isJournal
+  ? (await getJournal(entrySlug, draft, token)).data?.journal
+  : null;
+const page = isJournal ? null : (await getPage(slug || 'home', draft, token)).data?.page;
+
+if (isJournal && !journal) return new Response('Not Found', { status: 404 });
+if (!isJournal && !page) return new Response('Not Found', { status: 404 });
+
+const title = (journal?.title as string) || (page as any)?.seoTitle || 'Ember & Salt';
+---
+
+<Layout title={title} draft={draft}>
+  {journal ? <BlogBody data={journal} /> : <PageBody data={page} />}
+</Layout>

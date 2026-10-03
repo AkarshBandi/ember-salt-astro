@@ -1,27 +1,18 @@
 # Deploy on every push to main.
 #
-# WHY THIS FILE EXISTS. TinaCMS is Git-backed: when an editor clicks Save in
-# /admin, Tina commits the change to this repository. That commit is the LAST
-# step of a pipeline that had no second half — nothing rebuilt the site, so every
-# edit sat in Git until a human deployed by hand. These four projects went weeks
-# that way. This workflow closes the loop: Save becomes a commit, a commit
-# becomes a build, a build becomes a live site.
+# Content lives in Sanity, not in Git. An editor publishing in Sanity Studio
+# fires a webhook that triggers a Cloudflare build (see the "Publish -> rebuild"
+# step in studio/sanity.config.ts and the Sanity dashboard). Code changes land
+# here and take the same build path. Drafts never reach the live site.
 #
-# TWO THINGS THAT ARE EASY TO GET WRONG, both of which I hit while building this:
+# THE ONE THING THAT IS EASY TO GET WRONG:
 #
-# 1. `wrangler deploy --config dist/server/wrangler.json`, NOT a bare
-#    `wrangler deploy` against the repo-root wrangler.toml. The root config has
-#    no `main`, so wrangler ships an ASSETS-ONLY Worker: every page keeps
-#    working and the Tina island route silently does not exist. The symptom is
-#    that the admin's left panel reads "TinaCMS form fields will appear here"
-#    while the preview beside it looks perfect. @astrojs/cloudflare writes the
-#    correct config into dist/server/ during the build; we deploy that one.
-#
-# 2. `tinacms build --skip-cloud-checks`, not a bare `tinacms build`. The bare
-#    command validates the schema against TinaCloud and hard-fails when it
-#    cannot reach it. That makes a third party able to block a client's headline
-#    from going live. The schema check is still valuable, so it runs below as its
-#    own step that reports without gating the deploy.
+# `wrangler deploy --config dist/server/wrangler.json`, NOT a bare
+# `wrangler deploy` against the repo-root wrangler.toml. The root config has no
+# `main`, so wrangler ships an ASSETS-ONLY Worker: every static page keeps
+# working while every on-demand route (the draft preview at /preview/* and the
+# draft-mode API) silently does not exist. @astrojs/cloudflare writes the
+# correct config into dist/server/ during the build; we deploy that one.
 
 name: Deploy
 
@@ -30,6 +21,18 @@ on:
     branches: [main]
   # Lets us re-run a deploy from the Actions tab without pushing an empty commit.
   workflow_dispatch:
+
+  # How a Sanity publish reaches this workflow: Sanity -> webhook ->
+  # /api/rebuild on the live site -> GitHub repository_dispatch -> here.
+  repository_dispatch:
+    types: [sanity-publish]
+
+  # Nightly safety net. The publish webhook is the fast path; this catches the
+  # case where a webhook was missed or a build failed silently. Costs about two
+  # build minutes a month. Off the hour so we never contend with every other
+  # cron on the internet.
+  schedule:
+    - cron: '17 3 * * *'
 
 # One deploy at a time per branch. A second push while a build is running waits
 # instead of racing — two concurrent wrangler deploys to the same Worker
@@ -44,8 +47,7 @@ jobs:
     runs-on: ubuntu-latest
 
     # GitHub's default is NO timeout — a blocked step runs until the 6-hour job
-    # ceiling. `tinacms audit` sat on an invisible stdin prompt for 15 minutes
-    # before I noticed. Any step here that can block must be bounded by hand.
+    # ceiling. Any step here that can block must be bounded by hand.
     timeout-minutes: 10
 
     # Read-only on contents. Nothing here needs to push back to the repo.
@@ -59,58 +61,24 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          # 22 is the floor declared in trade-demos' package.json engines, and
-          # comfortably above what the others need.
           node-version: '22'
           cache: npm
 
       - name: Install dependencies
         run: npm ci
 
-      # PUBLIC_TINA_CLIENT_ID is public — it ships in the browser by design — but
-      # Tina's config reads it from the environment, so it still has to be
-      # present. TINA_TOKEN is the credential that permits writing to the
-      # TinaCloud branch, which is what lets an editor's Save commit at all.
-      # Prints the LENGTH of each credential, never the value. A GitHub secret
-      # set via stdin picks up a trailing newline, which Cloudflare reports as
-      # "Invalid format for Authorization header" and TinaCloud reports as a bare
-      # "401 Unauthorized" with no hint of the cause. Both cost real debugging
-      # time here. If these numbers are 37/41 instead of 36/40, the secret has a
-      # stray character — re-set it with `gh secret set NAME --body "$VALUE"`,
-      # not by piping into `--body -`.
-      - name: Check credential integrity
-        run: |
-          echo "  PUBLIC_TINA_CLIENT_ID length: ${#PUBLIC_TINA_CLIENT_ID} (expect 36)"
-          echo "  TINA_TOKEN length:           ${#TINA_TOKEN} (expect 40)"
-          test "${#PUBLIC_TINA_CLIENT_ID}" -eq 36 || { echo "::error::client id has a stray character"; exit 1; }
-          test "${#TINA_TOKEN}" -eq 40 || { echo "::error::tina token has a stray character"; exit 1; }
-        env:
-          PUBLIC_TINA_CLIENT_ID: ${{ secrets.PUBLIC_TINA_CLIENT_ID }}
-          TINA_TOKEN: ${{ secrets.TINA_TOKEN }}
-
-      - name: Build the CMS schema
-        run: npx tinacms build --skip-cloud-checks
-        env:
-          PUBLIC_TINA_CLIENT_ID: ${{ secrets.PUBLIC_TINA_CLIENT_ID }}
-          TINA_TOKEN: ${{ secrets.TINA_TOKEN }}
-
       - name: Build the site
-        run: npx astro build
+        # The dataset is public, so prerendered pages read Sanity without a
+        # token. If it ever becomes private, add SANITY_API_READ_TOKEN as a
+        # repository secret and map it into the env block below.
+        run: npm run build
         env:
-          PUBLIC_TINA_CLIENT_ID: ${{ secrets.PUBLIC_TINA_CLIENT_ID }}
-          TINA_TOKEN: ${{ secrets.TINA_TOKEN }}
-
-      # NOTE: there is deliberately no `tinacms audit` step here. It has no
-      # non-interactive flag, so in CI — where there is no TTY — it blocks on a
-      # prompt forever. It hung a deploy for 15 minutes before I removed it. It
-      # also wants to REWRITE files, which has no business in a pipeline. If
-      # schema drift ever needs surfacing, run `tinacms build` WITHOUT
-      # --skip-cloud-checks as its own non-blocking job, not inline here.
+          SITE_URL: ${{ vars.SITE_URL }}
 
       - name: Deploy to Cloudflare Workers
-        # The adapter writes a deploy-ready config here during the build. See
-        # note 1 at the top of this file — deploying the root wrangler.toml
-        # instead ships an assets-only Worker and breaks the CMS editor.
+        # See the note at the top of this file: deploying the root
+        # wrangler.toml instead ships an assets-only Worker and silently drops
+        # every on-demand route.
         run: npx wrangler deploy --config dist/server/wrangler.json
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

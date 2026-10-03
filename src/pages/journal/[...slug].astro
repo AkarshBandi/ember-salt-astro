@@ -1,22 +1,24 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import TinaIsland from '@tinacms/astro/TinaIsland.astro';
-import BlogBody from '../../components/islands/BlogBody.astro';
-import { getJournal } from '../../lib/tina/data';
-import { islands } from '../../lib/tina/islands';
+// Prerendered. The draft version lives at /preview/journal/*.
+export const prerender = true;
 
-export const prerender = false;
+import Layout from '../../layouts/Layout.astro';
+import BlogBody from '../../components/islands/BlogBody.astro';
+import { getJournal } from '../../lib/data';
+import { listJournalSlugs } from '../../sanity/lib/slugs';
+
+export async function getStaticPaths() {
+  const slugs = await listJournalSlugs();
+  return slugs.map((slug) => ({ params: { slug }, props: {} }));
+}
 
 const { slug } = Astro.params;
 if (!slug) return Astro.redirect('/journal/');
 
-const journalResult = await getJournal(slug);
-const journal = journalResult.data?.journal;
+const journal = (await getJournal(slug, false)).data?.journal;
 if (!journal) return new Response('Not Found', { status: 404 });
 ---
 
 <Layout title={journal?.title ?? 'Journal'}>
-  <TinaIsland name="journal" wrapper={islands.journal.wrapper} params={{ slug }} primary>
-    <BlogBody data={journal} />
-  </TinaIsland>
+  <BlogBody data={journal} />
 </Layout>

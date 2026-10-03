@@ -1,10 +1,12 @@
-export const prerender = true;
 ---
+// Prerendered. The draft version of this route lives at /preview/*, which
+// is always dynamic — a static file cannot be switched into a draft render.
+export const prerender = true;
 import Layout from '../../layouts/Layout.astro';
-import { getCollection } from 'astro:content';
+import { getJournalList } from '../../lib/data';
 
-const entries = (await getCollection('journal')).sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+const entries = (await getJournalList()).data.entries.sort(
+  (a: any, b: any) => new Date(b.date).valueOf() - new Date(a.date).valueOf()
 );
 ---
 
@@ -15,14 +17,14 @@ const entries = (await getCollection('journal')).sort(
     <h1 class="font-display" style="font-weight:900;letter-spacing:-0.02em;margin-top:12px;font-size:var(--fs-h2)">Written between services.</h1>
     <div class="ledger" style="margin-top:40px">
       {entries.map((entry) => (
-        <a class="ledger-row rv" href={`/journal/${entry.id}/`}>
-          <span style="font-size:11px;letter-spacing:0.25em;text-transform:uppercase;font-weight:700;color:var(--brassdeep)">{entry.data.category}</span>
+        <a class="ledger-row rv" href={`/journal/${entry.slug}/`}>
+          <span style="font-size:11px;letter-spacing:0.25em;text-transform:uppercase;font-weight:700;color:var(--brassdeep)">{entry.category}</span>
           <span>
-            <h3 class="font-display" style="font-weight:700;font-size:clamp(1.25rem,2.5vw,1.6rem)">{entry.data.title}</h3>
-            <span style="display:block;font-size:14px;color:rgba(34,26,18,0.6);margin-top:4px">{entry.data.description}</span>
-            <span style="display:block;font-size:12px;color:rgba(34,26,18,0.45);margin-top:6px">{entry.data.date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })} · 4 min</span>
+            <h3 class="font-display" style="font-weight:700;font-size:clamp(1.25rem,2.5vw,1.6rem)">{entry.title}</h3>
+            <span style="display:block;font-size:14px;color:rgba(34,26,18,0.6);margin-top:4px">{entry.description}</span>
+            <span style="display:block;font-size:12px;color:rgba(34,26,18,0.45);margin-top:6px">{new Date(entry.date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })} · 4 min</span>
           </span>
-          {entry.data.image && <span class="ledger-thumb"><img src={entry.data.image} alt="" loading="lazy" /></span>}
+          {entry.image && <span class="ledger-thumb"><img src={entry.image} alt="" loading="lazy" /></span>}
         </a>
       ))}
     </div>

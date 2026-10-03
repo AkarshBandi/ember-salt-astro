@@ -25,6 +25,18 @@
 /shots/*
   Cache-Control: public, max-age=604800, stale-while-revalidate=86400
 
+# Prerendered HTML. These files only change when the site is rebuilt (a
+# Sanity publish triggers a build), so the edge may hold them for an hour and
+# serve a stale copy while it revalidates in the background.
+#
+/*.html
+  Cache-Control: public, max-age=0, s-maxage=3600, stale-while-revalidate=600
+
+# The draft preview must never be cached by any layer — a cached draft would
+# be visible to a client who had already published.
+/preview/*
+  Cache-Control: private, no-store
+
 /*
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin

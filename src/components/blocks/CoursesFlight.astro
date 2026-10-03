@@ -1,0 +1,48 @@
+---
+const { data } = Astro.props as { data: any };
+const items = (data?.courses ?? []).filter(Boolean);
+const flightItems = [items[0], items[1], items[3], items[5], items[10]].filter(Boolean);
+---
+
+  <section id="menu" class="linen" style="padding:var(--space-section) 0;color:var(--ink)">
+    <div class="wrap">
+      <div class="rv">
+        <p class="eyebrow" style="color:var(--brassdeep)">{data?.eyebrow ?? 'The menu — dinner in five courses'}</p>
+        <h2 class="font-display" style="font-weight:900;letter-spacing:-0.02em;max-width:40rem;margin-top:12px;font-size:var(--fs-h2)">{data?.headline ?? 'Five plates land. Scroll to serve.'}</h2>
+        <p style="color:rgba(34,26,18,0.62);font-size:15px;margin-top:12px;max-width:36rem">{data?.description}</p>
+      </div>
+      <div id="flight" style="margin-top:48px;display:grid;gap:6vh">
+        {flightItems.map((a: any, i: number) => (
+          <article class="flight-card rv" data-flight={i} style={`top:calc(88px + ${i * 22}px)`}>
+            <div class="flight-photo">
+                {/* loading="lazy" on the first card is what a mobile visitor
+                    above the fold should NOT wait for; the rest defer. The
+                    .flight-photo wrapper carries min-height, so the box is
+                    already reserved and deferring causes no layout shift. */}
+                <img src={a?.img} alt={a?.name} loading={i === 0 ? 'eager' : 'lazy'} fetchpriority={i === 0 ? 'high' : 'auto'} decoding="async" data-photo-a={a?.img} data-photo-b={a?.imgB || undefined} />
+              <span class="flight-act eyebrow">Course {a?.n} / V</span>
+            </div>
+            <div class="flight-type">
+              <p class="flight-num font-display" aria-hidden="true" style={`-webkit-text-stroke:1.5px ${a?.accent}`}>{a?.numeral}</p>
+              <h3 class="font-display" style="font-weight:700;font-size:clamp(1.6rem,3vw,2.4rem);margin-top:4px">{a?.name}</h3>
+              <p class="font-display" style={`font-style:italic;margin-top:4px;color:${a?.accent}`}>{a?.sense}</p>
+              <p style="font-size:15px;color:rgba(34,26,18,0.65);margin-top:12px;line-height:1.65;max-width:26rem">{a?.line}</p>
+              {a?.choice?.length ? (
+                <div style="margin-top:18px;display:flex;flex-wrap:wrap;gap:8px" data-choice={a?.n}>
+                  {a.choice.map((opt: string) => (
+                    <button class="chip on-paper" data-opt={opt} aria-pressed="false"><span class="stamp">{opt}</span></button>
+                  ))}
+                </div>
+                <p style="margin-top:10px;font-size:11px;letter-spacing:0.25em;text-transform:uppercase;font-weight:700;color:rgba(34,26,18,0.66)" data-pick-label>Choose one</p>
+              ) : (
+                <p style="margin-top:18px;font-size:11px;letter-spacing:0.25em;text-transform:uppercase;font-weight:700;color:rgba(34,26,18,0.66)">Ingredients withheld</p>
+              )}
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+  <div class="linen" style="padding-bottom:40px">
+    <hr style="border:none;border-top:1px solid rgba(154,123,69,0.2);margin:0 10%" />
+  </div>

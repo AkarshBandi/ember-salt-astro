@@ -2,11 +2,11 @@
    Motion math preserved: springs, lerps, velocity turbulence, eased mappings. */
 (function () {
   "use strict";
-  var isTinaEdit = false;
-  try { isTinaEdit = window.self !== window.top; } catch (e) { isTinaEdit = true; }
-  if (!isTinaEdit && document.querySelector('[data-tina-form]')) isTinaEdit = true;
-    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches || isTinaEdit;
-    var fine = window.matchMedia("(pointer: fine)").matches && !isTinaEdit;
+  var isInsideIframe = false;
+  try { isInsideIframe = window.self !== window.top; } catch (e) { isInsideIframe = true; }
+  if (!isInsideIframe && document.querySelector('[data-sanity-edit-target]')) isInsideIframe = true;
+    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches || isInsideIframe;
+    var fine = window.matchMedia("(pointer: fine)").matches && !isInsideIframe;
 
     /* Opt into the hidden-then-revealed state only now that the script is
        running. Until this runs, .rv is fully visible in CSS, so a failed
@@ -38,7 +38,7 @@
   /* ---------- Lenis smooth scroll ---------- */
   var lenis = null;
   try {
-    if (!isTinaEdit && !reduce && typeof Lenis !== "undefined") {
+    if (!isInsideIframe && !reduce && typeof Lenis !== "undefined") {
       lenis = new Lenis({ lerp: 0.09, smoothWheel: true });
       window.__lenis = lenis;
       var rafL = function (t) { lenis.raf(t); requestAnimationFrame(rafL); };
@@ -97,9 +97,9 @@
 
   /* ---------- reveal on scroll ---------- */
   function revealAll() { document.querySelectorAll(".rv:not(.in)").forEach(function (el) { el.classList.add("in"); }); }
-  if (isTinaEdit) {
+  if (isInsideIframe) {
     revealAll();
-    // Re-reveal swapped islands from Tina
+    // Re-reveal swapped islands
     new MutationObserver(function (muts) {
       var needs = false;
       muts.forEach(function (m) {
@@ -284,7 +284,7 @@
 
   /* ---------- HERO WebGL steam + ignite + cinematic exit ---------- */
   (function hero() {
-    if (isTinaEdit) {
+    if (isInsideIframe) {
       var c0 = document.getElementById("gl");
       if (c0) { var fb0 = document.createElement("img"); fb0.src = c0.nextElementSibling && c0.nextElementSibling.tagName === 'IMG' ? c0.nextElementSibling.src : HERO_SRC; fb0.alt = "Fire dish"; fb0.style.cssText = "position:absolute;inset:0;width:100%;height:100%;object-fit:cover"; c0.replaceWith(fb0); }
       var ig0 = document.getElementById("ignite");

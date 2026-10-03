@@ -1,20 +1,17 @@
-export const prerender = true;
 ---
+// Prerendered. The draft version of this route lives at /preview/*, which
+// is always dynamic — a static file cannot be switched into a draft render.
+export const prerender = true;
 import Layout from '../layouts/Layout.astro';
-import TinaIsland from '@tinacms/astro/TinaIsland.astro';
 import PageBody from '../components/islands/PageBody.astro';
-import { getConfig, getPage } from '../lib/tina/data';
-import { islands } from '../lib/tina/islands';
+import { getPage } from '../lib/data';
 
 const slug = 'story';
 const page = await getPage(slug);
 const data = page.data?.page;
 if (!data) return new Response('Not Found', { status: 404 });
-const config = (await getConfig()).data?.config ?? null;
 ---
 
 <Layout title={data.seoTitle || 'Story'}>
-  <TinaIsland name="page" wrapper={islands.page.wrapper} params={{ slug }} primary>
-    <PageBody data={data} />
-  </TinaIsland>
+  <PageBody data={data} />
 </Layout>

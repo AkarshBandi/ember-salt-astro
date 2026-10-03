@@ -1,0 +1,73 @@
+export const config = {
+  name: 'config',
+  title: 'Site settings',
+  type: 'document',
+  fields: [
+    {
+      name: 'seo',
+      title: 'Site identity & SEO',
+      type: 'object',
+      fields: [
+        { name: 'title', title: 'Site name', type: 'string' },
+        { name: 'description', title: 'Default meta description', type: 'string' },
+      ],
+    },
+    {
+      name: 'nav',
+      title: 'Navigation menu',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          name: 'navItem',
+          title: 'Link',
+          fields: [
+            { name: 'title', title: 'Title', type: 'string' },
+            { name: 'link', title: 'Link', type: 'string' },
+          ],
+        },
+      ],
+    },
+    { name: 'headerCtaLabel', title: 'Header CTA label', type: 'string' },
+    {
+      name: 'header',
+      title: 'Header',
+      type: 'object',
+      fields: [
+        { name: 'wordmark', title: 'Wordmark text', type: 'string' },
+        { name: 'wordmarkJoiner', title: 'Wordmark joiner (&)', type: 'string' },
+        { name: 'wordmarkEnd', title: 'Wordmark end', type: 'string' },
+        { name: 'ctaLabel', title: 'Header CTA label', type: 'string' },
+        { name: 'ctaLabelShort', title: 'Header CTA label (mobile)', type: 'string' },
+        { name: 'ctaLink', title: 'Header CTA link', type: 'string' },
+        { name: 'menuButtonLabel', title: 'Menu button aria-label', type: 'string' },
+      ],
+    },
+    {
+      name: 'footer',
+      title: 'Footer',
+      type: 'object',
+      fields: [
+        { name: 'ctaEyebrow', title: 'CTA eyebrow', type: 'string' },
+        { name: 'ctaHeadline', title: 'CTA headline', type: 'string' },
+        { name: 'ctaText', title: 'CTA text', type: 'text', rows: 3 },
+        { name: 'guestEyebrow', title: 'Guest eyebrow', type: 'string' },
+        { name: 'guestLine', title: 'Guest line', type: 'text', rows: 2 },
+        { name: 'serviceEyebrow', title: 'Service eyebrow', type: 'string' },
+        { name: 'serviceThuSat', title: 'Thu–Sat line', type: 'string' },
+        { name: 'serviceSun', title: 'Sunday line', type: 'string' },
+        { name: 'serviceNote', title: 'Service note', type: 'string' },
+        { name: 'roomEyebrow', title: 'Room eyebrow', type: 'string' },
+        { name: 'phone', title: 'Phone', type: 'string' },
+        { name: 'email', title: 'Email', type: 'string' },
+        { name: 'address1', title: 'Address line 1', type: 'string' },
+        { name: 'address2', title: 'Address line 2', type: 'string' },
+        { name: 'roomNote', title: 'Room note', type: 'text', rows: 2 },
+        { name: 'legalNote', title: 'Legal note', type: 'text', rows: 3 },
+        { name: 'giantText', title: 'Giant outline text', type: 'string' },
+        { name: 'copyright', title: 'Copyright', type: 'string' },
+        { name: 'hoursNote', title: 'Hours note', type: 'string' },
+      ],
+    },
+  ],
+};

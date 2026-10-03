@@ -1,5 +1,4 @@
 ---
-import { tinaField } from '@tinacms/astro/tina-field';
 import Hero from './Hero.astro';
 import Marquee from './Marquee.astro';
 import Courses from './Courses.astro';
@@ -17,32 +16,32 @@ const blocks = (data?.blocks ?? []).filter(Boolean);
 ---
 {blocks.map((block: any) => {
   const rendered = (() => {
-    switch (block?.__typename) {
-      case 'PageBlocksHero':
+    switch (block?._type) {
+      case 'heroBlock':
         return <Hero data={block} />;
-      case 'PageBlocksMarquee':
+      case 'marqueeBlock':
         return <Marquee data={block} />;
-      case 'PageBlocksCourses':
+      case 'coursesBlock':
         return <Courses data={block} />;
-      case 'PageBlocksAssembly':
+      case 'assemblyBlock':
         return <Assembly data={block} />;
-      case 'PageBlocksStoryPreview':
+      case 'storyPreviewBlock':
         return <StoryPreview data={block} />;
-      case 'PageBlocksMenuHeader':
+      case 'menuHeaderBlock':
         return <MenuHeader data={block} />;
-      case 'PageBlocksLetter':
+      case 'letterBlock':
         return <Letter data={block} />;
-      case 'PageBlocksFacts':
+      case 'factsBlock':
         return <Facts data={block} />;
-      case 'PageBlocksSuppliers':
+      case 'suppliersBlock':
         return <Suppliers data={block} />;
-      case 'PageBlocksCta':
+      case 'ctaBlock':
         return <Cta data={block} />;
-      case 'PageBlocksVisitIntro':
+      case 'visitIntroBlock':
         return <VisitIntro data={block} />;
       default:
         return null;
     }
   })();
-  return <div data-tina-field={tinaField(block)}>{rendered}</div>;
+  return <div>{rendered}</div>;
 })}
